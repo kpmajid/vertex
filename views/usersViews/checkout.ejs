@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Essence - Fashion Ecommerce Template</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="/img/core-img/favicon.ico" />
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="/css/core-style.css" />
+
+    <style>
+        .product-remove {
+            border: 0px;
+            background: none;
+        }
+
+        .product-remove:hover {
+            cursor: pointer;
+            color: #0315ff;
+        }
+
+        .product-remove:focus {
+            outline: 0px;
+        }
+
+        .quantity-decrease:disabled {
+            background: none;
+        }
+
+        .quantity-decrease:disabled:hover i {
+            color: gray;
+        }
+
+        .radio-box {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .radio-label {
+            /* margin: 2px; */
+            /* Adjust the border-radius for the capsule shape */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #fff;
+            color: #000;
+            /* Blue for unselected state */
+        }
+
+        .radio-box .disabled {
+            border: 0px;
+            /* Change the background color for disabled state */
+            cursor: not-allowed;
+        }
+
+        /* Hide the actual radio buttons */
+        .radio-box input[type="radio"] {
+            display: none;
+        }
+
+        .radio-box input[type="radio"]:checked+label p {
+            /* Styles for the checked radio button */
+            background-color: #ccc;
+            color: #000;
+            /* Black for selected state */
+        }
+
+        .radio-label p {
+            padding: 10px 15px;
+            margin-bottom: 0;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ##### Header Area Start ##### -->
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <!-- Classy Menu -->
+            <nav class="classy-navbar" id="essenceNav">
+                <!-- Logo -->
+                <a class="nav-brand" href="/"><img src="/img/core-img/logo.png" alt="" /></a>
+                <!-- Navbar Toggler -->
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+                <!-- Menu -->
+                <div class="classy-menu">
+                    <!-- close btn -->
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap">
+                            <span class="top"></span><span class="bottom"></span>
+                        </div>
+                    </div>
+                    <!-- Nav Start -->
+                    <div class="classynav">
+                        <ul>
+                            <li>
+                                <a href="/shop">Shop</a>
+                            </li>
+
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <!-- Nav End -->
+                </div>
+            </nav>
+
+            <!-- Header Meta Data -->
+            <div class="header-meta d-flex clearfix justify-content-end">
+                <!-- Search Area -->
+                <div class="search-area">
+                    <form action="#" method="post">
+                        <input type="search" name="search" id="headerSearch" placeholder="Type for search" />
+                        <button type="submit">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="favourite-area">
+                    <a href="#"><img src="/img/core-img/heart.svg" alt="" /></a>
+                </div>
+
+                <!-- User Login Info -->
+                <div class="user-login-info">
+                    <a href="/profile"><img src="/img/core-img/user.svg" alt="" /></a>
+                </div>
+                <!-- Cart Area -->
+                <div class="cart-area">
+                    <a href="/cart" id="essenceCartBtn"><img src="/img/core-img/bag.svg" alt="" />
+                        <!-- <span>3</span> -->
+                    </a>
+                </div>
+                <div class="sign-in-area">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+
+    <!-- ##### Breadcumb Area Start ##### -->
+    <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg)">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>Checkout</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Breadcumb Area End ##### -->
+
+    <!-- ##### Checkout Area Start ##### -->
+    <div class="checkout_area section-padding-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-7">
+                    <div class="cart-page-heading">
+                        <h5>Billing Address</h5>
+                    </div>
+                    <div id="addressOptions" class="row flex radio-box">
+                        <% addresses.forEach(address=> { %>
+                            <input type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>" />
+                            <label for="<%= address._id %>" class="col-lg-6 radio-label">
+                                <p>
+                                    <%= address.fullname %><br />
+                                        <%= address.mobile %><br />
+                                            <%= address.address %><br />
+                                                <%= address.pincode %><br />
+                                                    <%= address.state %>, <%= address.city %>, <%= address.street %>,
+                                                                <br />
+                                </p>
+                            </label>
+                            <% }) %>
+                    </div>
+                    <hr />
+                    <div id="accordion" role="tablist" class="mb-4">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <h6 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="false"
+                                        aria-controls="collapseOne">
+                                        <div class="cart-page-heading">
+                                            <h5>Add Address</h5>
+                                        </div>
+                                    </a>
+                                </h6>
+                            </div>
+
+                            <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <form action="#" method="post">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for="full_name">First Name<span>*</span></label>
+                                                <input type="text" class="form-control" id="full_name" value=""
+                                                    required />
+                                                <div id="fullNameValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="mobile">Mobile No <span>*</span></label>
+                                                <input type="number" class="form-control" id="mobile" Mobile="0"
+                                                    value="" />
+                                                <div id="mobileValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="street_address">Address <span>*</span></label>
+                                                <input type="text" class="form-control" id="street_address" value="" />
+                                                <div id="streetAddressValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="pincode">Pincode <span>*</span></label>
+                                                <input type="text" class="form-control" id="pincode" value="" />
+                                                <div id="pincodeValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="state">State <span>*</span></label>
+                                                <input type="text" class="form-control" id="state" name="state" />
+                                                <div id="stateValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="town_city">Town/City <span>*</span></label>
+                                                <input type="text" class="form-control" id="town_city" value="" />
+                                                <div id="townCityValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="street">Street <span>*</span></label>
+                                                <input type="text" class="form-control" id="street" name="street" />
+                                                <div id="streetValidationMessage" class="text-danger mb-2"></div>
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="button" class="btn essence-btn" id="saveBtn">
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="checkout_details_areaclearfix  ">
+                        <hr>
+                        <div class="cart-page-heading mb-30">
+                            <h5>Add Address</h5>
+                        </div>
+                        <form action="#" method="post">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="full_name">First Name<span>*</span></label>
+                                    <input type="text" class="form-control" id="full_name" value="" required>
+                                    <div id="fullNameValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="mobile">Mobile No <span>*</span></label>
+                                    <input type="number" class="form-control" id="mobile" Mobile="0" value="">
+                                    <div id="mobileValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="street_address">Address <span>*</span></label>
+                                    <input type="text" class="form-control" id="street_address" value="">
+                                    <div id="streetAddressValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="pincode">Pincode <span>*</span></label>
+                                    <input type="text" class="form-control" id="pincode" value="">
+                                    <div id="pincodeValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="state">State <span>*</span></label>
+                                    <input type="text" class="form-control" id="state" name="state" />
+                                    <div id="stateValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="town_city">Town/City <span>*</span></label>
+                                    <input type="text" class="form-control" id="town_city" value="">
+                                    <div id="townCityValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="street">Street <span>*</span></label>
+                                    <input type="text" class="form-control" id="street" name="street" />
+                                    <div id="streetValidationMessage" class="text-danger mb-2"></div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" class="btn essence-btn" id="saveBtn">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div> -->
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                    <div class="order-details-confirmation">
+                        <div class="cart-page-heading">
+                            <h5>Your Order</h5>
+                        </div>
+
+                        <ul class="order-details-form mb-4">
+                            <li class="mb-2"><span>Product</span> <span>Total</span></li>
+                            <% products.forEach(product=> { %>
+                                <li>
+                                    <span>
+                                        <%=product.productId.name%>
+                                    </span>
+                                    <span class="totalPrice">
+                                        ₹ <%=product.quantity * product.productId.price %>
+                                    </span>
+                                </li>
+                                <% }) %>
+                                    <hr />
+                                    <li><span>Subtotal</span> <span id="subtotal"></span></li>
+                                    <li><span>Shipping</span> <span>Free</span></li>
+                                    <hr />
+                                    <li><span>Total</span> <span id="total"></span></li>
+                        </ul>
+                        <div class="form-group">
+                            <label for="paymentMethod">Select Payment Method:</label><br />
+                            <input type="radio" id="creditCard" name="paymentMethod" value="COD" />
+                            <label for="creditCard">Cash On Delivery</label><br />
+                            <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" />
+                            <label for="creditCard">Credit Card</label><br />
+                            <input type="radio" id="debitCard" name="paymentMethod" value="debitCard" />
+                            <label for="debitCard">Debit Card</label><br />
+                            <input type="radio" id="paypal" name="paymentMethod" value="paypal" />
+                            <label for="paypal">PayPal</label><br />
+                        </div>
+
+                        <button id="placeOrderBtn" class="btn essence-btn">
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Checkout Area End ##### -->
+
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="img/core-img/logo2.png" alt="" /></a>
+                        </div>
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="shop.html">Shop</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="#">Order Status</a></li>
+                            <li><a href="#">Payment Options</a></li>
+                            <li><a href="#">Shipping and Delivery</a></li>
+                            <li><a href="#">Guides</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-end">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_heading mb-30">
+                            <h6>Subscribe</h6>
+                        </div>
+                        <div class="subscribtion_form">
+                            <form action="#" method="post">
+                                <input type="email" name="mail" class="mail" placeholder="Your email here" />
+                                <button type="submit" class="submit">
+                                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_social_area">
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i
+                                    class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i
+                                    class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i
+                                    class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i
+                                    class="fa fa-pinterest" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i
+                                    class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        All rights reserved | Made with
+                        <i class="fa fa-heart-o" aria-hidden="true"></i> by
+                        <a href="https://colorlib.com" target="_blank">Colorlib</a>,
+                        distributed by
+                        <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        let orderId;
+
+        const initialize = () => {
+            calculateSubtotal();
+
+            createOrder();
+
+            const btn = document.getElementById("saveBtn");
+            btn.addEventListener("click", addAddress);
+
+            const placeOrderBtn = document.getElementById("placeOrderBtn");
+            placeOrderBtn.addEventListener("click", checkPlaceOrder);
+        };
+
+        const fullNameValidationMessage = document.getElementById(
+            "fullNameValidationMessage"
+        );
+        const mobileValidationMessage = document.getElementById(
+            "mobileValidationMessage"
+        );
+        const streetAddressValidationMessage = document.getElementById(
+            "streetAddressValidationMessage"
+        );
+        const pincodeValidationMessage = document.getElementById(
+            "pincodeValidationMessage"
+        );
+        const stateValidationMessage = document.getElementById(
+            "stateValidationMessage"
+        );
+        const townCityValidationMessage = document.getElementById(
+            "townCityValidationMessage"
+        );
+        const streetValidationMessage = document.getElementById(
+            "streetValidationMessage"
+        );
+
+        async function createOrder() {
+            try {
+                const amount = document
+                    .querySelector("#total")
+                    .innerText.replace("₹", "");
+                const response = await fetch("/create/orderId", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ amount }),
+                    redirect: "follow",
+                });
+                const result = await response.json();
+
+                orderId = result.orderId;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        async function addAddress() {
+            try {
+                console.log("clicked");
+
+                let isValidated = true;
+                fullNameValidationMessage.textContent = "";
+                mobileValidationMessage.textContent = "";
+                streetAddressValidationMessage.textContent = "";
+                pincodeValidationMessage.textContent = "";
+                stateValidationMessage.textContent = "";
+                townCityValidationMessage.textContent = "";
+                streetValidationMessage.textContent = "";
+
+                const full_name = document.getElementById("full_name").value;
+                const mobile = document.getElementById("mobile").value;
+                const address = document.getElementById("street_address").value;
+                const pincode = document.getElementById("pincode").value;
+                const state = document.getElementById("state").value;
+                const town_city = document.getElementById("town_city").value;
+                const street = document.getElementById("street").value;
+
+                if (full_name.trim() == "") {
+                    fullNameValidationMessage.textContent = "full name is required";
+                    isValidated = false;
+                }
+                if (mobile.trim() == "") {
+                    mobileValidationMessage.textContent = "mobile number is required";
+                    isValidated = false;
+                }
+                if (address.trim() == "") {
+                    streetAddressValidationMessage.textContent = "address is required";
+                    isValidated = false;
+                }
+                if (pincode.trim() == "") {
+                    pincodeValidationMessage.textContent = "pincode is required";
+                    isValidated = false;
+                }
+                if (state.trim() == "") {
+                    stateValidationMessage.textContent = "state name is required";
+                    isValidated = false;
+                }
+                if (town_city.trim() == "") {
+                    townCityValidationMessage.textContent = "town/city is required";
+                    isValidated = false;
+                }
+                if (street.trim() == "") {
+                    streetValidationMessage.textContent = "street is required";
+                    isValidated = false;
+                }
+
+                if (!isValidated) {
+                    return;
+                }
+
+                console.log(
+                    full_name,
+                    mobile,
+                    address,
+                    pincode,
+                    state,
+                    town_city,
+                    street
+                );
+
+                const response = await fetch("/add-address", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        full_name,
+                        mobile,
+                        address,
+                        pincode,
+                        state,
+                        town_city,
+                        street,
+                    }),
+                });
+                if (response.status === 401) {
+                    // Handle case where user is not logged in
+                    Swal.fire({
+                        title: "<strong>You haven't logged</strong>",
+                        icon: "warning",
+                        html: `You have to login before trying to adding Address.`,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: `<a href="/login">Login</a>`,
+                    });
+                } else if (response.status === 409) {
+                    // Handle case where the product is already in the cart
+                    const data = await response.json();
+                    Swal.fire(data.message);
+                } else if (response.ok) {
+                    await Swal.fire("Address added to successfully!");
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function calculateSubtotal() {
+            let subtotal = 0;
+            const totalPrices = document.querySelectorAll(".totalPrice");
+            console.log(totalPrices);
+
+            totalPrices.forEach((totalPrice) => {
+                totalPrice = parseFloat(totalPrice.innerText.replace("₹", ""));
+                subtotal += totalPrice;
+            });
+
+            const subtotalElement = document.getElementById("subtotal");
+            if (subtotalElement) {
+                subtotalElement.innerText = `₹${subtotal.toFixed(2)}`;
+            }
+
+            const totalElement = document.getElementById("total");
+            if (totalElement) {
+                totalElement.innerText = `₹${subtotal.toFixed(2)}`;
+            }
+        }
+
+        function checkPlaceOrder() {
+            event.preventDefault();
+
+            // Check if an address is selected
+            const selectedAddress = document.querySelector(
+                'input[name="address"]:checked'
+            );
+            const selectedPaymentMethod = document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            );
+
+            let isSelected = true;
+            let message = "";
+            if (!selectedAddress && !selectedPaymentMethod) {
+                message = `Please select an address and a payment method.`;
+                isSelected = false;
+            } else if (!selectedAddress) {
+                message = `Please select an address.`;
+                isSelected = false;
+            } else if (!selectedPaymentMethod) {
+                message = `Please select a payment method.`;
+                isSelected = false;
+            }
+
+            if (!isSelected) {
+                Swal.fire({
+                    icon: "warning",
+                    html: message,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: `Ok`,
+                });
+            }
+
+            const paymentMethod = selectedPaymentMethod.value;
+            if (paymentMethod == "paypal") {
+                console.log("payapl aan");
+                const amount = document
+                    .querySelector("#total")
+                    .innerText.replace("₹", "");
+                console.log(orderId);
+                setupRazorpay(orderId, amount);
+            } else if (paymentMethod == "COD") {
+                placeOrder()
+            }
+        }
+
+        async function placeOrder() {
+            console.log("placing Order")
+
+            const selectedAddress = document.querySelector(
+                'input[name="address"]:checked'
+            );
+            const selectedPaymentMethod = document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            );
+
+            try {
+                const addressId = selectedAddress.value;
+                const paymentMethod = selectedPaymentMethod.value;
+                console.log(addressId, paymentMethod);
+
+                const response = await fetch("/placeOrder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        addressId,
+                        paymentMethod,
+                    }),
+                });
+
+                if (response.ok) {
+                    await Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Your Order has been placed",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    window.location.assign("/orders");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function setupRazorpay(orderId, amount) {
+            console.log("setupRazorpay");
+            var options = {
+                key: "rzp_test_XmE1i9cQzXOgPU",
+                amount: amount * 100,
+                currency: "INR",
+                name: "Acme Corp",
+                description: "Test Transaction",
+                image: "https://example.com/your_logo",
+                order_id: orderId,
+                handler: async function (response) {
+                    const paymentData = {
+                        payment_id: response.razorpay_payment_id,
+                        order_id: response.razorpay_order_id,
+                        signature: response.razorpay_signature,
+                    };
+                    try {
+                        console.log("verifyPayment");
+                        const response = await fetch("/verify-payment", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(paymentData),
+                        });
+
+                        if (response.ok) {
+                            placeOrder()
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+                theme: {
+                    color: "#3399cc",
+                },
+            };
+            var rzp1 = new Razorpay(options);
+
+            rzp1.on("payment.failed", function (response) {
+                alert(response.error.description);
+            });
+            rzp1.open(); // Open the Razorpay Checkout form immediately after creating the instance
+        }
+
+        document.addEventListener("DOMContentLoaded", () => initialize());
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="js/plugins.js"></script>
+    <!-- Classy Nav js -->
+    <script src="js/classy-nav.min.js"></script>
+    <!-- Active js -->
+    <script src="js/active.js"></script>
+</body>
+
+</html>

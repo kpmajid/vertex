@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5" />
+    <meta name="author" content="AdminKit" />
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="css/sample.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /* Internal (inline) style */
+        .accordion-button:focus {
+            /* border-color: transparent; */
+            box-shadow: none;
+            /* or border-color: initial; or border-color: unset; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar js-sidebar">
+            <div class="sidebar-content js-simplebar">
+                <a class="sidebar-brand" href="/admin/dashboard">
+                    <span class="align-middle">Vertex</span>
+                </a>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">Menu</li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/dashboard">
+                            <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/products">
+                            <span class="align-middle">Products</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item active">
+                        <a class="sidebar-link" href="/admin/category">
+                            <span class="align-middle">Category</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/orders">
+                            <span class="align-middle">Orders</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/discount">
+                            <span class="align-middle">Discount</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/coupon">
+                            <span class="align-middle">Coupon</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/transaction">
+                            <span class="align-middle">Transaction</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-header">User Mangement</li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/users">
+                            <span class="align-middle">Users</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-header">Other</li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/admin/logout">
+                            <span class="align-middle">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <a class="sidebar-toggle js-sidebar-toggle">
+                    <i class="hamburger align-self-center"></i>
+                </a>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav navbar-align"></ul>
+                </div>
+            </nav>
+
+            <main class="content">
+                <div class="card flex-fill w-100">
+                    <div class="card-body">
+                        <!-- category according with subcategory rows -->
+                        <div class="mb-3">
+                            <% if (categories.length<=0) { %>
+                                <p>No categories</p>
+                                <% } else { %>
+                                    <% categories.forEach(category=> { %>
+                                        <div class="top-level-category accordion accordion-flush"
+                                            id="<%= category._id %>">
+                                            <div class="accordion-item">
+                                                <div class="row align-items-center m-0">
+                                                    <input type="hidden" class="hiddenCategoryId"
+                                                        value="<%= category._id %>" />
+                                                    <h5 class="category-name col mb-0 h3 d-inline">
+                                                        <strong>
+                                                            <%= category.name %>
+                                                        </strong>
+                                                    </h5>
+                                                    <div class="col-auto list-ulist-btn">
+                                                        <% if (category.status=="listed" ) { %>
+
+                                                            <button type="button" class="btn btn-danger btn-md">
+                                                                Unlist
+                                                            </button>
+
+                                                            <% } else { %>
+
+                                                                <button type="button" class="btn btn-success btn-md">
+                                                                    List
+                                                                </button>
+
+                                                                <% } %>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div id="edit-category-btn" class="edit-btn btn edit"></div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button class="accordion-button collapsed"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#<%=category.name %>" aria-expanded="false"
+                                                            aria-controls="collapse-1"></button>
+                                                    </div>
+                                                </div>
+                                                <div id="<%= category.name %>" class="accordion-collapse collapse"
+                                                    aria-labelledby="heading-1" data-bs-parent="#<%= category._id %>">
+                                                    <div class="accordion-body">
+                                                        <% if (category.subcategories.length<=0) { %>
+                                                            <p>No sub-categories</p>
+                                                            <% } else { %>
+                                                                <% category.subcategories.forEach(subcategory=> { %>
+                                                                    <input type="hidden" class="hiddenCategoryId"
+                                                                        value="<%= subcategory._id %>" />
+                                                                    <div class="row align-items-center mb-3">
+                                                                        <h5 class="category-name col mb-0 h5 d-inline">
+                                                                            <%= subcategory.name %>
+                                                                        </h5>
+                                                                        <div class="col-auto list-ulist-btn">
+                                                                            <% if (subcategory.status=="listed" ) { %>
+                                                                                <button type="button"
+                                                                                    class="btn btn-danger btn-md">
+                                                                                    Unlist
+                                                                                </button>
+                                                                                <% } else { %>
+
+                                                                                    <button type="button"
+                                                                                        class="btn btn-success btn-md">
+                                                                                        List
+                                                                                    </button>
+
+                                                                                    <% } %>
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <div id="edit-subcategory-modal"
+                                                                                class="edit-btn btn edit"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <% }) %>
+                                                                        <% } %>
+                                                                            <div class="justify-content-center d-flex">
+                                                                                <button
+                                                                                    class="btn btn-outline-primary add-sub-category-modal-btn"
+                                                                                    id="subCatrgoryAddModal"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#subCatrgoryAdd">
+                                                                                    Add SubCategory
+                                                                                </button>
+                                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                            <% } %>
+                        </div>
+
+                        <!-- edit category modal -->
+                        <!-- <div class="modal fade" id="editCategoryModal" tabindex="-1"
+                            aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="editCategoryModalLabel">
+                                            Edit Category
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label class="form-label">Category New Name</label>
+                                        <input id="categoryInputNewName" type="text" class="form-control" />
+                                    </div>
+                                    <div id="editErrorMessage" class="text-center text-danger mt-2"></div>
+                                    <div class="modal-footer">
+                                        <button id="edit-category" type="button" class="btn btn-primary">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="justify-content-center d-flex">
+                            <button class="btn btn-outline-primary" id="add-category-modal-btn" data-bs-toggle="modal"
+                                data-bs-target="#catrgoryAdd">
+                                Add Category
+                            </button>
+                        </div>
+
+                        <div class="modal fade" id="catrgoryAdd" tabindex="-1" aria-labelledby="categoryAddModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="categoryAddModalLabel">
+                                            Add Category
+                                        </h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <input id="categoryNameInput" type="text" class="form-control"
+                                                placeholder="Type product name here" />
+                                        </div>
+                                        <div id="addCategoryErrorMessage" class="text-center text-danger mt-2"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button id="add-category-btn" type="button" class="btn btn-primary">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="subCatrgoryAdd" tabindex="-1"
+                            aria-labelledby="subCategoryAddModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="subCategoryAddModalLabel">
+                                            Add sub Category
+                                        </h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <input id="subCategoryNameInput" type="text" class="form-control"
+                                                placeholder="Type product name here" />
+                                        </div>
+                                        <div id="addsubCategoryErrorMessage" class="text-center text-danger mt-2"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button id="add-sub-category-btn" type="button" class="btn btn-primary">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+    <script>
+        const initialize = () => {
+            initializeSimplebar();
+            initializeSidebarCollapse();
+            initializeAddCategory();
+            initializeAddSubCategory();
+            initializeCategoryActions();
+            clearError();
+        };
+
+        const clearError = () => {
+            const bt1 = document.getElementById("add-category-modal-btn");
+            bt1.addEventListener("click", () => {
+                addCategoryErrorMessage.textContent = "";
+            });
+
+            const bt2 = document.getElementById("subCatrgoryAddModal");
+            bt2.addEventListener("click", () => {
+                addsubCategoryErrorMessage.textContent = "";
+            });
+        };
+
+        const initializeSimplebar = () => {
+            const simplebarElement =
+                document.getElementsByClassName("js-simplebar")[0];
+
+            if (simplebarElement) {
+                const simplebarInstance = new SimpleBar(
+                    document.getElementsByClassName("js-simplebar")[0]
+                );
+
+                /* Recalculate simplebar on sidebar dropdown toggle */
+                const sidebarDropdowns = document.querySelectorAll(
+                    ".js-sidebar [data-bs-parent]"
+                );
+
+                sidebarDropdowns.forEach((link) => {
+                    link.addEventListener("shown.bs.collapse", () => {
+                        simplebarInstance.recalculate();
+                    });
+                    link.addEventListener("hidden.bs.collapse", () => {
+                        simplebarInstance.recalculate();
+                    });
+                });
+            }
+        };
+
+        const initializeSidebarCollapse = () => {
+            const sidebarElement = document.getElementsByClassName("js-sidebar")[0];
+            const sidebarToggleElement =
+                document.getElementsByClassName("js-sidebar-toggle")[0];
+
+            if (sidebarElement && sidebarToggleElement) {
+                sidebarToggleElement.addEventListener("click", () => {
+                    sidebarElement.classList.toggle("collapsed");
+
+                    sidebarElement.addEventListener("transitionend", () => {
+                        window.dispatchEvent(new Event("resize"));
+                    });
+                });
+            }
+        };
+
+        const initializeAddCategory = () => {
+            const addCategoryBtn = document.getElementById("add-category-btn");
+            addCategoryBtn.addEventListener("click", async () => {
+                try {
+                    const name = document.getElementById("categoryNameInput").value;
+                    if (name.length <= 0) {
+                        addCategoryErrorMessage.textContent = "Category can't be empty.";
+                        return;
+                    }
+
+                    const response = await fetch("/api/admin/categories/add", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                        }),
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        const jsonData = await response.json();
+                        addCategoryErrorMessage.textContent = jsonData.message;
+                        return;
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+        };
+
+        const initializeAddSubCategory = () => {
+            const addSubCategoryBtns = document.querySelectorAll(
+                ".add-sub-category-modal-btn"
+            );
+            const topLevelCategory = document.querySelectorAll(
+                ".top-level-category"
+            );
+
+            const addSubBtn = document.getElementById("add-sub-category-btn");
+
+            addSubBtn.addEventListener("click", async () => {
+                const name = document.getElementById("subCategoryNameInput").value;
+                const parentId = addSubBtn.getAttribute("parentid");
+                try {
+                    if (name.length <= 0) {
+                        addsubCategoryErrorMessage.textContent =
+                            "Category can't be empty.";
+                        return;
+                    }
+                    const response = await fetch("/api/admin/categories/add", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            parentId,
+                            name,
+                        }),
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        const jsonData = await response.json();
+                        console.log(response);
+                        console.log(jsonData);
+                        addsubCategoryErrorMessage.textContent = jsonData.message;
+                        addCategoryErrorMessage.textContent = jsonData.message;
+                        return;
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+
+            addSubCategoryBtns.forEach((button, index) => {
+                button.addEventListener("click", () => {
+                    const parentCategoryId = topLevelCategory[index].id;
+                    addSubBtn.setAttribute("parentid", parentCategoryId);
+                });
+            });
+        };
+
+        const initializeCategoryActions = () => {
+            const categories = document.querySelectorAll(".hiddenCategoryId");
+
+            const categoryNames = document.querySelectorAll(".category-name");
+
+            const listUnlistbtns = document.querySelectorAll(".list-ulist-btn");
+
+            const editbtns = document.querySelectorAll(".edit-btn");
+
+            // const editInput = document.getElementById("categoryInputNewName");
+
+            // const saveChanges = document.getElementById("edit-category");
+
+            // const editErrorMessage = document.getElementById("editErrorMessage");
+
+            // category list-unlist
+            listUnlistbtns.forEach((button, index) => {
+                button.childNodes[1].addEventListener("click", async () => {
+                    let action = button.childNodes[1].innerText;
+                    let name = categoryNames[index].innerText;
+                    let id = categories[index].value;
+                    // id = id.trim()
+                    const url = `/api/admin/categories/${id}`;
+                    try {
+                        const result = await Swal.fire({
+                            title: "Are you sure?",
+                            text: `do you want ${action} ${name} category!`,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: `Yes, ${action} it!`,
+                        });
+                        if (result.isConfirmed) {
+                            const response = await fetch(url, {
+                                method: "PATCH",
+                            });
+
+                            if (response.ok) {
+                                await Swal.fire({
+                                    title: `${action}ed!`,
+                                    text: `${name} category has been ${action}ed.`,
+                                    icon: "success",
+                                });
+                                window.location.reload();
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            // category edit
+            editbtns.forEach((button, index) => {
+                button.addEventListener("click", async () => {
+                    const category = categoryNames[index].innerText;
+                    let id = categories[index].value;
+                    id = id.trim();
+                    const url = `/api/admin/categories/${id}`;
+
+                    Swal.fire({
+                        title: "Edit Category ",
+                        input: "text",
+                        inputValue: category,
+                        inputAttributes: {
+                            autocapitalize: "off",
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: "Save",
+                        showLoaderOnConfirm: true,
+                        preConfirm: async (name) => {
+                            try {
+                                if (!name) {
+                                    return Swal.showValidationMessage("Name can't be empty");
+                                }
+
+                                const response = await fetch(url, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        name,
+                                    }),
+                                });
+                                if (!response.ok) {
+                                    const jsonData = await response.json();
+                                    console.log(jsonData);
+                                    return Swal.showValidationMessage(`${jsonData.message}`);
+                                }
+
+                                if (response.ok) {
+                                    await Swal.fire({
+                                        title: `Edited!`,
+                                        text: `${category} category has been edited.`,
+                                        icon: "success",
+                                    });
+                                    window.location.reload();
+                                }
+                            } catch (error) {
+                                Swal.showValidationMessage(`Request failed: ${error}`);
+                            }
+                        },
+                        allowOutsideClick: () => !Swal.isLoading(),
+                    });
+
+                    // try {
+                    //     const result = await Swal.fire({
+                    //         title: "Edit Category ",
+                    //         input: "text",
+                    //         inputValue: category,
+                    //         inputAttributes: {
+                    //             autocapitalize: "off",
+                    //         },
+                    //         showCancelButton: true,
+                    //         confirmButtonText: "Save",
+                    //         allowOutsideClick: () => !Swal.isLoading(),
+                    //     })
+
+                    //     if (result.isConfirmed) {
+                    //         const response = await fetch(url, {
+                    //             method: "PUT",
+                    //             headers: {
+                    //                 "Content-Type": "application/json",
+                    //             },
+                    //             body: JSON.stringify({
+                    //                 name: result.value,
+                    //             }),
+                    //         });
+                    //         console.log(response)
+                    //         if (response.ok) {
+                    //             await Swal.fire({
+                    //                 title: `Edited!`,
+                    //                 text: `${category} category has been edited.`,
+                    //                 icon: "success",
+                    //             });
+                    //             window.location.reload();
+                    //         } else {
+                    //             await Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
+                    //             return
+                    //             // const jsonData = await response.json();
+                    //             // await Swal.fire({
+                    //             //     title: `Oops...`,
+                    //             //     text: `${jsonData.message}.`,
+                    //             //     icon: "error",
+                    //             // });
+                    //             console.log(jsonData)
+                    //             // editErrorMessage.textContent = jsonData.message;
+                    //             return;
+                    //         }
+                    //     }
+
+                    // } catch (error) {
+                    //     console.log(error)
+                    // }
+                });
+            });
+        };
+
+        document.addEventListener("DOMContentLoaded", () => initialize());
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

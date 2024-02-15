@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Essence - Fashion Ecommerce Template</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="/img/core-img/favicon.ico" />
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="/css/core-style.css" />
+
+    <style>
+        .product-remove {
+            border: 0px;
+            background: none;
+        }
+
+        .product-remove:hover {
+            cursor: pointer;
+            color: #0315ff
+        }
+
+        .product-remove:focus {
+            outline: 0px;
+        }
+
+        .quantity-decrease:disabled {
+            background: none;
+        }
+
+        .quantity-decrease:disabled:hover i {
+            color: gray;
+        }
+
+        .cart-item-desc p {
+            line-height: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ##### Header Area Start ##### -->
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <!-- Classy Menu -->
+            <nav class="classy-navbar" id="essenceNav">
+                <!-- Logo -->
+                <a class="nav-brand" href="/"><img src="/img/core-img/logo.png" alt="" /></a>
+                <!-- Navbar Toggler -->
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+                <!-- Menu -->
+                <div class="classy-menu">
+                    <!-- close btn -->
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap">
+                            <span class="top"></span><span class="bottom"></span>
+                        </div>
+                    </div>
+                    <!-- Nav Start -->
+                    <div class="classynav">
+                        <ul>
+                            <li>
+                                <a href="/shop">Shop</a>
+
+                            </li>
+
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <!-- Nav End -->
+                </div>
+            </nav>
+
+            <!-- Header Meta Data -->
+            <div class="header-meta d-flex clearfix justify-content-end">
+                <!-- Search Area -->
+                <div class="search-area">
+                    <form action="#" method="post">
+                        <input type="search" name="search" id="headerSearch" placeholder="Type for search" />
+                        <button type="submit">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="favourite-area">
+                    <a href="#"><img src="/img/core-img/heart.svg" alt=""></a>
+                </div>
+
+                <!-- User Login Info -->
+                <div class="user-login-info">
+                    <a href="/profile"><img src="/img/core-img/user.svg" alt=""></a>
+                </div>
+                <!-- Cart Area -->
+                <div class="cart-area">
+                    <a href="/cart" id="essenceCartBtn"><img src="/img/core-img/bag.svg" alt="">
+                        <!-- <span>3</span> -->
+                    </a>
+                </div>
+                <div class="sign-in-area">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+
+    <div class="checkout_area section-padding-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-7">
+                    <div class="cart-content">
+                        <!-- Cart List Area -->
+                        <div class="cart-list">
+                            <% if (!products || products.length<1 ) { %>
+                                <div class="text-center">
+                                    <h5>NO PRODUCTS IN CART!</h5>
+                                    <hr>
+                                </div>
+
+                                <% } else { %>
+
+                                    <% products.forEach(product=> { %>
+
+                                        <div class="single-cart-item d-flex mb-2">
+
+                                            <div class="product-image">
+                                                <img src="/img/products/<%= product.productId.images[0]%>"
+                                                    class="cart-thumb" alt="" />
+                                            </div>
+                                            <div class="cart-item-desc px-2">
+                                                <h6>
+                                                    <%= product.productId.name%>
+                                                </h6>
+                                                <% if (product.message) { %>
+                                                    <p class="msg text-danger problem">
+                                                        <%= product.message %>
+                                                    </p>
+
+                                                    <% } %>
+                                                        <p class="size">Size: <%= product.size%>
+                                                        </p>
+                                                        <p class="color">Color: <%= product.color %>
+                                                        </p>
+                                                        <h6 class="price">₹<%= product.productId.price%>
+                                                        </h6>
+                                            </div>
+                                            <div class="px-2 cart-item-action">
+                                                <ul class="pagination">
+                                                    <li class="page-item">
+                                                        <button type="button" class="page-link quantity-decrease"
+                                                            data-itemid="<%= product._id %>"><i
+                                                                class="fa fa-minus"></i></button>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link quantity" href="#">
+                                                            <%= product.quantity %>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <button type="button" class="page-link quantity-increase"
+                                                            data-itemid="<%= product._id %>"><i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="cart-item-misc flex-fill">
+                                                <h6 class="pl-4 totalPrice">₹ <%=product.quantity *
+                                                        product.productId.price %>
+                                                </h6>
+
+                                                <button type="button" class="product-remove"
+                                                    data-itemid="<%= product._id %>">
+                                                    <i class="fa fa-close" aria-hidden="true">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <% }) %>
+                                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                    <div class="order-details-confirmation">
+                        <div class="cart-page-heading">
+                            <h5>Summary</h5>
+                        </div>
+
+                        <ul class="order-details-form mb-4" id="cart-summary">
+                            <li><span>SUBTOTAL</span> <span id="subtotal">₹0.00</span></li>
+                            <hr />
+                            <li><span>Total</span> <span id="total">₹0.00</span></li>
+                        </ul>
+
+                        <button id="checkOut" class="btn essence-btn">Proceed to checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="/img/core-img/logo2.png" alt="" /></a>
+                        </div>
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="/shop">Shop</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="#">Order Status</a></li>
+                            <li><a href="#">Payment Options</a></li>
+                            <li><a href="#">Shipping and Delivery</a></li>
+                            <li><a href="#">Guides</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-end">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_heading mb-30">
+                            <h6>Subscribe</h6>
+                        </div>
+                        <div class="subscribtion_form">
+                            <form action="#" method="post">
+                                <input type="email" name="mail" class="mail" placeholder="Your email here" />
+                                <button type="submit" class="submit">
+                                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <script>
+        const initialize = () => {
+            const removeButtons = document.querySelectorAll('.product-remove')
+            removeButtons.forEach((button, index) => {
+                button.addEventListener('click', () => removeProduct(button))
+            })
+
+            const decreaseButtons = document.querySelectorAll('.quantity-decrease');
+            const increaseButtons = document.querySelectorAll('.quantity-increase');
+
+            decreaseButtons.forEach(button => {
+                button.addEventListener('click', () => handleUpdateQuantity(button, -1));
+            });
+
+            increaseButtons.forEach(button => {
+                button.addEventListener('click', () => handleUpdateQuantity(button, 1));
+            });
+            calculateSubtotal();
+
+            const checkOutButton = document.querySelector('#checkOut')
+            checkOutButton.addEventListener('click', proceedToCheckOut)
+        }
+
+        async function removeProduct(button) {
+            const itemId = button.getAttribute('data-itemid')
+
+            try {
+                const response = await fetch('/removeProduct', {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        itemId
+                    }),
+                })
+                if (!response.ok) {
+                    throw new Error(`Failed to remove product. Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+
+                if (result.success) {
+                    const productItem = button.closest('.single-cart-item');
+                    if (productItem) {
+                        productItem.remove();
+                    }
+                }
+                calculateSubtotal()
+
+                const items = document.querySelectorAll(".single-cart-item")
+
+                if (items.length < 1) {
+
+                    const noItemDiv = document.createElement('div');
+                    noItemDiv.classList.add('text-center');
+                    noItemDiv.innerHTML = `
+                        <h5>NO PRODUCTS IN CART!</h5>
+                        <hr>
+                    `;
+
+                    const cartList = document.querySelector('.cart-list');
+                    cartList.appendChild(noItemDiv);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+        async function handleUpdateQuantity(button, change) {
+            const itemId = button.getAttribute('data-itemid');
+            const productItem = button.closest('.single-cart-item');
+            const cartItemProblems = productItem.querySelector('.problem');
+            if (cartItemProblems && cartItemProblems.innerHTML.trim() == "Product is unavailable") {
+                return;
+            }
+
+            try {
+                const response = await fetch('/updateQuantity', {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        itemId,
+                        change,
+                    }),
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    Swal.fire(result.message);
+                    throw new Error(`Failed to update quantity. Status: ${response.status}`);
+                }
+
+                // Update UI with the new quantity
+                if (result.success) {
+                    const cartItem = button.closest('.single-cart-item');
+                    const quantityElement = cartItem.querySelector('.quantity');
+
+                    const currentQuantity = parseInt(quantityElement.innerText, 10);
+
+                    if (quantityElement) {
+                        quantityElement.innerText = currentQuantity + change;
+                    }
+                    const priceElement = cartItem.querySelector('.price');
+                    const totalPrice = cartItem.querySelector('.totalPrice')
+
+                    if (priceElement) {
+                        const productPrice = parseFloat(priceElement.innerText.replace('₹', ''));
+                        totalPrice.innerText = `₹ ${(currentQuantity + change) * productPrice}`;
+                    }
+
+
+                    if (cartItemProblems && !result.errorMessage) {
+                        cartItemProblems.innerHTML = ""
+                    } else if (cartItemProblems && result.errorMessage) {
+                        cartItemProblems.innerHTML = result.errorMessage
+                        console.log(cartItemProblems)
+                    } else if (result.errorMessage) {
+                        console.log("undo")
+                        window.location.reload()
+                    }
+                }
+                calculateSubtotal()
+            } catch (error) {
+                console.error("Error updating quantity:", error.message);
+                // Handle error, show error message to the user, etc.
+            }
+        }
+
+        function calculateSubtotal() {
+            let subtotal = 0;
+            const products = document.querySelectorAll(".single-cart-item")
+            products.forEach((product) => {
+                const totalPriceElement = product.querySelector(".totalPrice");
+                let totalPrice = 0;
+                if (totalPriceElement) {
+                    totalPrice = parseFloat(totalPriceElement.innerText.replace('₹', ''));
+                }
+                subtotal += totalPrice;
+            })
+
+            const subtotalElement = document.getElementById('subtotal');
+            if (subtotalElement) {
+                subtotalElement.innerText = `₹${subtotal.toFixed(2)}`;
+            }
+
+            // For simplicity, setting total equal to subtotal in this example
+            const totalElement = document.getElementById('total');
+            if (totalElement) {
+                totalElement.innerText = `₹${subtotal.toFixed(2)}`;
+            }
+        }
+
+        function proceedToCheckOut() {
+            const items = document.querySelectorAll('.single-cart-item')
+
+            if (items.length <= 0) {
+                Swal.fire({
+                    icon: "warning",
+                    html: `Cart is empty.Please add Products.`,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: `Ok`,
+                });
+                return
+            }
+
+            const problems = document.querySelectorAll('.problem')
+
+            if (problems.length) {
+                Swal.fire({
+                    icon: "warning",
+                    html: `Please remove unavilable and out of stock products from cart.`,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: `Ok`,
+                });
+                return
+            }
+
+            window.location.assign('/checkout')
+        }
+
+        document.addEventListener("DOMContentLoaded", () => initialize());
+
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="/js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="/js/plugins.js"></script>
+    <!-- Classy Nav js -->
+    <script src="/js/classy-nav.min.js"></script>
+    <!-- Active js -->
+    <script src="/js/active.js"></script>
+</body>
+
+</html>

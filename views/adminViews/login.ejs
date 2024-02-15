@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>Sign In</title>
+
+    <link href="/admin/css/app.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <main class="d-flex w-100">
+        <div class="container d-flex flex-column">
+            <div class="row vh-100">
+                <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+                    <div class="d-table-cell align-middle">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="m-sm-4">
+                                    <div class="text-center my-4">
+                                        <h1 class="h2">Welcome back, Admin</h1>
+                                        <p class="lead">Sign in to your account to continue</p>
+                                    </div>
+                                    <form autocomplete="off">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input autocomplete="false" id="email" class="form-control form-control-lg"
+                                                type="email" name="email" placeholder="Enter your email" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input autocomplete="false" id="password"
+                                                class="form-control form-control-lg" type="password" name="password"
+                                                placeholder="Enter your password" />
+                                        </div>
+                                        <div id="validationMessage" class="text-center text-danger mt-2"></div>
+                                        <div class="text-center mt-3">
+                                            <button type="button" id="loginBtn" class="btn btn-lg btn-primary">Sign
+                                                in</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const url = "/admin/login";
+        const btn = document.getElementById("loginBtn");
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        btn.addEventListener("click", async () => {
+            event.preventDefault();
+
+            if (!email.value.trim() || !password.value.trim()) {
+                validationMessage.textContent = "Please enter both email and password.";
+                return;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email.value,
+                        password: password.value,
+                    }),
+                });
+
+                console.log(response)
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    const jsonData = await response.json();
+                    validationMessage.textContent = jsonData.message;
+                    console.log(jsonData.message);
+                    return;
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        });
+    </script>
+</body>
+
+</html>
