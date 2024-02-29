@@ -27,6 +27,11 @@ const categorySchema = new mongoose.Schema({
     ],
     default: [],
   },
+  discount: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Discount",
+    default: null,
+  },
 });
 
 module.exports = mongoose.model("Category", categorySchema);

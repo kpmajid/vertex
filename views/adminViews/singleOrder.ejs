@@ -63,6 +63,12 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/attributes">
+                            <span class="align-middle">Attributes</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-item active">
                         <a class="sidebar-link" href="/admin/orders">
                             <span class="align-middle">Orders</span>
@@ -139,35 +145,29 @@
                         <h6>Total: <%= total %>
                         </h6>
 
-                        <% if (orderStatus=='Cancelled' ) { %>
-                            <button type="button" class="btn text-black essence-btn bg-primary"
-                                data-orderId="<%= _id %>" id="order_button" disabled>Order Canceled</button>
-                            <% } else if (orderStatus==='Pending' ) { %>
+                        <select id="order_status_select">
+                            <option value="">select </option>
+                            <option value="Cancelled">Cancelled</option>
 
-                                <button type="button" class="btn essence-btn bg-success" data-orderId="<%= _id %>"
-                                    id="order_button">Ship Products</button>
-
-                                <% } else if (orderStatus==='Shipped' ) { %>
-
-                                    <button type="button" class="btn essence-btn bg-success" data-orderId="<%= _id %>"
-                                        id="order_button">Mark Delivered</button>
-                                    <% } else if (orderStatus==='Delivered' ) { %>
-                                        <button type="button" class="btn text-black essence-btn bg-success"
-                                            data-orderId="<%= _id %>" id="order_button" disabled>Order Delivered</button>
-                                        <% } %>
+                            <option value="Pending">Pending</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                        <button type="button" class="btn essence-btn bg-primary" id="order_button" style="color: white;"
+                            disabled data-orderId="<%= _id %>">Update</button>
 
 
-                                            <hr>
-                                            <h6 class="card-title  mb-0">Delivery Address:</h6>
-                                            <p>
-                                                <%= address.fullname %><br />
-                                                    <%= address.mobile %><br />
-                                                        <%= address.address %><br />
-                                                            <%= address.pincode %><br />
-                                                                <%= address.street %>, <%= address.city %>, <%=
-                                                                            address.state %>
-                                                                            <br />
-                                            </p>
+
+                        <hr>
+                        <h6 class="card-title  mb-0">Delivery Address:</h6>
+                        <p>
+                            <%= address.fullname %><br />
+                                <%= address.mobile %><br />
+                                    <%= address.address %><br />
+                                        <%= address.pincode %><br />
+                                            <%= address.street %>, <%= address.city %>, <%= address.state %>
+                                                        <br />
+                        </p>
                     </div>
                     <div class="table-responsive-sm mb-3">
                         <table id="myTable" class="table text-center table-hover my-0">
@@ -230,13 +230,23 @@
 
             const button = document.querySelector("#order_button")
             button.addEventListener("click", updateStatus)
+
+            document.querySelector('#order_status_select').addEventListener("change", () => {
+                button.disabled = false
+            })
         };
 
         async function updateStatus(e) {
             try {
                 console.log('updating status')
                 const button = event.target;
+                console.log(button)
+                const selectedStatus = document.getElementById('order_status_select').value;
+
+                console.log(selectedStatus)
                 const orderId = button.dataset.orderid;
+                console.log(orderId)
+                console.log(orderId)
 
                 const response = await fetch('/admin/updateOrder', {
                     method: "PATCH",
@@ -244,7 +254,7 @@
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        orderId
+                        orderId, selectedStatus
                     }),
                 });
                 const data = await response.json();
@@ -257,7 +267,7 @@
                     window.location.reload()
                 }
             } catch (error) {
-
+                console.log(error)
             }
         }
 

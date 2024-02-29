@@ -43,7 +43,6 @@
             <ul>
               <li>
                 <a href="/shop">Shop</a>
-
               </li>
 
               <li><a href="blog.html">Blog</a></li>
@@ -68,7 +67,6 @@
         <div class="sign-in-area">
           <a href="/login">Sign in</a>
         </div>
-
       </div>
     </div>
   </header>
@@ -79,7 +77,7 @@
     <div class="container h-100">
       <div class="row h-100 align-items-center">
         <div class="col-12 p-0">
-          <div class="p-0  col-sm-10 col-md-8 col-lg-5 mx-auto d-table h-100">
+          <div class="p-0 col-sm-10 col-md-8 col-lg-5 mx-auto d-table h-100">
             <div class="d-table-cell align-middle">
               <div class="card">
                 <div class="card-body">
@@ -103,6 +101,14 @@
                           placeholder="Enter your email" />
                         <sapn id="emailValidationMessage" class="text-danger mb-2"></sapn>
                       </div>
+
+                      <div class="mb-3">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input autocomplete="false" id="mobile" class="form-control" type="number" name="mobile"
+                          placeholder="Enter your mobile number" />
+                        <sapn id="mobileValidationMessage" class="text-danger mb-2"></sapn>
+                      </div>
+
                       <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input autocomplete="false" id="password" class="form-control" type="password" name="password"
@@ -120,7 +126,10 @@
                           Sign Up
                         </button>
                       </div>
-                      <p>Already a memeber? <a class="sign-up-anchor" href="/login">Log in</a></p>
+                      <p>
+                        Already a memeber?
+                        <a class="sign-up-anchor" href="/login">Log in</a>
+                      </p>
                     </form>
                   </div>
                 </div>
@@ -209,28 +218,43 @@
     const btn = document.getElementById("registerBtn");
     const full_name = document.getElementById("full_name");
     const email = document.getElementById("email");
+    const mobile = document.getElementById("mobile");
     const password = document.getElementById("password");
     const confirmPassword = document.getElementById("confirmpassword");
 
-    const nameValidationMessage = document.getElementById("nameValidationMessage");
-    const emailValidationMessage = document.getElementById("emailValidationMessage");
-    const passwordValidationMessage = document.getElementById("passwordValidationMessage");
-    const confirmPasswordValidationMessage = document.getElementById("confirmPasswordValidationMessage");
-    const validationMessage = document.getElementById("validationMessage");
+    const nameValidationMessage = document.getElementById(
+      "nameValidationMessage"
+    );
+    const emailValidationMessage = document.getElementById(
+      "emailValidationMessage"
+    );
 
+    const mobileValidationMessage = document.getElementById(
+      "mobileValidationMessage"
+    );
+
+    const passwordValidationMessage = document.getElementById(
+      "passwordValidationMessage"
+    );
+    const confirmPasswordValidationMessage = document.getElementById(
+      "confirmPasswordValidationMessage"
+    );
+    const validationMessage = document.getElementById("validationMessage");
 
     function validateEmail(email) {
       let validRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const matches = email.match(validRegex)
-      return matches !== null && matches[0] === email
+      const matches = email.match(validRegex);
+      return matches !== null && matches[0] === email;
     }
 
-    console.log(confirmPassword)
+    console.log(confirmPassword);
 
-    btn.addEventListener("click", async (event) => {
+    btn.addEventListener("click", register);
+    async function register(event) {
       event.preventDefault();
       console.log("button clicked");
 
+      let isValid = true;
 
       nameValidationMessage.textContent = "";
       emailValidationMessage.textContent = "";
@@ -239,32 +263,43 @@
 
       if (full_name.value.trim() === "") {
         nameValidationMessage.textContent = "Full Name is required";
-        return;
+        isValid = false;
       }
 
       if (email.value.trim() === "") {
-
         emailValidationMessage.textContent = "Email is required";
-        return;
+        isValid = false;
       } else if (!validateEmail(email.value)) {
-        console.log("not epty")
+        console.log("not epty");
         emailValidationMessage.textContent = "invalid Email";
-        return
+        isValid = false;
+      }
+
+      if (mobile.value.trim() === "") {
+        mobileValidationMessage.textContent = "Mobile number is required";
+        isValid = false;
       }
 
       if (password.value.trim() === "") {
         passwordValidationMessage.textContent = "Password is required";
-        return;
+        isValid = false;
       }
 
       if (confirmPassword.value.trim() == "") {
-        confirmPasswordValidationMessage.textContent = "Confirm Password is required";
-        return
+        confirmPasswordValidationMessage.textContent =
+          "Confirm Password is required";
+        isValid = false;
       } else if (password.value !== confirmPassword.value) {
-        confirmPasswordValidationMessage.textContent = "Passwords do not match";
-        return
+        confirmPasswordValidationMessage.textContent =
+          "Passwords do not match";
+        isValid = false;
+      }
+      if (!isValid) {
+        return;
       }
 
+      const queryParams = new URLSearchParams(window.location.search);
+      const referralCode = queryParams.get("ref");
 
       try {
         btn.disabled = true;
@@ -276,23 +311,19 @@
           body: JSON.stringify({
             name: full_name.value,
             email: email.value,
+            mobile: mobile.value,
             password: password.value,
+            ref: referralCode
           }),
         });
-        if (response.redirected) {
-          window.location.href = response.url;
-        } else {
-          const jsonData = await response.json();
-          // Work with the parsed JSON data (jsonData) here
-          validationMessage.textContent = jsonData.message
+        if (response.ok) {
+          window.location.assign("/register/otp");
         }
       } catch (error) {
         console.log(error);
       }
-    });
-
+    }
   </script>
 </body>
-
 
 </html>

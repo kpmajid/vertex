@@ -173,7 +173,8 @@
                     </div>
                     <div id="addressOptions" class="row flex radio-box">
                         <% addresses.forEach(address=> { %>
-                            <input type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>" />
+                            <input type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>"
+                                data-phone="<%= address.mobile %>" />
                             <label for="<%= address._id %>" class="col-lg-6 radio-label">
                                 <p>
                                     <%= address.fullname %><br />
@@ -319,7 +320,12 @@
                                         <%=product.productId.name%>
                                     </span>
                                     <span class="totalPrice">
-                                        ₹ <%=product.quantity * product.productId.price %>
+                                        <% if (product.productId.discount) { %>
+                                            ₹<%=product.quantity * product.productId.discountedPrice %>
+
+                                                <% } else { %>
+                                                    ₹<%=product.quantity * product.productId.originalPrice%>
+                                                        <% } %>
                                     </span>
                                 </li>
                                 <% }) %>
@@ -333,12 +339,9 @@
                             <label for="paymentMethod">Select Payment Method:</label><br />
                             <input type="radio" id="creditCard" name="paymentMethod" value="COD" />
                             <label for="creditCard">Cash On Delivery</label><br />
-                            <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" />
-                            <label for="creditCard">Credit Card</label><br />
-                            <input type="radio" id="debitCard" name="paymentMethod" value="debitCard" />
-                            <label for="debitCard">Debit Card</label><br />
+
                             <input type="radio" id="paypal" name="paymentMethod" value="paypal" />
-                            <label for="paypal">PayPal</label><br />
+                            <label for="razorpay">RazorPay</label><br />
                         </div>
 
                         <button id="placeOrderBtn" class="btn essence-btn">
@@ -698,10 +701,9 @@
                         paymentMethod,
                     }),
                 });
-
                 if (response.ok) {
                     await Swal.fire({
-                        position: "top-end",
+
                         icon: "success",
                         title: "Your Order has been placed",
                         showConfirmButton: false,
@@ -716,6 +718,10 @@
 
         function setupRazorpay(orderId, amount) {
             console.log("setupRazorpay");
+            const selectedAddress = document.querySelector(
+                'input[name="address"]:checked'
+            );
+            let phoneNumber = selectedAddress.getAttribute('data-phone');
             var options = {
                 key: "rzp_test_XmE1i9cQzXOgPU",
                 amount: amount * 100,
@@ -746,6 +752,9 @@
                     } catch (error) {
                         console.log(error);
                     }
+                },
+                "prefill": {
+                    "contact": phoneNumber
                 },
                 theme: {
                     color: "#3399cc",

@@ -33,6 +33,17 @@
       border-color: #007bff;
     }
 
+    #resendTimer {
+      border: 0px;
+      background: none;
+      cursor: not-allowed;
+    }
+
+    #resendTimer:focus {
+      outline: none;
+    }
+
+
     /* Adjust the width to make it square */
   </style>
 </head>
@@ -85,7 +96,6 @@
         <div class="sign-in-area">
           <a href="/login">Sign in</a>
         </div>
-
       </div>
     </div>
   </header>
@@ -125,7 +135,7 @@
                       </div>
                       <p>
                         Didn't receive the OTP?
-                        <a class="resend-otp-anchor" href="#">Resend OTP</a>
+                        <button type="button" id="resendTimer">Resend</button>
                       </p>
                     </form>
                   </div>
@@ -197,6 +207,8 @@
   </footer>
   <!-- ##### Footer Area End ##### -->
 
+  <!-- sweet alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- jQuery (Necessary for All JavaScript Plugins) -->
   <script src="/js/jquery/jquery-2.2.4.min.js"></script>
   <!-- Popper js -->
@@ -209,6 +221,48 @@
   <script src="/js/classy-nav.min.js"></script>
   <!-- Active js -->
   <script src="/js/active.js"></script>
+
+  <script>
+    let resendLink = document.getElementById("resendTimer")
+    let seconds = 30;
+    let timer;
+
+    window.addEventListener('load', function () {
+      startTimer(); // Start the timer when the page loads
+      resendLink.style.cursor = 'not-allowed';
+    });
+
+    resendLink.addEventListener('click', async function () {
+      console.log("click? ")
+      if (!timer) {
+        const response = await fetch("/resend")
+        if (response.ok) {
+          startTimer();
+          resendLink.style.cursor = 'not-allowed';
+        }
+
+      }
+    });
+
+    function startTimer() {
+      timer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      seconds--;
+
+      if (seconds <= 0) {
+        clearInterval(timer);
+        resendLink.innerText = 'Resend OTP';
+        resendLink.style.cursor = 'pointer';
+        seconds = 30; // Reset the timer
+        timer = null;
+      } else {
+        resendLink.innerText = 'Resend OTP in ' + seconds + 's';
+      }
+    }
+  </script>
+
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -282,21 +336,18 @@
 
       otpInputs[0].focus(); // Set focus on the first OTP input field
 
-      const url = "/register/otp";
+      const url = "/verifyOtp";
       const otp = document.getElementById("otp");
       const btn = document.getElementById("verifyOtpBtn");
 
       btn.addEventListener("click", async (event) => {
         event.preventDefault();
-        console.log("OTP submitted");
-        console.log(otpInputs)
-        console.log(Array.from(otpInputs).map((input) => input.value).join(""))
 
         const enteredOTP = Array.from(otpInputs)
           .map((input) => input.value)
           .join("");
 
-        console.log(enteredOTP)
+        console.log(enteredOTP);
 
         if (enteredOTP.length === 6) {
           try {
@@ -310,6 +361,13 @@
               }),
             });
             if (response.redirected) {
+              await Swal.fire({
+                icon: "success",
+                title: "Registration Successfull",
+                html: ` Please login to continue`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
               window.location.href = response.url;
             } else {
               const jsonData = await response.json();
@@ -319,9 +377,10 @@
             console.log(error);
           }
         } else {
-          otpValidationMessage.textContent = "Please enter all six digits of the OTP.";
+          otpValidationMessage.textContent =
+            "Please enter all six digits of the OTP.";
           // document.getElementById("otpValidationMessage").value = "Please enter all six digits of the OTP."
-          console.log("Please enter all six digits of the OTP.")
+          console.log("Please enter all six digits of the OTP.");
         }
       });
     });

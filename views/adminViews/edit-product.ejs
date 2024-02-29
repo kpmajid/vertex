@@ -54,6 +54,12 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/attributes">
+                            <span class="align-middle">Attributes</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
                             <span class="align-middle">Orders</span>
@@ -151,7 +157,8 @@
                                         <div class="mb-3">
                                             <label for="price" class="form-label">Base Price</label>
                                             <input id="price" name="price" type="text" class="form-control"
-                                                placeholder="Type basse price here" value="<%= product.price%>" />
+                                                placeholder="Type basse price here"
+                                                value="<%= product.originalPrice%>" />
                                             <div id="priceErrorMessage" class="text-danger mt-2"></div>
                                         </div>
 
@@ -718,6 +725,7 @@
 
                 reader.readAsDataURL(file);
             }
+
             const removedFiles = [];
 
             function remove(event) {

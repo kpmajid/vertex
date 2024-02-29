@@ -54,6 +54,12 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/attributes">
+                            <span class="align-middle">Attributes</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
                             <span class="align-middle">Orders</span>
@@ -131,44 +137,36 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr class="productRow">
-                                                    <input type="hidden" class="hiddenProductId"
-                                                        value="65c0708e898128f8367aef00" />
-                                                    <td class="product-name">
-                                                        Cozy Fleece Mega Raglan Hoodie
-                                                    </td>
-                                                    <td>25</td>
-                                                    <td>1250</td>
-                                                    <td>Women</td>
-                                                    <td>Hoodie</td>
+                                                <% if (!orders ) { %>
+                                                    <tr>
+                                                        <td colspan="5">No Orders</td>
+                                                    </tr>
+                                                    <% }else{%>
+                                                        <% orders.forEach(order=> { %>
+                                                            <tr>
 
-                                                </tr>
+                                                                <td>
+                                                                    <a href='/admin/orders/<%=order._id %>'>
+                                                                        <%= order._id %>
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.createdAt.toLocaleDateString() %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.paymentStatus %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.orderStatus %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.total %>
+                                                                </td>
+                                                            </tr>
 
-                                                <tr class="productRow">
-                                                    <input type="hidden" class="hiddenProductId"
-                                                        value="65c4685ef418d7e5dc20ef86" />
-                                                    <td class="product-name">
-                                                        Evolution Short-Sleeve Polo Shirt
-                                                    </td>
-                                                    <td>23</td>
-                                                    <td>999</td>
-                                                    <td>Men</td>
-                                                    <td>Shirt</td>
+                                                            <% }) %>
+                                                                <% } %>
 
-                                                </tr>
-
-                                                <tr class="productRow">
-                                                    <input type="hidden" class="hiddenProductId"
-                                                        value="65c5adec79194c2bb20e232b" />
-                                                    <td class="product-name">
-                                                        Cuban Collar Shirt with Short Sleeves
-                                                    </td>
-                                                    <td>5</td>
-                                                    <td>1250</td>
-                                                    <td>Men</td>
-                                                    <td>Shirt</td>
-
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>

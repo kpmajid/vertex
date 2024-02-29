@@ -22,7 +22,7 @@ btn.addEventListener("click", async (event) => {
     if (response.redirected) {
       window.location.href = response.url;
     } else {
-      const jsonData = await response.json();
+    const jsonData = await response.json();
       // Work with the parsed JSON data (jsonData) here
     }
   } catch (error) {

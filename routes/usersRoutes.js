@@ -7,15 +7,17 @@ const {
   loadHome,
   loadLogin,
   authUser,
-  loadRegister,
-  registerUser,
+  renderRegisterForm,
+  initiateUserRegister,
   loadValidateOTP,
   verifyOTP,
   renderForgotPasswordForm,
   initiateForgotPassword,
   updatePassword,
   verifyForgotPasswordOTP,
+  resendOTP,
   loadShop,
+  loadCategoryShop,
   loadProduct,
   fetchVariants,
   loadProfile,
@@ -37,6 +39,9 @@ const {
   cancelOrder,
   loadPassword,
   changePassword,
+  loadWishlist,
+  addToFav,
+  loadWallet,
   logout,
 } = require("../controllers/usersController");
 
@@ -49,11 +54,17 @@ router.get("/", loadHome);
 router.get("/login", isLogout, loadLogin);
 router.post("/login", isLogout, authUser);
 
-router.get("/register", isLogout, loadRegister);
-router.post("/register", isLogout, registerUser);
+router.get("/otp", loadValidateOTP);
+router.post("/verifyOtp", verifyOTP);
 
-router.get("/register/otp", isLogout, loadValidateOTP);
-router.post("/register/otp", isLogout, verifyOTP);
+router.get("/register", isLogout, renderRegisterForm);
+
+router.post("/register", initiateUserRegister);
+
+router.get("/register/otp", loadValidateOTP);
+
+// router.get("/register", isLogout, loadRegister);
+// router.post("/register", isLogout, registerUser);
 
 router.get("/forgot-password", renderForgotPasswordForm);
 router.post("/forgot-password", initiateForgotPassword);
@@ -62,13 +73,16 @@ router.post("/verify-forgot-password", verifyForgotPasswordOTP);
 
 router.post("/update-password", updatePassword);
 
+router.get("/resend", resendOTP);
+
 router.get("/home", (req, res) => {
   res.send("verified successfully");
 });
 
-// router.use("*", isBlocked);
+// router.use("/", isBlocked);
 
 router.get("/shop", loadShop);
+router.get("/shop/:category", loadCategoryShop);
 
 router.get("/product/:id", loadProduct);
 
@@ -109,6 +123,8 @@ router.post("/create/orderId", isLogin, razorPayOrder);
 
 router.post("/verify-payment", isLogin, verifyPayment);
 
+//razorpay end
+
 router.post("/placeOrder", isLogin, createOrder);
 
 router.get("/orders", isLogin, LoadOrders);
@@ -116,6 +132,11 @@ router.get("/orders", isLogin, LoadOrders);
 router.get("/orders/:orderId", isLogin, LoadSingleOrder);
 
 router.patch("/cancelOrder", isLogin, cancelOrder);
+
+router.get("/wishlist", isLogin, loadWishlist);
+router.get("/addToFav/:id", isLogin, addToFav);
+
+router.get("/wallet", isLogin, loadWallet);
 
 router.get("/logout", logout);
 

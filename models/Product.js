@@ -9,9 +9,17 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  price: {
+  originalPrice: {
     type: Number,
     required: true,
+  },
+  discount: {
+    type: Number,
+    default: null,
+  },
+  discountedPrice: {
+    type: Number,
+    default: null,
   },
   variants: [
     {
@@ -49,6 +57,11 @@ const productSchema = new mongoose.Schema({
   images: {
     type: [String],
     default: [],
+  },
+  discountId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Discount",
+    default: null,
   },
 });
 

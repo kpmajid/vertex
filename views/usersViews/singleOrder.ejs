@@ -160,12 +160,12 @@
                             <li><a href="/password">Change Password</a></li>
                             <li><a href="/orders" class="active">Order History</a></li>
                             <li><a href="#">Track Order</a></li>
-                            <li><a href="#">Shopping Cart</a></li>
-                            <li><a href="#">Wishlist</a></li>
+                            <li><a href="/cart">Shopping Cart</a></li>
+                            <li><a href="/wishlist">Wishlist</a></li>
                             <li><a href="/address">Address</a></li>
                             <li><a href="/add-address">Add Address</a></li>
-                            <li><a href="#">Wallet</a></li>
-                            <li><a href="#">Logout</a></li>
+                            <li><a href="/wallet">wallet</a></li>
+                            <li><a href="/logout">Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -183,19 +183,28 @@
                         </h6>
                         <h6>Total: <%= total %>
                         </h6>
-                        <button type="button" class=" btn essence-btn bg-danger" data-orderId="<%= _id %>"
-                            id="cancelBtn">Cancel
-                            Order</button>
-                        <hr>
-                        <h6 class="card-title  mb-0">Delivery Address:</h6>
-                        <p>
-                            <%= address.fullname %><br />
-                                <%= address.mobile %><br />
-                                    <%= address.address %><br />
-                                        <%= address.pincode %><br />
-                                            <%= address.street %>, <%= address.city %>, <%= address.state %>
-                                                        <br />
-                        </p>
+                        <% if (orderStatus=="Delivered" ) { %>
+
+                            <button type="button" class=" btn essence-btn bg-danger" data-orderId="<%= _id %>"
+                                id="actionBtn" data-action="return">Return
+                                Order</button>
+                            <% } else { %>
+                                <button type="button" class=" btn essence-btn bg-danger" data-orderId="<%= _id %>"
+                                    id="actionBtn" data-action="cancel">Cancel
+                                    Order</button>
+
+                                <% } %>
+                                    <hr>
+
+                                    <h6 class="card-title  mb-0">Delivery Address:</h6>
+                                    <p>
+                                        <%= address.fullname %><br />
+                                            <%= address.mobile %><br />
+                                                <%= address.address %><br />
+                                                    <%= address.pincode %><br />
+                                                        <%= address.street %>, <%= address.city %>, <%= address.state %>
+                                                                    <br />
+                                    </p>
                     </div>
                     <div class="table-responsive-sm mb-3">
                         <table id="myTable" class="table text-center table-hover my-0">
@@ -349,15 +358,25 @@
         <script>
 
             const initialize = () => {
-                const cancelButton = document.querySelector("#cancelBtn")
-                cancelButton.addEventListener("click", cancelOrder)
+                const actionButton = document.querySelector("#actionBtn")
+                const action = actionButton.getAttribute('data-action')
+                console.log(action)
+                if (action !== "Delivered") {
+                    actionButton.addEventListener("click", cancelOrder)
+                } else {
+                    actionButton.addEventListener("click", returnOrder)
 
+                }
+
+            }
+            async function returnOrder(e) {
+                console.log("returnng")
             }
 
             async function cancelOrder(e) {
                 try {
-                    const button = event.target; 
-                    const orderId = button.dataset.orderid; 
+                    const button = event.target;
+                    const orderId = button.dataset.orderid;
                     const response = await fetch('/cancelOrder', {
                         method: "PATCH",
                         headers: {

@@ -1,10 +1,15 @@
-const { json } = require("express");
 const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const User = require("../models/User");
 const Orders = require("../models/Orders");
 const Address = require("../models/Address");
+const Discounts = require("../models/Discounts");
+const Coupons = require("../models/Coupons");
+
+const { ObjectId } = require("mongodb");
+
+const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
 
@@ -28,7 +33,6 @@ const authenticateAdmin = async (req, res) => {
       return res.json({ message: "Invalid username or password" });
     }
 
-    console.log(admin);
     req.session.admin = admin._id;
     res.redirect("/admin/dashboard");
   } catch (error) {
@@ -60,229 +64,20 @@ const registerAdmin = async (req, res) => {
   }
 };
 
-const loadDashboard = (req, res) => {
-  res.render("adminViews/dashboard");
-};
-
-const loadProducts = async (req, res) => {
+const getCategories = async (req, res) => {
   try {
-    const products = await Product.aggregate([
-      {
-        $lookup: {
-          from: "categories", // Assuming your category collection is named 'categories'
-          localField: "category.parentCategory",
-          foreignField: "_id",
-          as: "parentCategory",
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "category.subCategory",
-          foreignField: "_id",
-          as: "subCategory",
-        },
-      },
-      {
-        $unwind: "$parentCategory",
-      },
-      {
-        $unwind: "$subCategory",
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          price: 1,
-          status: 1,
-          parentCategory: "$parentCategory.name",
-          subCategory: "$subCategory.name",
-          totalQuantity: {
-            $sum: "$variants.quantity",
-          },
-        },
-      },
-    ]);
-
-    // console.log(products);
-
-    res.render("adminViews/products", { products });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const loadAddProduct = async (req, res) => {
-  try {
-    const categories = await Category.find({
-      isParentCategory: true,
-    });
-
-    res.render("adminViews/add-product", { categories });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const addProduct = async (req, res) => {
-  try {
-    const files = req.files;
-    const images = files.map((file) => file.filename);
-
-    const {
-      name,
-      description,
-      price,
-      parentCategory,
-      subCategory,
-      combinations,
-    } = req.body;
-
-    const variants = JSON.parse(combinations);
-
-    const product = new Product({
-      name,
-      description: description.trim(),
-      price,
-      variants,
-      category: {
-        parentCategory: parentCategory,
-        subCategory: subCategory,
-      },
-      images,
-    });
-    await product.save();
-
-    res.json({ message: "product created successfully" });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const loadEditProduct = async (req, res) => {
-  try {
-    const id = req.params.id;
-    // console.log(id);
-    const product = await Product.findById(id);
-
-    //all parentCategories
-    const parentCategories = await Category.find({ isParentCategory: true });
-
-    //all subCategories which have parentCategory as product's parentCategory
-    const subCategories = await Category.find({
-      parentCategory: product.category.parentCategory,
-    });
-
-    res.render("adminViews/edit-product", {
-      product,
-      parentCategories,
-      subCategories,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const editProduct = async (req, res) => {
-  try {
-    const {
-      name,
-      description,
-      price,
-      parentCategory,
-      subCategory,
-      combinations,
-      removedFiles,
-    } = req.body;
-    const id = req.params.id;
-
-    const variants = JSON.parse(combinations);
-
-    const removedFilesArray = JSON.parse(removedFiles);
-
-    const product = await Product.findById(id);
-    console.log("product:", product);
-
-    if (removedFilesArray.length) {
-      product.images = product.images.filter(
-        (element) => !removedFilesArray.includes(element.split(".")[0])
-      );
-      console.log(removedFilesArray);
-      const files = req.files;
-      const uploadedImages = files.map((file) => file.filename);
-      product.images.push(...uploadedImages);
-    }
-
-    product.name = name;
-    product.description = description.trim();
-    product.price = price;
-    product.category.parentCategory = parentCategory;
-    product.category.subCategory = subCategory;
-
-    product.variants = variants;
-
-    await product.save();
-    console.log("saved");
-    res.json({ message: "product updated successfully" });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const loadCategory = async (req, res) => {
-  try {
-    // const categories = await Category.aggregate([
-    //   {
-    //     $match: { isParentCategory: true },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: "categories",
-    //       localField: "_id",
-    //       foreignField: "parentCategory",
-    //       as: "subcategories",
-    //     },
-    //   },
-    //   {
-    //     $project: {
-    //       _id: 0,
-    //       parentId: "$_id",
-    //       parentCategory: "$name",
-    //       status: "$status",
-    //       subcategories: {
-    //         $map: {
-    //           input: "$subcategories",
-    //           as: "subcategory",
-    //           in: {
-    //             categoryId: "$$subcategory._id",
-    //             categoryName: "$$subcategory.name",
-    //             status: "$$subcategory.status",
-    //           },
-    //         },
-    //       },
-    //     },
-    //   },
-    // ]);
-
-    const categories = await Category.find({ isParentCategory: true })
-      .populate({
-        path: "subcategories",
-        select: "name status",
-      })
-      .exec();
+    const categories = await Category.find({ isParentCategory: true });
     console.log(categories);
-
-    res.render("adminViews/category", { categories });
+    console.log("categories");
+    res.status(200).json({ categories });
   } catch (error) {
     console.log(error);
-    res.send(error);
   }
 };
 
 const loadOrders = async (req, res) => {
   try {
     const orders = await Orders.find().populate("userId");
-    console.log(orders);
     res.render("adminViews/orders", { orders });
   } catch (error) {
     console.log(error);
@@ -331,19 +126,22 @@ const loadSingleOrder = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
   try {
-    const { orderId } = req.body;
+    console.log(req.body);
+    const { orderId, selectedStatus } = req.body;
     console.log("updating status");
 
     const order = await Orders.findById(orderId);
     console.log(order);
-    let message = "";
-    if (order.orderStatus == "Pending") {
-      order.orderStatus = "Shipped";
-      message = "products shipped";
-    } else if (order.orderStatus == "Shipped") {
-      order.orderStatus = "Delivered";
-      message = "products shipped";
-    }
+    // if (order.orderStatus == "Pending") {
+    //   order.orderStatus = "Shipped";
+    //   message = "products shipped";
+    // } else if (order.orderStatus == "Shipped") {
+    //   order.orderStatus = "Delivered";
+    //   message = "products shipped";
+    // }
+
+    order.orderStatus = selectedStatus;
+    let message = `products ${selectedStatus}`;
     order.save();
     res.status(200).json({ message });
   } catch (error) {
@@ -391,7 +189,128 @@ const loadSingleUser = async (req, res) => {
     const id = req.params.id;
     const user = await User.findById(id);
     user.formattedCreatedAt = user.createdAt.toLocaleDateString("en-GB");
-    res.render("adminViews/singleUser", { user });
+    const userId = user._id.toString();
+    console.log(userId);
+    const orders = await Orders.find({ userId: userId });
+    console.log(orders);
+    res.render("adminViews/singleUser", { user, orders });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadDiscount = async (req, res) => {
+  try {
+    const discounts = await Discounts.find();
+    res.render("adminViews/discount", { discounts });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadAddDiscount = (req, res) => {
+  try {
+    console.log("loadAddDiscount");
+    res.render("adminViews/add-discount");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+    console.log(products);
+    res.json(products);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const createDiscount = async (req, res) => {
+  try {
+    console.log("creatingDiscount");
+    const { name, discountPercentage, start, end } = req.body;
+    console.log(req.body);
+
+    const discount = new Discounts({
+      name,
+      value: discountPercentage,
+      start,
+      end,
+    });
+    await discount.save();
+
+    res.status(200).json({ message: "Discount created successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+const removeDiscount = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { discountId } = req.body;
+    const discount = await Discounts.findById(discountId);
+
+    let productsToUpdate = [];
+
+    // if (discount.offerType === "category") {
+    //   const categoryObjectIds = discount.applicableTo.map(
+    //     (id) => new mongoose.Types.ObjectId(id)
+    //   );
+    //   productsToUpdate = await Product.aggregate([
+    //     {
+    //       $match: {
+    //         $or: [
+    //           { "category.parentCategory": { $in: categoryObjectIds } },
+    //           { "category.subCategory": { $in: categoryObjectIds } },
+    //         ],
+    //       },
+    //     },
+    //   ]);
+    // } else {
+    //   const productObjectIds = discount.applicableTo.map(
+    //     (id) => new mongoose.Types.ObjectId(id)
+    //   );
+    //   productsToUpdate = await Product.find({ _id: { $in: productObjectIds } });
+    // }
+
+    // for (const product of productsToUpdate) {
+    //   console.log("updating product");
+    //   console.log(product);
+
+    //   product.discount = null;
+    //   product.discountedPrice = null;
+
+    //   await product.save();
+    //   console.log("saved product");
+    // }
+    await Discounts.findByIdAndDelete(discountId);
+    res.status(200).json({ message: "Discount removed successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getOffers = async (req, res) => {
+  try {
+    const offers = await Discounts.aggregate([
+      {
+        $match: {
+          end: {
+            $gte: new Date(),
+          },
+        },
+      },
+      {
+        $project: {
+          name: { $concat: ["$name", " ", { $toString: "$value" }, "% off"] },
+        },
+      },
+    ]);
+    res.status(200).json({ offers });
   } catch (error) {
     console.log(error);
   }
@@ -411,18 +330,18 @@ module.exports = {
   loadLogin,
   authenticateAdmin,
   registerAdmin,
-  loadDashboard,
-  loadProducts,
-  loadAddProduct,
   getSubCategory,
-  addProduct,
-  loadEditProduct,
-  editProduct,
-  loadCategory,
+  getCategories,
   loadOrders,
   loadSingleOrder,
   updateOrderStatus,
   loadUsers,
   loadSingleUser,
+  loadDiscount,
+  loadAddDiscount,
+  getProducts,
+  createDiscount,
+  removeDiscount,
+  getOffers,
   logout,
 };

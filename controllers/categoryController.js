@@ -1,20 +1,89 @@
 const Category = require("../models/Category");
 
-const addCategory = async (req, res) => {
-  const { name, parentId } = req.body;
-  console.log(req.body);
+const loadCategory = async (req, res) => {
   try {
-    if (name.length <= 0) {
-      return res.status(400).json({ error: "name can't be empty" });
-    }
+    const categories = await Category.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "parentCategory",
+          foreignField: "_id",
+          as: "parent",
+        },
+      },
+      {
+        $addFields: {
+          parentName: { $arrayElemAt: ["$parent.name", 0] },
+        },
+      },
+      {
+        $lookup: {
+          from: "discounts",
+          localField: "discount",
+          foreignField: "_id",
+          as: "discount",
+        },
+      },
+      {
+        $unwind: {
+          path: "$discount",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          name: {
+            $cond: {
+              if: "$parentName",
+              then: { $concat: ["$parentName", " / ", "$name"] },
+              else: "$name",
+            },
+          },
+          status: 1,
+          isParentCategory: 1,
+          parentCategory: 1,
+          subcategories: 1,
+          discount: 1,
+        },
+      },
+      {
+        $sort: {
+          name: 1,
+        },
+      },
+    ]);
+
+    // console.log("categories");
+    // console.log(categories);
+
+    res.render("adminViews/category", { categories });
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+};
+
+const loadAddCategory = async (req, res) => {
+  try {
+    const categories = await Category.find({ isParentCategory: true });
+    res.render("adminViews/add-category", { categories });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addCategory = async (req, res) => {
+  try {
+    const { name, category } = req.body;
+    console.log("name, category");
+
     let query = {
       name: { $regex: `^${name}$`, $options: "i" },
       isParentCategory: true,
     };
 
-    if (parentId) {
-      // If parentId is provided, it's a subcategory
-      const parentCategory = await Category.findById(parentId);
+    if (category) {
+      const parentCategory = await Category.findById(category);
 
       if (!parentCategory) {
         return res
@@ -26,7 +95,7 @@ const addCategory = async (req, res) => {
       query = {
         name: { $regex: `^${name}$`, $options: "i" },
         isParentCategory: false,
-        parentCategory: parentId,
+        parentCategory: category,
       };
     }
 
@@ -40,14 +109,14 @@ const addCategory = async (req, res) => {
       });
     }
 
-    if (parentId) {
+    if (category) {
       const newSubcategory = new Category({
         name,
         isParentCategory: false,
-        parentCategory: parentId,
+        parentCategory: category,
       });
       await newSubcategory.save();
-      const parentCategory = await Category.findById(parentId);
+      const parentCategory = await Category.findById(category);
       parentCategory.subcategories.push(newSubcategory._id);
       await parentCategory.save();
     } else {
@@ -57,8 +126,51 @@ const addCategory = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Category Added" });
   } catch (error) {
-    console.error("Error creating category or subcategory:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.log(error);
+  }
+};
+
+const loadEditCategory = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    let category = await Category.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "parentCategory",
+          foreignField: "_id",
+          as: "parentCategory",
+        },
+      },
+      {
+        $unwind: {
+          path: "$parentCategory",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+    const categories = await Category.find(
+      {
+        isParentCategory: true,
+        _id: { $ne: id },
+      },
+      { name: 1 }
+    );
+
+    category = category[0];
+    console.log("category, ");
+    console.log(category);
+    console.log(categories);
+    // res.status(200).json({ category, categories });
+    res.render("adminViews/edit-category", { category, categories });
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -77,6 +189,7 @@ const editCategory = async (req, res) => {
       name: { $regex: `^${newName}$`, $options: "i" },
       _id: { $ne: id },
     });
+
     if (isExisting) {
       return res
         .status(400)
@@ -117,7 +230,10 @@ const changeCategoryStatus = async (req, res) => {
 };
 
 module.exports = {
+  loadCategory,
+  loadAddCategory,
   addCategory,
+  loadEditCategory,
   editCategory,
   changeCategoryStatus,
 };

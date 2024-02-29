@@ -28,10 +28,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", usersRouter);
 app.use("/admin", adminRouter);
 app.use("/api/admin", apiAdminRoutes);
+app.use("/", usersRouter);
 
-app.listen(3001, () => {
+app.listen(5000, () => {
   console.log("server is running");
 });

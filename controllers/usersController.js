@@ -5,10 +5,34 @@ const Category = require("../models/Category");
 const Cart = require("../models/Cart");
 const Address = require("../models/Address");
 const Orders = require("../models/Orders");
+const Wallet = require("../models/Wallet");
+const Wishlist = require("../models/Wishlist");
+
+const { ObjectId } = require("mongodb");
 
 const bcrypt = require("bcrypt");
 const sendEmail = require("../services/sendEmail");
 const generateOTP = require("../utils/generateOTP");
+
+function generateReferralCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+async function generateUniqueReferralCode() {
+  let uniqueCode;
+  let codeExists = true;
+
+  while (codeExists) {
+    uniqueCode = generateReferralCode();
+    // Check if the generated code already exists in the database
+    const existingUser = await User.findOne({ referralCode: uniqueCode });
+    if (!existingUser) {
+      codeExists = false;
+    }
+  }
+
+  return uniqueCode;
+}
 
 const loadHome = (req, res) => {
   const user = req.session?.user ?? null;
@@ -29,6 +53,12 @@ const authUser = async (req, res) => {
       return res.json({ message: "user not found" });
     }
 
+    if (!user.isVerified) {
+      req.session.email = email;
+
+      return res.redirect("/otp");
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     console.log(passwordMatch);
@@ -45,19 +75,20 @@ const authUser = async (req, res) => {
   }
 };
 
-const loadRegister = (req, res) => {
+const renderRegisterForm = (req, res) => {
   res.render("usersViews/register");
 };
 
-const registerUser = async (req, res) => {
+const initiateUserRegister = async (req, res) => {
   try {
-    console.log("user register reached");
-    const { name, email, password } = { ...req.body };
+    console.log("initiateUserRegister");
+    const { name, email, mobile, password, ref } = { ...req.body };
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !mobile) {
       return res.json({ status: "", message: "please provide information" });
     }
 
+    //checking if user already exist?
     const isExist = await User.findOne({ email });
     if (isExist) {
       return res.json({
@@ -65,33 +96,8 @@ const registerUser = async (req, res) => {
         message: `User with ${email} id already exist`,
       });
     }
-    console.log("saving user");
 
-    let hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    console.log("saving user");
-    await user.save();
-
-    const cart = new Cart({
-      userId: user._id,
-      products: [],
-    });
-
-    await cart.save();
-    const address = new Address({
-      userId: user._id,
-      address: [],
-    });
-    await address.save();
-
-    console.log("OTP");
     let otp = generateOTP();
-
     let hashedOtp = await bcrypt.hash(otp, 10);
     const saveOtp = new Otp({
       email,
@@ -99,17 +105,48 @@ const registerUser = async (req, res) => {
     });
     await saveOtp.save();
 
-    req.session.email = email;
-
     try {
       await sendEmail(email, otp);
       console.log("Email sent successfully");
     } catch (emailError) {
       console.log("Error sending email:", emailError);
-      // Handle the email sending error
     }
 
-    res.redirect("/register/otp");
+    const referralCode = await generateUniqueReferralCode();
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      mobile,
+      referralCode,
+    });
+
+    await user.save();
+
+    req.session.email = email;
+    req.session.ref = ref;
+
+    const cart = new Cart({
+      userId: user._id,
+      products: [],
+    });
+    await cart.save();
+
+    const address = new Address({
+      userId: user._id,
+      address: [],
+    });
+    await address.save();
+
+    const wallet = new Wallet({
+      user: user._id,
+    });
+    await wallet.save();
+
+    res.status(200).json({ message: "user created successfully!" });
   } catch (error) {
     console.log(error);
   }
@@ -125,38 +162,114 @@ const loadValidateOTP = async (req, res) => {
 
 const verifyOTP = async (req, res) => {
   try {
-    const userProvidedOtp = req.body.otp;
+    console.log("verifyOTP");
+    console.log(req.body);
+
     const email = req.session.email;
     if (!email) {
       return res.redirect("/login");
     }
 
-    console.log(userProvidedOtp);
+    const { otp } = { ...req.body };
 
-    if (!userProvidedOtp) {
+    if (!otp) {
       return res.json({ status: "", message: "please provide otp" });
     }
 
-    const userOtp = await Otp.findOne({
+    const otpDoc = await Otp.findOne({
       email,
     }).sort({ timeStamp: -1 });
 
-    const otpMatch = await bcrypt.compare(userProvidedOtp, userOtp.otp);
+    const otpMatch = bcrypt.compare(otp, otpDoc.otp);
     if (!otpMatch) {
       return res.json({ status: "", message: "invalid OTP" });
     }
 
     const user = await User.findOne({ email });
-
     user.isVerified = true;
-
     await user.save();
+
+    const ref = req.session.ref;
+
+    if (ref) {
+      await handleRefferal(ref, user._id);
+    }
 
     res.redirect("/login");
   } catch (error) {
     console.log(error);
   }
 };
+
+const resendOTP = async (req, res) => {
+  try {
+    let { email } = req.session;
+    let otp = generateOTP();
+    let hashedOtp = await bcrypt.hash(otp, 10);
+    const saveOtp = new Otp({
+      email,
+      otp: hashedOtp,
+    });
+
+    await saveOtp.save();
+    await sendEmail(email, otp);
+
+    res.status(200).json({ message: "otp resented" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+async function handleRefferal(referralCode, userId) {
+  try {
+    console.log("referralCode, userId");
+    console.log(referralCode, userId);
+    if (!referralCode) {
+      return;
+    }
+
+    const referrer = await User.findOne({ referralCode: referralCode });
+    console.log(referrer);
+    if (!referrer) {
+      return;
+    }
+
+    console.log(referrer._id);
+    console.log(typeof referrer._id);
+    console.log(userId);
+    console.log(typeof userId);
+
+    const referrerTransaction = {
+      description: "Referral reward for referring a new user",
+      type: "credit",
+      amount: 70,
+    };
+
+    const refereeTransaction = {
+      description: "Referral bonus for signing up using a referral link",
+      type: "credit",
+      amount: 50,
+    };
+
+    console.log("Updating referrer's wallet...");
+    let referrerId = referrer._id;
+    const referrerWallet = await Wallet.findOne({ user: referrerId });
+    console.log(referrerWallet);
+    referrerWallet.transactions.push(referrerTransaction);
+    referrerWallet.currentBalance += 70;
+
+    await referrerWallet.save();
+
+    const refereeWallet = await Wallet.findOne({ user: userId });
+    console.log(refereeWallet);
+    refereeWallet.transactions.push(refereeTransaction);
+    refereeWallet.currentBalance += 50;
+
+    await refereeWallet.save();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const changeUserStatus = async (req, res) => {
   try {
@@ -203,6 +316,10 @@ const initiateForgotPassword = async (req, res) => {
       otp: hashedOtp,
     });
     await saveOtp.save();
+
+    req.session.email = email;
+    console.log("req.session.email");
+    console.log(req.session.email);
 
     try {
       await sendEmail(email, otp);
@@ -292,6 +409,20 @@ const loadShop = async (req, res) => {
       },
       {
         $lookup: {
+          from: "discounts",
+          localField: "discountId",
+          foreignField: "_id",
+          as: "discountDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$discountDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
           from: "categories",
           localField: "category.subCategory",
           foreignField: "_id",
@@ -308,23 +439,100 @@ const loadShop = async (req, res) => {
       {
         $project: {
           name: 1,
-          price: 1,
+          originalPrice: 1,
+          discountedPrice: 1,
+          discount: 1,
+          discountPercent: "$discountDetails.value",
           images: 1,
         },
       },
     ]);
 
-    const categories = await Category.find({ isParentCategory: true })
+    const categories = await Category.find({
+      isParentCategory: true,
+      status: "listed",
+    });
+
+    res.render("usersViews/shop", { products, categories, user });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadCategoryShop = async (req, res) => {
+  try {
+    const user = req.session?.user ?? null;
+    const category = req.params.category;
+    console.log(category);
+    const products = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category.parentCategory",
+          foreignField: "_id",
+          as: "parentCategory",
+        },
+      },
+      {
+        $lookup: {
+          from: "discounts",
+          localField: "discountId",
+          foreignField: "_id",
+          as: "discountDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$discountDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category.subCategory",
+          foreignField: "_id",
+          as: "subCategory",
+        },
+      },
+      {
+        $match: {
+          status: "listed",
+          "parentCategory.name": category,
+          "parentCategory.status": "listed",
+          "subCategory.status": "listed",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          originalPrice: 1,
+          discountedPrice: 1,
+          discount: 1,
+          discountPercent: "$discountDetails.value",
+          images: 1,
+        },
+      },
+    ]);
+
+    const categories = await Category.find({
+      isParentCategory: true,
+      name: category,
+    })
       .populate({
         path: "subcategories",
         select: "name",
         match: { status: "listed" },
       })
       .exec();
+    console.log("products");
+    console.log(products);
+    console.log("Categories");
+    console.log(categories);
 
     res.render("usersViews/shop", { products, categories, user });
   } catch (error) {
-    console.log(error);
+    res.status(500).render("error", { error: error.message });
   }
 };
 
@@ -575,6 +783,52 @@ const editAddress = async (req, res) => {
   }
 };
 
+// const loadCart = async (req, res) => {
+//   try {
+//     const { id } = req.session.user;
+//     const cartItems = await Cart.aggregate([
+//       {
+//         $match: {
+//           userId: new ObjectId("65d25b7ffea88e9a743cc4f2"),
+//         },
+//       },
+//       {
+//         $unwind: {
+//           path: "$products",
+//         },
+//       },
+//       {
+//         $lookup: {
+//           from: "products",
+//           localField: "products.productId",
+//           foreignField: "_id",
+//           as: "products.details",
+//         },
+//       },
+//       {
+//         $unwind: {
+//           path: "$products.details",
+//         },
+//       },
+//       {
+//         $project: {
+//           name: "$products.details.name",
+//           color: "$products.color",
+//           size: "$products.size",
+//           quantity: "$products.quantity",
+//           image: "$products.details.images",
+//           discountedPrice: "$products.details.discountedPrice",
+//           originalPrice: "$products.details.originalPrice",
+//         },
+//       },
+//     ]);
+//     console.log(cartItems);
+//     res.send(cartItems);
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
 const loadCart = async (req, res) => {
   try {
     const { id } = req.session.user;
@@ -582,11 +836,11 @@ const loadCart = async (req, res) => {
       "products.productId",
       "-description"
     );
-
+    console.log(userCart);
     for (const cartProduct of userCart.products) {
       const product = cartProduct.productId;
 
-      // console.log(product);
+      console.log(product);
 
       if (product.status !== "listed") {
         cartProduct.message = "Product is unavailable";
@@ -633,7 +887,10 @@ const loadCart = async (req, res) => {
         continue;
       }
     }
+
     const products = userCart?.products || null;
+    console.log("products");
+    console.log(products);
     res.render("usersViews/cart", { products });
   } catch (error) {
     console.log(error);
@@ -712,6 +969,7 @@ const updateQuantity = async (req, res) => {
     if (!product) {
       return res.status(404).json({ error: "Item not found in the cart." });
     }
+
     const variant = product.variants.find(
       (v) => v.color === color && v.size === size
     );
@@ -788,13 +1046,15 @@ const createOrder = async (req, res) => {
     cart.products.forEach((cartItem) => {
       console.log(cartItem);
       const {
-        productId: { _id: productId, price },
+        productId: { _id: productId, originalPrice, discountedPrice },
         color,
         size,
         quantity,
       } = cartItem;
-
+      const price =
+        discountedPrice !== undefined ? discountedPrice : originalPrice;
       total += quantity * price;
+
       products.push({
         productId,
         price,
@@ -804,6 +1064,8 @@ const createOrder = async (req, res) => {
       });
     });
 
+    const latestOrder = await Orders.findOne().sort({ order_number: -1 });
+    let order_number = latestOrder?.order_number ?? 10000;
     const order = new Orders({
       userId: id,
       products,
@@ -811,6 +1073,7 @@ const createOrder = async (req, res) => {
       paymentMethod,
       paymentStatus,
       total,
+      order_number: order_number + 1,
     });
 
     await order.save();
@@ -899,7 +1162,9 @@ const cancelOrder = async (req, res) => {
     const { orderId } = req.body;
     const order = await Orders.findOne({ userId: id, _id: orderId });
     order.orderStatus = "Cancelled";
-    order.paymentStatus = "Failed";
+    if (order.paymentStatus == "paid") {
+      //return payment,
+    }
     console.log(order);
     await order.save();
     res.status(200).json({ message: "order canceled successfully" });
@@ -928,6 +1193,48 @@ const changePassword = async (req, res) => {
   }
 };
 
+const loadWishlist = async (req, res) => {
+  try {
+    const { id } = req.session.user;
+    res.render("usersViews/wishlist");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addToFav = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { id } = req.session.user;
+    const wishlist = await Wishlist.findOne({ user: id });
+    if (!wishlist) {
+      const newWishlist = new Wishlist({
+        user: id, // Assign the user's ObjectId to the wishlist
+        wishlist: [], // Initialize the wishlist as empty
+      });
+      newWishlist.wishlist.push(productId);
+      newWishlist.save();
+      res.status(200).json({ message: "added to wishlist" });
+      return;
+    }
+    wishlist.wishlist.push(productId);
+    wishlist.save();
+    res.status(200).json({ message: "added to wishlist" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const loadWallet = async (req, res) => {
+  try {
+    const { id } = req.session.user;
+    const wallet = await Wallet.findOne({ user: id });
+    console.log(wallet);
+    res.render("usersViews/wallet", { wallet });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const logout = async (req, res) => {
   try {
     req.session.destroy();
@@ -942,16 +1249,18 @@ module.exports = {
   loadHome,
   loadLogin,
   authUser,
-  loadRegister,
-  registerUser,
+  renderRegisterForm,
+  initiateUserRegister,
   loadValidateOTP,
   verifyOTP,
   changeUserStatus,
   renderForgotPasswordForm,
   initiateForgotPassword,
   verifyForgotPasswordOTP,
+  resendOTP,
   updatePassword,
   loadShop,
+  loadCategoryShop,
   loadProduct,
   fetchVariants,
   loadProfile,
@@ -973,5 +1282,8 @@ module.exports = {
   cancelOrder,
   loadPassword,
   changePassword,
+  loadWishlist,
+  addToFav,
+  loadWallet,
   logout,
 };

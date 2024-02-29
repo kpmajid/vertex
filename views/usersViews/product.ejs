@@ -137,7 +137,6 @@
             <div class="product_thumbnail_slides owl-carousel">
                 <% product.images.forEach(image=> { %>
                     <img src="/img/products/<%= image %>" alt="" />
-
                     <% }) %>
             </div>
         </div>
@@ -151,8 +150,13 @@
                 </h2>
             </a>
             <p class="product-price">
-                <!-- <span class="old-price">$65.00</span> -->
-                ₹<%=product.price%>
+                <% if (product.discount) { %>
+                    <span class="old-price">
+                        ₹ <%= product.originalPrice %>
+                    </span>
+                    ₹ <%= product.discountedPrice %>
+                        <% } else { %> ₹ <%= product.originalPrice %>
+                                <% } %>
             </p>
             <p class="product-desc">
                 <%= product.description %>.
@@ -184,7 +188,9 @@
                     </button>
                     <!-- Favourite -->
                     <div class="product-favourite ml-4">
-                        <a href="#" class="favme fa fa-heart"></a>
+                        <!-- <a href="#" class="favme fa fa-heart"></a> -->
+                        <button class="favme fa fa-heart btn fav-btn" type="button"
+                            data-productId="<%= product._id %>"></button>
                     </div>
                 </div>
             </form>
@@ -298,9 +304,23 @@
 
             const btn = document.getElementById("addtocart");
             btn.addEventListener("click", addToCart);
+
+
+            document.querySelector(".fav-btn").addEventListener("click", addToFav)
         };
 
         //fetch size
+        async function addToFav() {
+            const btn = document.querySelector(".fav-btn")
+            console.log(btn)
+            const id = btn.getAttribute("data-productId")
+            console.log(id)
+            try {
+                const response=await fetch(`/addToFav/${id}`)
+            } catch (error) {
+                console.log(error)
+            }
+        }
 
         async function updateOptions() {
             const sizeOptionsDiv = document.getElementById("sizeOptions");

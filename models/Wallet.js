@@ -6,8 +6,9 @@ const walletSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  balance: {
+  currentBalance: {
     type: Number,
+    default:0,
     required: true,
   },
   transactions: [
@@ -24,8 +25,12 @@ const walletSchema = new mongoose.Schema({
       type: {
         type: String,
         enum: ["debit", "credit"],
-        require: true,
+        required: true,
       },
+      amount:{
+        type:Number,
+        required:true,
+      }
     },
   ],
 });

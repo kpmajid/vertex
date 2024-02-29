@@ -32,21 +32,64 @@ const {
   loadLogin,
   authenticateAdmin,
   registerAdmin,
-  loadDashboard,
-  loadProducts,
-  loadAddProduct,
   getSubCategory,
-  addProduct,
-  loadEditProduct,
-  editProduct,
-  loadCategory,
   loadOrders,
   loadSingleOrder,
   updateOrderStatus,
   loadUsers,
   loadSingleUser,
+  loadDiscount,
+  loadAddDiscount,
+  getProducts,
+  getCategories,
+  createDiscount,
+  removeDiscount,
+  getOffers,
+
   logout,
 } = require("../controllers/adminController");
+
+const {
+  loadDashboard,
+  renderSalesChart,
+} = require("../controllers/dashboardController");
+
+const {
+  loadProducts,
+  loadAddProduct,
+  addProduct,
+  loadEditProduct,
+  editProduct,
+  changeProductStatus,
+} = require("../controllers/productController");
+
+const {
+  loadCategory,
+  loadAddCategory,
+  addCategory,
+  loadEditCategory,
+  editCategory,
+  changeCategoryStatus,
+} = require("../controllers/categoryController");
+
+const {
+  renderAttributes,
+  renderAddAttributes,
+} = require("../controllers/attributeController");
+
+const {
+  renderCoupon,
+  renderAddCoupon,
+  generateCoupon,
+  createCoupon,
+} = require("../controllers/couponController");
+
+const {
+  applyProductOffer,
+  removeProductOffer,
+  applyCategoryOffer,
+  removeCategoryOffer,
+} = require("../controllers/offerController");
 
 const { isLogin, isLogout } = require("../middleware/authAdmin");
 
@@ -55,18 +98,16 @@ router.get("/", isLogout, loadLogin);
 router.post("/login", isLogout, authenticateAdmin);
 router.post("/register", isLogout, registerAdmin);
 
+// Dashboard
 router.get("/dashboard", isLogin, loadDashboard);
+router.get("/sales-chart/${timeFrame}", isLogin, renderSalesChart);
 
+//Product
 router.get("/products", isLogin, loadProducts);
-
 router.get("/add-product", isLogin, loadAddProduct);
-
 router.post("/subcategory", isLogin, getSubCategory);
-
 router.post("/add-product", isLogin, upload.array("images[]", 4), addProduct);
-
 router.get("/edit-product/:id", isLogin, loadEditProduct);
-
 router.put(
   "/edit-product/:id",
   isLogin,
@@ -74,16 +115,50 @@ router.put(
   editProduct
 );
 
+//category
 router.get("/category", isLogin, loadCategory);
+router.get("/getCategories", isLogin, getCategories);
+router.get("/add-category", isLogin, loadAddCategory);
+router.post("/add-category", isLogin, addCategory);
+router.get("/edit-category/:id", isLogin, loadEditCategory);
+// router.patch()
 
+//orders
 router.get("/orders", isLogin, loadOrders);
 router.get("/orders/:orderId", isLogin, loadSingleOrder);
+router.patch("/updateOrder", isLogin, updateOrderStatus);
 
-router.patch("/updateOrder",isLogin,updateOrderStatus)
-
+//users
 router.get("/users", isLogin, loadUsers);
-
 router.get("/users/:id", isLogin, loadSingleUser);
+
+//discount offer
+router.get("/discount", isLogin, loadDiscount);
+router.get("/add-discount", isLogin, loadAddDiscount);
+router.get("/get_products", isLogin, getProducts);
+
+// router.get("/get_categories", isLogin, getCategories);
+
+router.post("/create-discount", isLogin, createDiscount);
+
+router.post("/remove-discount", isLogin, removeDiscount);
+router.get("/getOffers", isLogin, getOffers);
+
+router.post("/apply-product-offer", isLogin, applyProductOffer);
+router.post("/remove-product-offer", isLogin, removeProductOffer);
+
+router.post("/apply-category-offer", isLogin, applyCategoryOffer);
+router.post("/remove-category-offer", isLogin, removeCategoryOffer);
+
+//Coupon
+router.get("/coupon", isLogin, renderCoupon);
+router.get("/add-coupon", isLogin, renderAddCoupon);
+router.get("/generate-coupon", isLogin, generateCoupon);
+router.post("/create-coupon", isLogin, createCoupon);
+
+//Attribute
+router.get("/attributes", isLogin, renderAttributes);
+router.get("/add-attributes", isLogin, renderAddAttributes);
 
 router.get("/logout", logout);
 

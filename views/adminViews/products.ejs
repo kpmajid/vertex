@@ -56,6 +56,13 @@
                         </a>
                     </li>
 
+
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/attributes">
+                            <span class="align-middle">Attributes</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
                             <span class="align-middle">Orders</span>
@@ -134,7 +141,7 @@
                 <div class="row">
                     <div class="col-12 d-flex">
                         <div class="card flex-fill">
-                            <div class="table-responsive-sm">
+                            <div class="table-responsive-md">
                                 <table id="myTable" class="table text-center table-hover my-0">
                                     <thead>
                                         <tr>
@@ -142,10 +149,11 @@
                                             <th class="">Name</th>
                                             <th class="">Stock</th>
                                             <th class="">Price</th>
-                                            <th class="">Parent Category</th>
-                                            <th class="">Sub Category</th>
+                                            <th class="">Discount Price</th>
+                                            <th class="">Category</th>
+                                            <th>offer</th>
+                                            <th>remove offer</th>
                                             <th></th>
-                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -160,19 +168,51 @@
                                                         <input type="hidden" class="hiddenProductId"
                                                             value="<%= product._id %>" />
                                                         <td class="product-name">
-                                                            <%= product.name %>
+                                                            <a href="/admin/edit-product/<%= product._id %>">
+                                                                <%= product.name %>
+                                                            </a>
                                                         </td>
                                                         <td>
                                                             <%= product.totalQuantity %>
                                                         </td>
                                                         <td>
-                                                            <%= product.price %>
+                                                            <%= product.originalPrice %>
                                                         </td>
                                                         <td>
-                                                            <%= product.parentCategory %>
+                                                            <% if (product.discountedPrice) { %>
+                                                                <%= product.discountedPrice %>
+                                                                    <% } else { %>
+                                                                        No Discount
+                                                                        <% } %>
                                                         </td>
                                                         <td>
-                                                            <%= product.subCategory %>
+                                                            <%= product.parentCategory %> /
+                                                                <%= product.subCategory %>
+                                                        </td>
+                                                        <td>
+                                                            <% if(!product.discount){%>
+                                                                <button type="button"
+                                                                    class="apply-offer btn btn-success btn-md"
+                                                                    data-productId="<%= product._id%>">
+                                                                    Apply
+                                                                </button>
+                                                                <%}else{%>
+                                                                    <%= product.discount.name %>,
+                                                                        <%= product.discount.value%>%off
+                                                                            <%} %>
+                                                        </td>
+
+                                                        <td>
+                                                            <% if(!product.discount){%>
+                                                                no offers
+                                                                <%}else{%>
+                                                                    <button type="button"
+                                                                        class="remove-offer btn btn-success btn-md"
+                                                                        data-productId="<%= product._id%>">
+                                                                        remove
+                                                                    </button>
+                                                                    <%} %>
+
                                                         </td>
                                                         <td class="list-ulist-btn">
                                                             <% if (product.status=="listed" ) { %>
@@ -190,15 +230,7 @@
 
                                                                     <% } %>
                                                         </td>
-                                                        <td class="edit-btn">
-                                                            <a href="/admin/edit-product/<%= product._id %>">
 
-                                                                <div id="edit-product-modal" type="button"
-                                                                    data-bs-toggle="modal" type="button"
-                                                                    data-bs-target="#editproductModal" class="btn edit">
-                                                                </div>
-                                                            </a>
-                                                        </td>
                                                     </tr>
                                                     <% }) %>
                                                         <% } %>
@@ -224,7 +256,119 @@
                 });
 
             initializeSomething();
+
+            const applyOffereBtns = document.querySelectorAll(".apply-offer")
+            applyOffereBtns.forEach((applyBtn) => {
+                applyBtn.addEventListener("click", () => applyOffer(applyBtn))
+            })
+
+            const removeOfferBtns = document.querySelectorAll(".remove-offer")
+            removeOfferBtns.forEach((removeBtn) => {
+                removeBtn.addEventListener("click", () => removeOffer(removeBtn))
+            })
         };
+
+        async function applyOffer(button) {
+            const productId = button.getAttribute("data-productid")
+            const response = await fetch("/admin/getOffers")
+            if (response.ok) {
+                const data = await response.json()
+                const { offers } = data
+                if (offers.length <= 0) {
+                    await Swal.fire({
+                        title: "No Offers",
+                        text: "Please add offers in offers page.",
+                        icon: "error"
+                    });
+                    return
+                }
+                let inputData = {};
+                offers.forEach(offer => {
+                    inputData[offer._id] = offer.name
+                })
+                console.log(inputData)
+
+                Swal.fire({
+                    title: "Select Offers",
+                    input: "select",
+                    inputOptions: inputData,
+                    inputPlaceholder: "Select a offer",
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        return new Promise((resolve) => {
+                            if (!value) {
+                                resolve(`You have to select offer.`);
+                            } else {
+                                resolve()
+                            }
+                        });
+                    }
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        console.log(result)
+                        fetch("/admin/apply-product-offer", {
+                            method: "POST",
+                            headers: {
+                                "content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ productId, offerId: result.value })
+                        }).then((response) => {
+                            if (response.ok) {
+                                Swal.fire("Saved!", "", "success").then(() => {
+                                    window.location.reload()
+                                });
+
+                            }
+                        }).catch((error) => {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Something went wrong!",
+                                timer: 1500,
+                            });
+                        })
+                    }
+                })
+            }
+        }
+
+        async function removeOffer(button) {
+            try {
+                console.log(button)
+                const productId = button.getAttribute("data-productid")
+                Swal.fire({
+                    title: "Do you want to remove the offer?",
+                    showCancelButton: true,
+                    confirmButtonText: "Remove",
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        console.log(productId)
+                        fetch("/admin/remove-product-offer", {
+                            method: "POST",
+                            headers: {
+                                "content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ productId })
+                        }).then((response) => {
+                            if (response.ok) {
+                                Swal.fire("Remved!", "", "success").then(() => {
+                                    window.location.reload()
+                                });;
+                            }
+                        }).catch((error) => {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Something went wrong!",
+                            });
+                        })
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+            }
+        }
 
         const initializeSimplebar = () => {
             const simplebarElement =
@@ -345,6 +489,7 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 
 </html>
