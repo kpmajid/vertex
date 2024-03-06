@@ -24,6 +24,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         .text-interactive {
             background: transparent;
@@ -141,9 +143,9 @@
                             <div class="d-flex justify-content-between card-header">
                                 <span class="card-title">Sale Statistics</span>
                                 <div>
-                                    <button class="text-interactive">Daily</button>
-                                    <button class="text-interactive">Weekly</button>
-                                    <button class="text-interactive">Monthly</button>
+                                    <button class="text-interactive badge bg-primary" id="Daily">Daily</button>
+                                    <button class="text-interactive badge bg-primary" id="Weekly">Weekly</button>
+                                    <button class="text-interactive badge bg-primary" id="Monthly">Monthly</button>
                                 </div>
 
                             </div>
@@ -160,11 +162,126 @@
     </div>
     <script src="/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
+
+            let interactiveText = document.querySelectorAll(".text-interactive")
+            interactiveText.forEach((text) => {
+                text.addEventListener("click", () => renderSalesChart(text.innerHTML))
+            })
+
+            renderSalesChart("Weekly")
         };
+
+        async function renderSalesChart(period) {
+            try {
+                let interactiveText = document.querySelectorAll(".text-interactive")
+                interactiveText.forEach((element) => {
+
+                    element.classList.remove("active");
+                })
+
+                let element = document.getElementById(period)
+                console.log(element)
+                element.classList.add("active");
+
+                const response = await fetch(`/admin/sales-chart/${period}`)
+                const data = await response.json();
+                if (!response.ok) {
+                    console.log(data);
+                    return Swal.showValidationMessage(`${data.message}`);
+                }
+
+                const salesArray = [];
+                const ordersArray = [];
+                const timeArray = [];
+
+                data.forEach(item => {
+                    salesArray.push(item.sales);
+                    ordersArray.push(item.orders);
+                    timeArray.push(item.time);
+                });
+
+                const footer = (tooltipItems) => {
+                    let orders = 0;
+                    data.forEach((report) => {
+                        if (report.time == tooltipItems[0].label) {
+                            orders = report.orders
+                        }
+                    })
+                    return 'Orders:' + orders;
+                }
+
+                var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
+                var gradient = ctx.createLinearGradient(0, 0, 0, 225);
+                gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
+                gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
+                // Line chart
+                new Chart(document.getElementById("chartjs-dashboard-line"), {
+                    type: "line",
+                    data: {
+                        labels: timeArray,
+                        datasets: [{
+                            label: "Sales (₹)",
+                            fill: true,
+                            backgroundColor: gradient,
+                            borderColor: window.theme.primary,
+                            data: salesArray
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            callbacks: {
+                                footer: footer
+                            }
+                        },
+                        hover: {
+                            intersect: true
+                        },
+                        plugins: {
+                            filler: {
+                                propagate: false
+                            },
+                        },
+                        scales: {
+                            xAxes: [{
+                                reverse: true,
+                                gridLines: {
+                                    color: "rgba(0,0,0,0.0)"
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    stepSize: 2500
+                                },
+                                display: true,
+                                borderDash: [3, 3],
+                                gridLines: {
+                                    color: "rgba(0,0,0,0.0)"
+                                }
+                            }]
+                        }
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    timer: 1500,
+                });
+            }
+
+        }
+
 
         const initializeSimplebar = () => {
             const simplebarElement =
@@ -210,79 +327,7 @@
         document.addEventListener("DOMContentLoaded", () => initialize());
 
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => renderSalesChart("daily"));
-        async function renderSalesChart(timeFrame) {
-            const response = fetch(`/sales-chart/${timeFrame}`)
 
-            var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-            var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-            gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-            gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-            // Line chart
-            new Chart(document.getElementById("chartjs-dashboard-line"), {
-                type: "line",
-                data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    datasets: [{
-                        label: "Sales ($)",
-                        fill: true,
-                        backgroundColor: gradient,
-                        borderColor: window.theme.primary,
-                        data: [
-                            3795,
-                            1562,
-                            1584,
-                            1892,
-                            1587,
-                            1923,
-                            2566,
-                            2448,
-                            2805,
-                            3438,
-                            2917,
-                            3327
-                        ]
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        intersect: false
-                    },
-                    hover: {
-                        intersect: true
-                    },
-                    plugins: {
-                        filler: {
-                            propagate: false
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            reverse: true,
-                            gridLines: {
-                                color: "rgba(0,0,0,0.0)"
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                stepSize: 1000
-                            },
-                            display: true,
-                            borderDash: [3, 3],
-                            gridLines: {
-                                color: "rgba(0,0,0,0.0)"
-                            }
-                        }]
-                    }
-                }
-            });
-        }
-    </script>
 </body>
 
 </html>

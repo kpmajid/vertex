@@ -57,6 +57,28 @@
         .cart-item-desc {
             width: 296px;
         }
+
+
+        .product-name-head,
+        .product-name {
+            display: inline-block;
+            width: 200px;
+            /* Adjust as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #couponCode {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        #applyCoupon {
+
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
     </style>
 </head>
 
@@ -222,6 +244,73 @@
                 </div>
 
                 <!-- summary part -->
+                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                    <div class="order-details-confirmation">
+                        <div class="cart-page-heading">
+                            <h5>Summary</h5>
+                        </div>
+
+                        <ul class="order-details-form mb-4" id="cart-summary">
+                            <li class="summary-header">
+                                <span class="product-name-head">Product</span>
+                                <span>Qty</span>
+                                <span>Price</span>
+                            </li>
+                            <% if (products.length>0) { %>
+                                <% products.forEach(product=> { %>
+                                    <li class="summary-item" id="<%=product._id%>">
+                                        <span class="product-name">
+                                            <%= product.productId.name %>
+                                        </span>
+                                        <span class="product-quantity">
+                                            <%= product.quantity %>
+                                        </span>
+                                        <span class="product-originalPrice"> ₹ <%=product.quantity *
+                                                product.productId.originalPrice%>
+                                        </span>
+                                    </li>
+                                    <% }) %>
+                                        <% } %>
+
+                                            <hr class="summary-divider" />
+
+                                            <li><span>SUBTOTAL</span> <span id="subtotal">₹0.00</span></li>
+                                            <li><span>Discounts &amp; Offers:</span></li>
+                                            <% products.forEach(product=> { %>
+                                                <% if (product.productId.discount) { %>
+                                                    <li id="<%=product._id%>">
+                                                        <span class="product-name">
+                                                            -<%= product.productId.name %> (x<span class="quantity">
+                                                                    <%= product.quantity %>):
+                                                                </span>
+                                                        </span>
+                                                        <span>-₹
+                                                            <%= product.quantity*product.productId.discount %>
+                                                        </span>
+                                                    </li>
+                                                    <% } %>
+                                                        <% }) %>
+                                                            <li id="coupon"><span>- Promo Code ABC:</span>
+                                                                <span>-₹15.00</span></li>
+                                                            <hr />
+                                                            <li><span>Total</span> <span id="total">₹0.00</span></li>
+                                                            <hr />
+                                                            <li>
+                                                                <input type="text" id="couponCode" class="form-control"
+                                                                    placeholder="Enter coupon code">
+                                                                <button id="applyCoupon"
+                                                                    class="btn btn-primary">Apply</button>
+                                                                <div id="couponValidationMessage"
+                                                                    class="text-danger mb-2"></div>
+                                                            </li>
+                        </ul>
+
+                        <button id="checkOut" class="btn essence-btn">
+                            Proceed to checkout
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -401,13 +490,13 @@
                     }
                     const priceElement = cartItem.querySelector(".price");
                     const totalPrice = cartItem.querySelector(".totalPrice");
-                    
+
                     if (priceElement) {
                         const productPrice = parseFloat(
                             priceElement.innerText.replace("₹", "")
-                            );
-                            console.log("productPrice")
-                            console.log(productPrice)
+                        );
+                        console.log("productPrice")
+                        console.log(productPrice)
                         totalPrice.innerText = `₹ ${(currentQuantity + change) * productPrice
                             }`;
                     }
@@ -422,11 +511,22 @@
                         window.location.reload();
                     }
 
-                    const productId = button.getAttribute("data-itemId");
-                    console.log(productId);
-                    const discountElement = document.getElementById(productId);
 
-                    console.log(discountElement);
+                    const selector = `[id='${itemId}']`;
+                    let orderDetailsForm = document.querySelector(selector);
+
+                    orderDetailsForm.querySelector(".product-quantity").innerText = currentQuantity + change;
+
+                    if (priceElement) {
+                        const productPrice = parseFloat(
+                            priceElement.innerText.replace("₹", "")
+                        );
+
+                        orderDetailsForm.querySelector(".product-originalPrice").innerText = `₹ ${(currentQuantity + change) * productPrice}`;
+                    }
+
+
+
                 }
                 calculateSubtotal();
             } catch (error) {

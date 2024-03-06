@@ -1,5 +1,7 @@
 const Category = require("../models/Category");
 
+const { ObjectId } = require("mongodb");
+
 const loadCategory = async (req, res) => {
   try {
     const categories = await Category.aggregate([
@@ -32,13 +34,14 @@ const loadCategory = async (req, res) => {
       },
       {
         $project: {
-          name: {
+          display_name: {
             $cond: {
               if: "$parentName",
               then: { $concat: ["$parentName", " / ", "$name"] },
               else: "$name",
             },
           },
+          name: 1,
           status: 1,
           isParentCategory: 1,
           parentCategory: 1,
@@ -48,7 +51,7 @@ const loadCategory = async (req, res) => {
       },
       {
         $sort: {
-          name: 1,
+          display_name: 1,
         },
       },
     ]);
@@ -180,6 +183,7 @@ const editCategory = async (req, res) => {
     const id = req.params.id;
     const newName = req.body.name;
     const category = await Category.findById(id);
+    console.log(category);
     if (!category) {
       return res
         .status(404)
@@ -189,7 +193,7 @@ const editCategory = async (req, res) => {
       name: { $regex: `^${newName}$`, $options: "i" },
       _id: { $ne: id },
     });
-
+    console.log(isExisting);
     if (isExisting) {
       return res
         .status(400)

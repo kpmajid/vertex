@@ -2517,13 +2517,25 @@ img {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #5b862a;
 }
-.w    width: 30px;
+.widget.color .widget-desc ul li label.color10 {    width: 30px;
     height: 30px;
     display: block;
     background-color: #ffffff;
     position: relative;
     z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);idget.color .widget-desc ul li label.color10 {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
 
   background-color: #8662a9;
+}
+
+.xzoom-source img,
+.xzoom-preview img,
+.xzoom-lens img {
+    display: block;
+    max-width: none;
+    max-height: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
 }

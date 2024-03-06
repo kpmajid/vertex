@@ -1,3 +1,7 @@
+const Product = require("../models/Product");
+const Category = require("../models/Category");
+const Discounts = require("../models/Discounts");
+
 const applyProductOffer = async (req, res) => {
   try {
     console.log("ehid");

@@ -100,7 +100,7 @@ router.post("/register", isLogout, registerAdmin);
 
 // Dashboard
 router.get("/dashboard", isLogin, loadDashboard);
-router.get("/sales-chart/${timeFrame}", isLogin, renderSalesChart);
+router.get("/sales-chart/:period", isLogin, renderSalesChart);
 
 //Product
 router.get("/products", isLogin, loadProducts);
@@ -121,6 +121,7 @@ router.get("/getCategories", isLogin, getCategories);
 router.get("/add-category", isLogin, loadAddCategory);
 router.post("/add-category", isLogin, addCategory);
 router.get("/edit-category/:id", isLogin, loadEditCategory);
+router.put("/edit-category/:id", isLogin, editCategory);
 // router.patch()
 
 //orders

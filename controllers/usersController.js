@@ -129,22 +129,31 @@ const initiateUserRegister = async (req, res) => {
     req.session.email = email;
     req.session.ref = ref;
 
+    //create cart
     const cart = new Cart({
       userId: user._id,
       products: [],
     });
     await cart.save();
 
+    //create address
     const address = new Address({
       userId: user._id,
       address: [],
     });
     await address.save();
 
+    //create wallet
     const wallet = new Wallet({
       user: user._id,
     });
     await wallet.save();
+
+    //create whishlist
+    const wishlist = new Wishlist({
+      user: user._id,
+    });
+    await wishlist.save();
 
     res.status(200).json({ message: "user created successfully!" });
   } catch (error) {
@@ -448,10 +457,24 @@ const loadShop = async (req, res) => {
       },
     ]);
 
-    const categories = await Category.find({
-      isParentCategory: true,
-      status: "listed",
-    });
+    const categories = await Category.aggregate([
+      {
+        $match: {
+          isParentCategory: true,
+          status: "listed",
+          subcategories: { $ne: [] },
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "subcategories",
+          foreignField: "_id",
+          as: "subcategories",
+        },
+      },
+    ]);
+    console.log(categories);
 
     res.render("usersViews/shop", { products, categories, user });
   } catch (error) {
@@ -1208,10 +1231,6 @@ const addToFav = async (req, res) => {
     const { id } = req.session.user;
     const wishlist = await Wishlist.findOne({ user: id });
     if (!wishlist) {
-      const newWishlist = new Wishlist({
-        user: id, // Assign the user's ObjectId to the wishlist
-        wishlist: [], // Initialize the wishlist as empty
-      });
       newWishlist.wishlist.push(productId);
       newWishlist.save();
       res.status(200).json({ message: "added to wishlist" });

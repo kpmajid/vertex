@@ -1,3 +1,5 @@
+const Coupons = require("../models/Coupons");
+
 const renderCoupon = async (req, res) => {
   try {
     const coupons = await Coupons.find();

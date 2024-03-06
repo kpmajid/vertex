@@ -1,4 +1,6 @@
 const Product = require("../models/Product");
+const Category = require("../models/Category");
+const Discounts = require("../models/Discounts");
 
 const loadProducts = async (req, res) => {
   try {
@@ -70,11 +72,8 @@ const loadProducts = async (req, res) => {
         },
       },
     ]);
-    console.log(products);
 
     const offers = await Discounts.find({ end: { $gte: new Date() } });
-    console.log(offers);
-    // console.log(products);
 
     res.render("adminViews/products", { products, offers });
   } catch (error) {

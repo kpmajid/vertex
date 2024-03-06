@@ -1,6 +1,5 @@
 const dayjs = require("dayjs");
-
-
+const Orders = require("./models/Orders");
 
 async function renderSalesChart() {
   try {
@@ -48,8 +47,36 @@ async function renderSalesChart() {
       i -= 1;
     }
     console.log(result);
+
+    const results = await Promise.all(
+      result.map(async (element) => {
+        const queryResult = await Orders.aggregate([
+          {
+            $match: {
+              createdAt: {
+                $gte: new Date(element.from),
+                $lte: new Date(element.to),
+              },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              orders: {
+                $sum: 1,
+              },
+              sales: {
+                $sum: "$total",
+              },
+            },
+          },
+        ]);
+        return queryResult;
+      })
+    );
+    console.log(results);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    console.log(error);
   }
 }
 renderSalesChart();

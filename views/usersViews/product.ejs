@@ -14,9 +14,16 @@
     <!-- Favicon  -->
     <link rel="icon" href="/img/core-img/favicon.ico" />
 
+
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="/css/core-style.css" />
     <!-- <link rel="stylesheet" href="style.css"> -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://unpkg.com/xzoom/dist/xzoom.min.js"></script> -->
+    <script src="/javascripts/xzoom.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/xzoom/dist/xzoom.css">
+
 
     <style>
         .radio-box {
@@ -54,6 +61,39 @@
             background-color: #000;
             /* Black for selected state */
             color: #fff;
+        }
+
+        .xzoom-column {
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .xzoom-container {
+            width: 550px;
+            height: 550px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .xzoom-thumbs {
+            flex-direction: column;
+        }
+
+        .xzoom-source img,
+        .xzoom-preview img,
+        .xzoom-lens img {
+            display: block;
+            max-width: none;
+            max-height: none;
+            -webkit-transition: none;
+            -moz-transition: none;
+            -o-transition: none;
+            transition: none;
+            z-index: 99;
+        }
+
+        #xzoom-default {
+            width: 80%;
         }
     </style>
 </head>
@@ -131,71 +171,81 @@
     <!-- ##### Header Area End ##### -->
 
     <!-- ##### Single Product Details Area Start ##### -->
-    <section class="single_product_details_area d-flex align-items-center">
+
+    <div class="row">
         <!-- Single Product Thumb -->
-        <div class="single_product_thumb clearfix">
-            <div class="product_thumbnail_slides owl-carousel">
-                <% product.images.forEach(image=> { %>
-                    <img src="/img/products/<%= image %>" alt="" />
-                    <% }) %>
+        <div class="xzoom-column large-5 d-flex column col-6">
+            <div class="xzoom-container d-flex">
+                <div class="xzoom">
+                    <img class="xzoom-image" id="xzoom-default" src="/img/products/<%= product.images[0] %>"
+                        xoriginal="/img/products/<%= product.images[0] %>" style="width: 80%;" />
+                </div>
+                <div class="xzoom-thumbs d-flex">
+                    <% product.images.forEach(image=> { %>
+                        <a href="/img/products/<%= image %>"><img class="xzoom-gallery" width="80"
+                                src="/img/products/<%= image %>" title="<%= product.name %>"></a>
+                        <% }) %>
+                </div>
             </div>
         </div>
+        <section class="single_product_details_area col-6 d-flex align-items-center" style="z-index: -1;">
+            <!-- Single Product Description -->
+            <div class="single_product_desc clearfix">
+                <!-- <span>mango</span> -->
+                <a href="cart.html">
+                    <h2 id="productName">
+                        <%= product.name %>
+                    </h2>
+                </a>
+                <p class="product-price">
+                    <% if (product.discount) { %>
+                        <span class="old-price">
+                            ₹ <%= product.originalPrice %>
+                        </span>
+                        ₹ <%= product.discountedPrice %>
+                            <% } else { %> ₹ <%= product.originalPrice %>
+                                    <% } %>
+                </p>
+                <p class="product-desc">
+                    <%= product.description %>.
+                </p>
 
-        <!-- Single Product Description -->
-        <div class="single_product_desc clearfix">
-            <!-- <span>mango</span> -->
-            <a href="cart.html">
-                <h2 id="productName">
-                    <%= product.name %>
-                </h2>
-            </a>
-            <p class="product-price">
-                <% if (product.discount) { %>
-                    <span class="old-price">
-                        ₹ <%= product.originalPrice %>
-                    </span>
-                    ₹ <%= product.discountedPrice %>
-                        <% } else { %> ₹ <%= product.originalPrice %>
-                                <% } %>
-            </p>
-            <p class="product-desc">
-                <%= product.description %>.
-            </p>
+                <!-- Form -->
+                <input type="hidden" name="productId" id="productId" value="<%= product._id %>" />
+                <form id="myForm" class="cart-form clearfix">
+                    <!-- Color Radio Buttons -->
+                    <span class="">select color</span>
+                    <div class="radio-box" id="colorOptions">
+                        <% uniqueColors.forEach((color,index)=> { %> <input type="radio" name="color"
+                                id="color<%= color %>" value="<%= color %>" <% if (index==0) { %> checked <% } %>>
+                                <label for="color<%= color %>" class="radio-label">
+                                    <%= color %>
+                                </label>
 
-            <!-- Form -->
-            <input type="hidden" name="productId" id="productId" value="<%= product._id %>" />
-            <form id="myForm" class="cart-form clearfix">
-                <!-- Color Radio Buttons -->
-                <span class="">select color</span>
-                <div class="radio-box" id="colorOptions">
-                    <% uniqueColors.forEach((color,index)=> { %> <input type="radio" name="color" id="color<%= color %>"
-                            value="<%= color %>" <% if (index==0) { %> checked <% } %>>
-                            <label for="color<%= color %>" class="radio-label">
-                                <%= color %>
-                            </label>
-
-                            <% }) %>
-                </div>
-
-                <span class="">choose size</span>
-                <div class="radio-box" id="sizeOptions"></div>
-
-                <!-- Cart & Favourite Box -->
-                <div class="cart-fav-box d-flex align-items-center">
-                    <!-- Cart -->
-                    <button type="button" name="addtocart" id="addtocart" value="5" class="btn essence-btn">
-                        Add to cart
-                    </button>
-                    <!-- Favourite -->
-                    <div class="product-favourite ml-4">
-                        <!-- <a href="#" class="favme fa fa-heart"></a> -->
-                        <button class="favme fa fa-heart btn fav-btn" type="button"
-                            data-productId="<%= product._id %>"></button>
+                                <% }) %>
                     </div>
-                </div>
-            </form>
-        </div>
-    </section>
+
+                    <span class="">choose size</span>
+                    <div class="radio-box" id="sizeOptions"></div>
+
+                    <!-- Cart & Favourite Box -->
+                    <div class="cart-fav-box d-flex align-items-center">
+                        <!-- Cart -->
+                        <button type="button" name="addtocart" id="addtocart" value="5" class="btn essence-btn">
+                            Add to cart
+                        </button>
+                        <!-- Favourite -->
+                        <div class="product-favourite ml-4">
+                            <!-- <a href="#" class="favme fa fa-heart"></a> -->
+                            <button class="favme fa fa-heart btn fav-btn" type="button"
+                                data-productId="<%= product._id %>"></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </div>
     <!-- ##### Single Product Details Area End ##### -->
 
     <!-- ##### Footer Area Start ##### -->
@@ -292,6 +342,82 @@
     <!-- ##### Footer Area End ##### -->
 
     <script>
+        (function ($) {
+            $(document).ready(function () {
+                $('.xzoom-image, .xzoom-gallery').xzoom({
+                    zoomWidth: 350,
+                    zoomHeight: 350,
+                    title: true,
+                    tint: '#333',
+                    Xoffset: 15,
+                    lensSize: 200
+                });
+
+                //Integration with hammer.js
+                var isTouchSupported = 'ontouchstart' in window;
+
+                if (isTouchSupported) {
+                    //If touch device
+                    $('.xzoom-image').each(function () {
+                        var xzoom = $(this).data('xzoom');
+                        xzoom.eventunbind();
+                    });
+
+                    $('.xzoom-image').each(function () {
+                        var xzoom = $(this).data('xzoom');
+                        $(this).hammer().on("tap", function (event) {
+                            event.pageX = event.gesture.center.pageX;
+                            event.pageY = event.gesture.center.pageY;
+                            var s = 1, ls;
+
+                            xzoom.eventmove = function (element) {
+                                element.hammer().on('drag', function (event) {
+                                    event.pageX = event.gesture.center.pageX;
+                                    event.pageY = event.gesture.center.pageY;
+                                    xzoom.movezoom(event);
+                                    event.gesture.preventDefault();
+                                });
+                            };
+
+                            xzoom.eventleave = function (element) {
+                                element.hammer().on('tap', function (event) {
+                                    xzoom.closezoom();
+                                });
+                            };
+
+                            xzoom.openzoom(event);
+                        });
+                    });
+
+                } else {
+                    //If not touch device
+
+                    //Integration with fancybox plugin
+                    $('#xzoom-fancy').bind('click', function (event) {
+                        var xzoom = $(this).data('xzoom');
+                        xzoom.closezoom();
+                        $.fancybox.open(xzoom.gallery().cgallery, { padding: 0, helpers: { overlay: { locked: false } } });
+                        event.preventDefault();
+                    });
+
+                    //Integration with magnific popup plugin
+                    $('#xzoom-magnific').bind('click', function (event) {
+                        var xzoom = $(this).data('xzoom');
+                        xzoom.closezoom();
+                        var gallery = xzoom.gallery().cgallery;
+                        var i, images = new Array();
+                        for (i in gallery) {
+                            images[i] = { src: gallery[i] };
+                        }
+                        $.magnificPopup.open({ items: images, type: 'image', gallery: { enabled: true } });
+                        event.preventDefault();
+                    });
+                }
+            });
+        })(jQuery);
+    </script>
+
+    <script>
         const initialize = () => {
             const colorRadioButtons = document.querySelectorAll(
                 'input[name="color"]'
@@ -307,6 +433,7 @@
 
 
             document.querySelector(".fav-btn").addEventListener("click", addToFav)
+
         };
 
         //fetch size
@@ -316,7 +443,7 @@
             const id = btn.getAttribute("data-productId")
             console.log(id)
             try {
-                const response=await fetch(`/addToFav/${id}`)
+                const response = await fetch(`/addToFav/${id}`)
             } catch (error) {
                 console.log(error)
             }

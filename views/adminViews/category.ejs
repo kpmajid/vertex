@@ -170,8 +170,8 @@
                   <% } else { %>
                     <% categories.forEach(category=> { %>
                       <tr>
-                        <td>
-                          <%= category.name %>
+                        <td class="name">
+                          <%= category.display_name %>
                         </td>
                         <td>
                           <% if (category.isParentCategory) { %> Parent Category <% }else {%> Child Category <% } %>
@@ -212,14 +212,13 @@
                         </td>
                         <td>
                           <div class="col-auto">
-                            <a href="/admin/edit-category/<%= category._id %>">
-                              <div id="edit-category-btn" class="edit-btn btn edit">
-
-                              </div>
-                            </a>
+                            <div id="edit-category-btn" class="edit-btn btn edit" data-categoryId="<%= category._id%>"
+                              data-categoryName="<%= category.name%>">
+                            </div>
+                            <a href="/admin/edit-category/<%= category._id %>"> </a>
                           </div>
                         </td>
-                        
+
                       </tr>
                       <% }) %>
                         <% } %>
@@ -263,11 +262,70 @@
         button.addEventListener("click", () => listUnlist(button))
       })
 
-      
-
+      const editBtns = document.querySelectorAll(".edit-btn")
+      editBtns.forEach((button) => {
+        button.addEventListener("click", (e) => editCategory(button, e))
+      })
     };
 
-   
+    async function editCategory(button, e) {
+      try {
+        console.log(button)
+
+        let categoryId = button.getAttribute("data-categoryid")
+        let categoryName = button.getAttribute("data-categoryname")
+
+
+        let url = `/admin/edit-category/${categoryId}`
+        const { value: name } = await Swal.fire({
+          title: "Edit Category",
+          input: "text",
+          inputLabel: "Your category name",
+          inputValue: categoryName,
+          showCancelButton: true,
+          inputValidator: (name) => {
+            console.log("inputValidator")
+            if (!name) {
+              return "Name can't be empty!";
+            }
+          },
+          preConfirm: async (name) => {
+            const response = await fetch(url, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name,
+              }),
+            });
+            if (!response.ok) {
+              const jsonData = await response.json();
+              console.log(jsonData);
+              return Swal.showValidationMessage(`${jsonData.message}`);
+            }
+            if (response.ok) {
+              console.log()
+              await Swal.fire({
+                title: `Edited!`,
+                text: `${categoryName} category has been edited.`,
+                icon: "success",
+              });
+              window.location.reload();
+            }
+          },
+        });
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `Something went wrong!
+                ${error}      
+          `,
+        });
+      }
+    }
+
 
     async function listUnlist(button) {
       const categoryId = button.getAttribute("data-categoryid");

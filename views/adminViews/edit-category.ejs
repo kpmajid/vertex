@@ -18,7 +18,7 @@
     <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
 
     <link href="/admin/css/app.css" rel="stylesheet" />
-    <link href="css/sample.css" rel="stylesheet" />
+    <!-- <link href="/css/sample.css" rel="stylesheet" /> -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -192,7 +192,6 @@
                 .getElementById("edit-category")
                 .addEventListener("click", editCategory);
 
-
         };
         const nameErrorMessage = document.getElementById("nameErrorMessage");
 
@@ -201,7 +200,7 @@
             nameErrorMessage.textContent = "";
 
             const name = document.getElementById("name").value;
-            const category = document.querySelector("#dropdown").value;
+            const parentCategory = document.querySelector("#dropdown").value;
 
             if (!name) {
                 nameErrorMessage.textContent = "Name is required";
@@ -213,17 +212,30 @@
             }
             const data = {
                 name,
-                category,
+                parentCategory,
             };
 
             try {
-                const response = await fetch("/admin/add-category", {
-                    method: "POST",
+
+                const url = window.location.pathname
+                const response = await fetch(url, {
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data),
                 });
+                if (!response.ok) {
+                    const jsonData = await response.json();
+                    console.log(jsonData);
+                    await Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: `${jsonData.message}`,
+                    });
+                    return
+                }
+
                 if (response.ok) {
                     await Swal.fire({
                         icon: "success",
@@ -235,6 +247,13 @@
                 }
             } catch (error) {
                 console.log(error);
+                Swal.showValidationMessage();
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `Something went wrong!
+                    Request failed: ${error}`,
+                });
             }
         }
 

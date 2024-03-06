@@ -248,6 +248,13 @@
                     isValidated = false
                 }
 
+
+                if (end && start && end < start) {
+                    startErrorMessage.textContent = "Invalid dates: End date must be after start date.";
+                    endErrorMessage.textContent = "Invalid dates: End date must be after start date.";
+                    console.log("error")
+                }
+
                 // const offerType = document.querySelector('input[name="offer_type"]:checked').value;
 
                 // const categories = [];

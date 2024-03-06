@@ -153,7 +153,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 d-flex">
+                    <div class="col-xl-8 col-xxl-7 ">
                         <div class="card flex-fill">
                             <div class="table-responsive-md">
                                 <table id="myTable" class="table table-hover my-0">
@@ -163,12 +163,42 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        <tr>
+                                            <td>sample</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-4 col-xxl-5 d-flex">
+                        <div class="card flex-fill">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h5 class="card-title mb-0">Real-Time</h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <!-- Add save button here -->
+                                        <button id="save-button" class="btn btn-success">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body py-0 mb-3">
+                                <form action="">
+                                    <label for="name" class="form-label">Product Name</label>
+                                    <input id="name" name="name" type="text" class="form-control"
+                                        placeholder="Type product name here" />
+                                    <p class="mb-0 mt-2 mb-1">Attribute Options</p>
+                                    <div class="option-container mb-2">
+                                    </div>
+                                    <button type="button" id="add-option" class="btn btn-primary">Add Option</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </main>
         </div>
@@ -179,7 +209,33 @@
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
+
+            document.querySelector('#add-option').addEventListener("click", addfield)
+
         };
+
+        const optionContainer = document.querySelector('.option-container');
+
+        function addfield() {
+            let clonedOption = `
+                <div class="mt-1 row align-items-center option-row">
+                    <div class="col pe-0">
+                        <input id="attribute" name="attribute" type="text" class="form-control" placeholder="Type attribute here" />
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-danger remove-option">remove</button>
+                    </div>
+                </div>
+            `;
+            optionContainer.insertAdjacentHTML('beforeend', clonedOption);
+
+            // Event listener for remove buttons within the added field
+            optionContainer.addEventListener('click', function (event) {
+                if (event.target.classList.contains('remove-option')) {
+                    event.target.closest('.option-row').remove();
+                }
+            });
+        }
 
         const initializeSimplebar = () => {
             const simplebarElement =
