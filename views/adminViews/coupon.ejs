@@ -54,11 +54,11 @@
                     </li>
 
 
-                    <li class="sidebar-item ">
+                    <!-- <li class="sidebar-item ">
                         <a class="sidebar-link" href="/admin/attributes">
                             <span class="align-middle">Attributes</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
                             <span class="align-middle">Orders</span>
@@ -148,7 +148,9 @@
                                             <% coupons.forEach(coupon=> { %>
                                                 <tr>
                                                     <td>
-                                                        <%= coupon.couponCode %>
+                                                        <a href="/admin/edit-coupon/<%= coupon._id %>">
+                                                            <%= coupon.couponCode %>
+                                                        </a>
                                                     </td>
                                                     <td>
                                                         <%= coupon.start.toLocaleDateString() %>

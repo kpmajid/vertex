@@ -22,28 +22,43 @@ const {
   fetchVariants,
   loadProfile,
   editProfile,
+  loadCheckOut,
+  loadPassword,
+  changePassword,
+  loadWallet,
+  logout,
+} = require("../controllers/usersController");
+
+const {
   loadAddress,
   removeAddress,
   loadAddAddress,
   addAddress,
   loadEditAddress,
   editAddress,
-  loadCart,
-  addToCart,
-  removeProduct,
-  updateQuantity,
-  loadCheckOut,
+} = require("../controllers/addressController");
+
+const {
   createOrder,
   LoadOrders,
   LoadSingleOrder,
   cancelOrder,
-  loadPassword,
-  changePassword,
+} = require("../controllers/orderController");
+
+const {
   loadWishlist,
-  addToFav,
-  loadWallet,
-  logout,
-} = require("../controllers/usersController");
+  addToWishlist,
+  removeProductFromWishlist,
+} = require("../controllers/wishlistController");
+
+const {
+  loadCart,
+  addToCart,
+  removeProduct,
+  updateQuantity,
+} = require("../controllers/cartController");
+
+const { checkCoupon } = require("../controllers/couponController");
 
 const { isLogin, isLogout } = require("../middleware/authUser");
 
@@ -110,7 +125,7 @@ router.post("/add-address", isLogin, addAddress);
 
 router.get("/cart", isLogin, loadCart);
 
-router.post("/addToCart", isLogin, addToCart);
+router.post("/addToCart", addToCart);
 
 router.delete("/removeProduct", isLogin, removeProduct);
 
@@ -134,7 +149,11 @@ router.get("/orders/:orderId", isLogin, LoadSingleOrder);
 router.patch("/cancelOrder", isLogin, cancelOrder);
 
 router.get("/wishlist", isLogin, loadWishlist);
-router.get("/addToFav/:id", isLogin, addToFav);
+router.get("/addToWishlist/:id", addToWishlist);
+router.delete("/wishlist/:productId", removeProductFromWishlist);
+
+//coupon
+router.post("/checkCoupon/:couponCode", checkCoupon);
 
 router.get("/wallet", isLogin, loadWallet);
 

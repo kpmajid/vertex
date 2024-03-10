@@ -28,6 +28,7 @@ const applyProductOffer = async (req, res) => {
     res.status(200).json({ message: "Offer applied" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -54,6 +55,7 @@ const removeProductOffer = async (req, res) => {
     res.status(200).json({ message: "offer removed" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -106,6 +108,7 @@ const applyCategoryOffer = async (req, res) => {
     res.status(200).json({ message: "Offer applied" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -140,6 +143,44 @@ const removeCategoryOffer = async (req, res) => {
     res.status(200).json({ message: "offer removed" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const loadEditOffer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const offer = await Discounts.findById(id);
+    console.log(offer);
+    res.render("adminViews/edit-offer", { offer });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const editOffer = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { name, discountPercentage, start, end } = req.body;
+
+    const offerDoc = await Discounts.findById(id);
+
+    if (!offerDoc) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Offer not found." });
+    }
+
+    offerDoc.name = name;
+    offerDoc.value = discountPercentage;
+    offerDoc.start = start;
+    offerDoc.end = end;
+
+    await offerDoc.save();
+    res.json({ success: true, message: "Offer Updated" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -148,4 +189,6 @@ module.exports = {
   removeProductOffer,
   applyCategoryOffer,
   removeCategoryOffer,
+  loadEditOffer,
+  editOffer,
 };

@@ -74,10 +74,38 @@
             border-bottom-right-radius: 0;
         }
 
+        #couponCode:focus,
+        #applyCoupon:focus {
+            box-shadow: 0 0 0 0;
+        }
+
         #applyCoupon {
 
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
+        }
+
+        .order-details-confirmation .order-details-form li {
+            font-weight: 500;
+        }
+
+        #coupon-remove {
+            flex-direction: row-reverse;
+        }
+
+        #coupon-remove button {
+            border: 0;
+            background-color: transparent;
+            color: #ff0000;
+        }
+
+        #coupon-remove button:focus {
+            outline: 0;
+        }
+
+        #coupon-remove button:hover {
+            text-decoration: underline;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -222,7 +250,7 @@
                                                 </ul>
                                             </div>
                                             <div class="cart-item-misc flex-fill">
-                                                <h6 class="pl-4 totalPrice">
+                                                <h6 class="px-2 totalPrice">
                                                     <% if (product.productId.discount) { %>
                                                         ₹<%=product.quantity * product.productId.discountedPrice %>
                                                             <% } else { %> ₹<%=product.quantity *
@@ -290,19 +318,23 @@
                                                     </li>
                                                     <% } %>
                                                         <% }) %>
-                                                            <li id="coupon"><span>- Promo Code ABC:</span>
-                                                                <span>-₹15.00</span></li>
+                                                            <li id="coupon">
+                                                                <span id="coupon-name">- Coupon none:</span>
+                                                                <span id="coupon-value">-₹0.00</span>
+                                                            </li>
+                                                            <li id="coupon-remove">
+                                                            </li>
                                                             <hr />
                                                             <li><span>Total</span> <span id="total">₹0.00</span></li>
                                                             <hr />
                                                             <li>
                                                                 <input type="text" id="couponCode" class="form-control"
                                                                     placeholder="Enter coupon code">
-                                                                <button id="applyCoupon"
+                                                                <button type="button" id="applyCoupon"
                                                                     class="btn btn-primary">Apply</button>
-                                                                <div id="couponValidationMessage"
-                                                                    class="text-danger mb-2"></div>
                                                             </li>
+                                                            <div id="couponValidationMessage" class="text-danger mb-2">
+                                                            </div>
                         </ul>
 
                         <button id="checkOut" class="btn essence-btn">
@@ -396,9 +428,91 @@
             });
             calculateSubtotal();
 
+            document.querySelector("#applyCoupon").addEventListener("click", applyCoupon)
+
             const checkOutButton = document.querySelector("#checkOut");
             checkOutButton.addEventListener("click", proceedToCheckOut);
         };
+
+        async function applyCoupon() {
+            const couponCodeInput = document.querySelector("#couponCode")
+            const couponValidationMessage = document.querySelector("#couponValidationMessage")
+            const couponRemoveElement = document.querySelector("#coupon-remove")
+            try {
+                const couponCode = couponCodeInput.value
+                if (couponCode.length < 8) {
+                    console.log("invalid couponcode")
+                    couponValidationMessage.innerHTML = "invalid couponcode"
+                    return
+                }
+
+                const subtotalElement = document.getElementById("subtotal");
+                const totalAmount = parseFloat(subtotalElement.innerText.replace("₹", ""));
+
+                const response = await fetch(`/checkCoupon/${couponCode}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        totalAmount,
+                    }),
+                })
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    couponValidationMessage.innerHTML = responseData.error;
+                    return;
+                }
+
+                if (!responseData.success) {
+                    couponValidationMessage.innerHTML = responseData.error;
+                    return
+                }
+
+                if (!document.getElementById("coupon-remove-btn")) {
+                    var buttonElement = document.createElement("button");
+
+                    // Set attributes for the button element
+                    buttonElement.setAttribute("id", "coupon-remove-btn");
+                    buttonElement.setAttribute("type", "button");
+                    buttonElement.setAttribute("onclick", "removeCoupon()");
+                    buttonElement.textContent = "Remove";
+
+                    couponRemoveElement.appendChild(buttonElement);
+                }
+
+                let couponName = document.querySelector("#coupon-name")
+                couponName.innerText = `- ${couponCode}:`
+
+                let couponValue = document.querySelector("#coupon-value")
+                couponValue.innerHTML = `-₹${responseData.discountAmount.toFixed(2)}`
+
+                calculateTotal(totalAmount)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+        function removeCoupon() {
+            const couponRemoveElement = document.querySelector("#coupon-remove")
+            let buttonElementToRemove = document.getElementById("coupon-remove-btn");
+            if (buttonElementToRemove) {
+                // Remove the button element from the coupon remove element
+                couponRemoveElement.removeChild(buttonElementToRemove);
+            }
+
+            let couponNameElement = document.getElementById("coupon-name");
+            console.log(couponNameElement)
+            couponNameElement.innerText = "- Coupon none:"
+
+            let couponValueElement = document.getElementById("coupon-value");
+            console.log(couponValueElement)
+            couponValueElement.innerText = "-₹0.00"
+
+
+        }
 
         async function removeProduct(button) {
             const itemId = button.getAttribute("data-itemid");
@@ -558,10 +672,22 @@
                 subtotalElement.innerText = `₹${subtotal.toFixed(2)}`;
             }
 
+            calculateTotal(subtotal)
+        }
+
+        function calculateTotal(subtotal) {
+
+            const couponValueElement = document.querySelector("#coupon-value")
+            const couponValue = parseFloat(couponValueElement.innerText.replace("-₹", ""))
+
+            let total = subtotal - couponValue;
+
+            console.log(subtotal)
+            console.log(couponValue)
             // For simplicity, setting total equal to subtotal in this example
             const totalElement = document.getElementById("total");
             if (totalElement) {
-                totalElement.innerText = `₹${subtotal.toFixed(2)}`;
+                totalElement.innerText = `₹${total.toFixed(2)}`;
             }
         }
 

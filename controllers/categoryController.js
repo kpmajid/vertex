@@ -62,7 +62,8 @@ const loadCategory = async (req, res) => {
     res.render("adminViews/category", { categories });
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.status(500).json({ error: "Internal Server Error" });
+    // res.send(error);
   }
 };
 
@@ -72,6 +73,7 @@ const loadAddCategory = async (req, res) => {
     res.render("adminViews/add-category", { categories });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -90,7 +92,7 @@ const addCategory = async (req, res) => {
 
       if (!parentCategory) {
         return res
-          .status(404)
+          .status(400)
           .json({ success: false, message: "Parent category not found" });
       }
 
@@ -106,7 +108,7 @@ const addCategory = async (req, res) => {
 
     if (existingCategory) {
       console.log(existingCategory);
-      return res.status(404).json({
+      return res.status(409).json({
         success: false,
         message: "Category with the same name already exists",
       });
@@ -130,6 +132,7 @@ const addCategory = async (req, res) => {
     res.status(200).json({ success: true, message: "Category Added" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -174,6 +177,7 @@ const loadEditCategory = async (req, res) => {
     res.render("adminViews/edit-category", { category, categories });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

@@ -50,7 +50,6 @@
     });
   }
 
-
   // :: ScrollUp Active Code
   if ($.fn.scrollUp) {
     $.scrollUp({
@@ -82,8 +81,7 @@
     var value_min = jQuery(this).data("value-min");
     var value_max = jQuery(this).data("value-max");
     var label_result = jQuery(this).data("label-result");
-    console.log("min,max,unit,value_min,value_max,label_result,")
-    console.log(min,max,unit,value_min,value_max,label_result,)
+
     var t = $(this);
     $(this).slider({
       range: true,
@@ -99,8 +97,6 @@
           " - " +
           unit +
           ui.values[1];
-          console.log(result)
-        console.log(t);
         t.closest(".slider-range").find(".range-price").html(result);
       },
     });
@@ -135,5 +131,4 @@
   if ($.fn.tooltip) {
     $('[data-toggle="tooltip"]').tooltip();
   }
-
 })(jQuery);

@@ -79,6 +79,11 @@
             flex-direction: column;
         }
 
+        .xzoom-preview {
+
+            z-index: 1;
+        }
+
         .xzoom-source img,
         .xzoom-preview img,
         .xzoom-lens img {
@@ -94,6 +99,19 @@
 
         #xzoom-default {
             width: 80%;
+        }
+
+        .xzoom {
+            display: contents;
+        }
+
+        .single_product_desc {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #addtowishlist {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -174,9 +192,9 @@
 
     <div class="row">
         <!-- Single Product Thumb -->
-        <div class="xzoom-column large-5 d-flex column col-6">
-            <div class="xzoom-container d-flex">
-                <div class="xzoom">
+        <div class="xzoom-column large-5 d-flex column col-12 col-lg-6">
+            <div class="xzoom-container d-flex" id="xzoom-container">
+                <div class="xzoom" id="xzoom" style="z-index: -1;">
                     <img class="xzoom-image" id="xzoom-default" src="/img/products/<%= product.images[0] %>"
                         xoriginal="/img/products/<%= product.images[0] %>" style="width: 80%;" />
                 </div>
@@ -188,7 +206,7 @@
                 </div>
             </div>
         </div>
-        <section class="single_product_details_area col-6 d-flex align-items-center" style="z-index: -1;">
+        <section class="single_product_details_area col-12 col-lg-6 d-flex align-items-center">
             <!-- Single Product Description -->
             <div class="single_product_desc clearfix">
                 <!-- <span>mango</span> -->
@@ -231,15 +249,13 @@
                     <!-- Cart & Favourite Box -->
                     <div class="cart-fav-box d-flex align-items-center">
                         <!-- Cart -->
-                        <button type="button" name="addtocart" id="addtocart" value="5" class="btn essence-btn">
+                        <button type="button" name="addtocart" id="addtocart" class="btn essence-btn">
                             Add to cart
                         </button>
-                        <!-- Favourite -->
-                        <div class="product-favourite ml-4">
-                            <!-- <a href="#" class="favme fa fa-heart"></a> -->
-                            <button class="favme fa fa-heart btn fav-btn" type="button"
-                                data-productId="<%= product._id %>"></button>
-                        </div>
+                        <!-- WishList -->
+                        <button type="button" name="addtowishlist" id="addtowishlist" class="btn essence-btn">
+                            Add to WishList
+                        </button>
                     </div>
                 </form>
             </div>
@@ -431,19 +447,34 @@
             const btn = document.getElementById("addtocart");
             btn.addEventListener("click", addToCart);
 
-
-            document.querySelector(".fav-btn").addEventListener("click", addToFav)
-
+            const wishlistbtn = document.getElementById("addtowishlist")
+            wishlistbtn.addEventListener("click", addToWishlist)
         };
 
+
         //fetch size
-        async function addToFav() {
-            const btn = document.querySelector(".fav-btn")
-            console.log(btn)
-            const id = btn.getAttribute("data-productId")
-            console.log(id)
+        async function addToWishlist() {
+            const id = document.getElementById("productId").value;
             try {
-                const response = await fetch(`/addToFav/${id}`)
+                console.log("await")
+                const response = await fetch(`/addToWishlist/${id}`)
+                if (response.status === 401) {
+                    // Handle case where user is not logged in
+                    Swal.fire({
+                        title: "<strong>You haven't logged</strong>",
+                        icon: "warning",
+                        html: `You have to login before trying to adding product to wishlist.`,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: `<a href="/login">Login</a>`,
+                    });
+                } else if (response.status === 409) {
+                    const data = await response.json();
+                    Swal.fire(data.message);
+                } else if (response.ok) {
+                    console.log(response)
+                    Swal.fire("Product added to the wishlist!");
+                }
             } catch (error) {
                 console.log(error)
             }

@@ -54,11 +54,11 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item ">
+                    <!-- <li class="sidebar-item ">
                         <a class="sidebar-link" href="/admin/attributes">
                             <span class="align-middle">Attributes</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
@@ -165,7 +165,7 @@
                                         <div class="mb-3">
                                             <label for="images" class="form-label">Photo</label>
                                             <div id="preview-container">
-                                                <p class="m-0">click and add image</p>
+                                                <p class="m-0" id="preview-container-p">click and add image</p>
                                                 <div id="imageErrorMessage" class="text-danger"></div>
                                                 <label for="imageInput" class="btn btn-outline-primary"
                                                     id="custom-button">Add Image</label>
@@ -426,7 +426,7 @@
             }
 
             document.getElementById("custom-button").style.display = "none";
-            document.getElementsByTagName("p")[0].style.display = "none";
+            document.getElementById("preview-container-p").style.display = "none";
 
             document
                 .getElementById("saveButton")
@@ -435,11 +435,12 @@
             async function saveChanges() {
                 event.preventDefault();
                 console.log("working");
+                let isValid = true
 
                 const name = document.getElementById("name");
                 if (!name.value.trim()) {
                     nameErrorMessage.textContent = "Product name can't be empty.";
-                    return;
+                    isValid = false
                 } else {
                     nameErrorMessage.textContent = "";
                 }
@@ -448,22 +449,27 @@
                 if (!description.value.trim()) {
                     descriptionErrorMessage.textContent =
                         "Product description can't be empty.";
-                    return;
+                    isValid = false
                 } else {
                     descriptionErrorMessage.textContent = "";
                 }
 
                 const price = document.getElementById("price");
+                var priceValue = parseFloat(price.value);
                 if (!price.value.trim()) {
                     priceErrorMessage.textContent = "Product price can't be empty.";
-                    return;
+                    isValid = false
+                } else if (priceValue < 1 || isNaN(priceValue)) {
+                    priceErrorMessage.textContent = "Please enter valid product price.";
+                    isValid = false
                 } else {
                     priceErrorMessage.textContent = "";
                 }
 
                 if (addedFiles.length < removedFiles.length) {
                     let number = addedFiles.length - removedFiles.length;
-                    return (imageErrorMessage.textContent = `Please add ${number} images`);
+                    imageErrorMessage.textContent = `Please add ${number} images`;
+                    isValid = false
                 } else {
                     imageErrorMessage.textContent = "";
                 }
@@ -472,7 +478,7 @@
                 if (parentCategory.value == 0) {
                     parentCateErrorMessage.textContent =
                         "Please Select Parent Category.";
-                    return;
+                    isValid = false
                 } else {
                     parentCateErrorMessage.textContent = "";
                 }
@@ -480,7 +486,7 @@
                 const subCategory = document.getElementById("subCategory");
                 if (subCategory.value == 0) {
                     subCateErrorMessage.textContent = "Please Select Sub Category.";
-                    return;
+                    isValid = false
                 } else {
                     subCateErrorMessage.textContent = "";
                 }
@@ -490,7 +496,7 @@
                 );
                 if (colorCheckboxes.length < 1) {
                     colorErrorMessage.textContent = "Please Select Atleast one color.";
-                    return;
+                    isValid = false
                 } else {
                     colorErrorMessage.textContent = "";
                 }
@@ -500,7 +506,7 @@
                 );
                 if (sizeCheckboxes.length < 1) {
                     sizeErrorMessage.textContent = "Please Select Atleast one size.";
-                    return;
+                    isValid = false
                 } else {
                     sizeErrorMessage.textContent = "";
                 }
@@ -526,8 +532,9 @@
                             size
                         );
                         if (quantityInput.value == "") {
-                            return (variantErrorMessages[index].textContent =
-                                "Please Enter the variant quantity");
+                            variantErrorMessages[index].textContent =
+                                "Please Enter the variant quantity";
+                            isValid = false
                         } else {
                             variantErrorMessages[index].textContent = "";
                         }
@@ -542,6 +549,10 @@
                         index++;
                     });
                 });
+
+                if (!isValid) {
+                    return
+                }
 
                 try {
                     let formData = new FormData();
@@ -669,7 +680,7 @@
                 // Check and hide the button if the limit is reached
                 if (addedFiles.length >= maxImages) {
                     document.getElementById("custom-button").style.display = "none";
-                    document.getElementsByTagName("p")[0].style.display = "none";
+                    document.getElementById("preview-container-p").style.display = "none";
                 }
                 console.log(addedFiles);
             }
@@ -710,7 +721,7 @@
                         if (addedFiles.length < maxImages) {
                             document.getElementById("custom-button").style.display =
                                 "inline-block";
-                            document.getElementsByTagName("p")[0].style.display =
+                            document.getElementById("preview-container-p").style.display =
                                 "inline-block";
                         }
                     });
@@ -743,7 +754,7 @@
 
                 document.getElementById("custom-button").style.display =
                     "inline-block";
-                document.getElementsByTagName("p")[0].style.display = "inline-block";
+                document.getElementById("preview-container-p").style.display = "inline-block";
             }
 
             document

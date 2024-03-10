@@ -6,6 +6,7 @@ const isLogin = (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -17,6 +18,7 @@ const isLogout = (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
+    res.status(500).send("Internal Server Error");
   }
 };
 

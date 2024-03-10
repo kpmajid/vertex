@@ -25,6 +25,7 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
   <style>
     /* Internal (inline) style */
     .accordion-button:focus {
@@ -151,7 +152,7 @@
         </div>
         <div class="card flex-fill w-100">
           <div class="table-responsive-sm">
-            <table id="myTable" class="table text-center table-hover my-0">
+            <table id="example" class="table text-center table-hover my-0 display" style="width:100%">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -236,8 +237,17 @@
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+
+
+
+
   <script>
     const initialize = () => {
+
       initializeSimplebar();
       initializeSidebarCollapse();
 

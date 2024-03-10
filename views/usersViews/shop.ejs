@@ -16,9 +16,62 @@
 
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="/css/core-style.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <style>
 
+    <style>
+        .filter-section {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-section h3 {
+            margin-top: 0;
+        }
+
+        .filter-section h4 {
+            margin-top: 0.5em;
+        }
+
+        .filter-category .category-btn {
+            margin-right: 5px;
+        }
+
+        .filter-slider input {
+            width: 100%;
+        }
+
+        .filter-color select,
+        .filter-size select {
+            width: 100%;
+            margin-top: 5px;
+            padding: 5px;
+        }
+
+        .apply-btn {
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .apply-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .radio-label {
+            padding: 10px 15px;
+            margin: 2px;
+            border-radius: 25px;
+            /* Adjust the border-radius for the capsule shape */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #fff;
+            /* Blue for unselected state */
+            color: #000;
+            border: 1px solid #000;
+        }
     </style>
 </head>
 
@@ -150,33 +203,11 @@
                             </div>
                         </div>
 
-                        <!-- ##### Single Widget ##### -->
-                        <div class="widget price mb-50">
-                            <!-- Widget Title -->
-                            <h6 class="widget-title mb-30">Filter by</h6>
-                            <!-- Widget Title 2 -->
-                            <p class="widget-title2 mb-30">Price</p>
 
-                            <div class="widget-desc">
-                                <div class="slider-range">
-                                    <div data-min="49" data-max="360" data-unit="$"
-                                        class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                                        data-value-min="49" data-value-max="360" data-label-result="Range:">
-                                        <div class="ui-slider-range ui-widget-header ui-corner-all">
-                                        </div>
-                                        <span class="ui-slider-handle ui-state-default ui-corner-all"
-                                            tabindex="0"></span>
-                                        <span class="ui-slider-handle ui-state-default ui-corner-all"
-                                            tabindex="0"></span>
-                                    </div>
-                                    <div class="range-price">Range: $49.00 - $360.00</div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- ##### Single Widget ##### -->
-                        <div class="widget color mb-50">
-                            <!-- Widget Title 2 -->
+                        <!-- Widget Title 2 -->
+                        <!--  <div class="widget color mb-50">
                             <p class="widget-title2 mb-30">Color</p>
                             <div class="widget-desc">
                                 <ul class="d-flex">
@@ -192,7 +223,7 @@
                                     <li><a href="#" class="color10"></a></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 
@@ -206,18 +237,16 @@
                                         <!-- <p><span>186</span> products found</p> -->
                                     </div>
                                     <!-- Sorting -->
-                                    <!-- <div class="product-sorting d-flex">
+                                    <div class="product-sorting d-flex">
                                         <p>Sort by:</p>
-                                        <form action="#" method="get">
-                                            <select name="select" id="sortByselect">
-                                                <option value="value">Highest Rated</option>
-                                                <option value="value">Newest</option>
-                                                <option value="value">Price: $$ - $</option>
-                                                <option value="value">Price: $ - $$</option>
-                                            </select>
-                                            <input type="submit" class="d-none" value="">
-                                        </form>
-                                    </div> -->
+                                        <select name="sortBy" id="sortBySelect">
+                                            <option value="default">None</option>
+                                            <option value="rated">Highest Rated</option>
+                                            <option value="newest">Newest</option>
+                                            <option value="lowToHigh">Price: Low to High</option>
+                                            <option value="highToLow">Price: High to Low</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -247,10 +276,7 @@
                                                     <% } else { %> ₹ <%= product.originalPrice %>
                                                             <% } %>
 
-                                                                <!-- Favourite -->
-                                                                <div class="product-favourite">
-                                                                    <a href="#" class="favme fa fa-heart"></a>
-                                                                </div>
+
                                             </div>
 
                                             <!-- Product Description -->
@@ -278,22 +304,23 @@
                                     <% }) %>
                                         <% } %>
                         </div>
+                        <!-- Pagination -->
+                        <nav aria-label="navigation">
+                            <ul class="pagination mt-50 mb-70">
+                                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">21</a></li>
+                                <li class="page-item"><a class="page-link" href="#"><i
+                                            class="fa fa-angle-right"></i></a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-                <!-- Pagination -->
-                <!-- <nav aria-label="navigation">
-                        <ul class="pagination mt-50 mb-70">
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">21</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a>
-                            </li>
-                        </ul>
-                    </nav> -->
             </div>
         </div>
     </section>
@@ -392,6 +419,9 @@
     </footer>
     <!-- ##### Footer Area End ##### -->
 
+
+
+
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
@@ -404,6 +434,18 @@
     <script src="/js/classy-nav.min.js"></script>
     <!-- Active js -->
     <script src="/js/active.js"></script>
+
+
+    <script>
+
+
+        function updateURL() {
+            const sortBy = document.getElementById("sortBySelect").value
+
+
+        }
+
+    </script>
 </body>
 
 </html>

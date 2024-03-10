@@ -6,7 +6,6 @@ const Orders = require("../models/Orders");
 const Address = require("../models/Address");
 const Discounts = require("../models/Discounts");
 
-
 const { ObjectId } = require("mongodb");
 
 const mongoose = require("mongoose");
@@ -19,6 +18,7 @@ const loadLogin = (req, res) => {
 
 const authenticateAdmin = async (req, res) => {
   try {
+    console.log("admin login");
     const { email, password } = req.body;
 
     const admin = await Admin.findOne({ email: email });

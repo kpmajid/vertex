@@ -55,11 +55,12 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item ">
+
+                    <!-- <li class="sidebar-item ">
                         <a class="sidebar-link" href="/admin/attributes">
                             <span class="align-middle">Attributes</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
@@ -222,6 +223,29 @@
                             timer: 1500,
                         });
                         window.location.assign("/admin/category");
+                    } else if (response.status === 400) {
+                        const errorMessage = await response.json();
+                        await Swal.fire({
+                            icon: "error",
+                            title: "Bad Request",
+                            text: errorMessage.message || "An error occurred",
+                        });
+                    } else if (response.status === 409) {
+
+                        const errorMessage = await response.json();
+                        await Swal.fire({
+                            icon: "warning",
+                            title: "Conflict",
+                            text: errorMessage.message || "An error occurred",
+                        });
+                    } else {
+
+                        console.error("Error:", response.statusText);
+                        await Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "An error occurred",
+                        });
                     }
                 } catch (error) {
                     console.log(error);

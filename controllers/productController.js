@@ -154,6 +154,8 @@ const loadEditProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
+    console.log("edit product");
+    console.log(req.body);
     const {
       name,
       description,
@@ -184,7 +186,7 @@ const editProduct = async (req, res) => {
 
     product.name = name;
     product.description = description.trim();
-    product.price = price;
+    product.originalPrice = price;
     product.category.parentCategory = parentCategory;
     product.category.subCategory = subCategory;
 
@@ -192,7 +194,7 @@ const editProduct = async (req, res) => {
 
     await product.save();
     console.log("saved");
-    res.json({ message: "product updated successfully" });
+    res.status(200).json({ message: "product updated successfully" });
   } catch (error) {
     console.log(error);
   }

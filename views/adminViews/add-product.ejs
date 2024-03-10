@@ -16,6 +16,11 @@
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
     <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@4/dist/css/bootstrap.min.css" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="/css/cropper.css" />
 
     <link href="/admin/css/app.css" rel="stylesheet" />
     <link href="css/sample.css" rel="stylesheet" />
@@ -25,6 +30,11 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
     <link href="/admin/css/uploadImage.css" rel="stylesheet" />
+    <style>
+        .img-container img {
+            max-width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -56,11 +66,11 @@
                     </li>
 
 
-                    <li class="sidebar-item ">
+                    <!-- <li class="sidebar-item ">
                         <a class="sidebar-link" href="/admin/attributes">
                             <span class="align-middle">Attributes</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/orders">
@@ -160,11 +170,11 @@
                                         <div class="mb-3">
                                             <span class="form-label">Photo</span>
                                             <div id="preview-container">
-                                                <p class="m-0">click and add image</p>
+                                                <p class="m-0" id="preview-container-p">click and add image</p>
                                                 <div id="imageErrorMessage" class="text-danger"></div>
                                                 <label for="imageInput" class="btn btn-outline-primary"
                                                     id="custom-button">Add Image</label>
-                                                <input type="file" name="productImages" id="imageInput" multiple />
+                                                <input type="file" name="productImages" id="imageInput" />
                                                 <div class="preview-images" id="preview-images"></div>
                                             </div>
                                         </div>
@@ -278,10 +288,41 @@
                     </div>
                 </form>
             </main>
+            <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalLabel">
+                                Cropper
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> <span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+
+
+                        <div class="modal-body">
+                            <div class="img-container">
+                                <img id="cropper-image" src="" alt="" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" class="btn btn-primary" id="crop-image-button">
+                                Crop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <script src="https://unpkg.com/jquery@3/dist/jquery.slim.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+    <script src="/js/cropper.js"></script>
     <script>
         function updateOptions() {
             // Get selected variants, colors, and sizes
@@ -342,11 +383,32 @@
             }
         }
 
+        let cropper;
+        const addedFiles = [];
+        let count = 0;
+        let formData = new FormData();
+        let imageName;
+        const maxImages = 4;
+
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
 
             // initializeAddProduct();
+            document
+                .getElementById("imageInput")
+                .addEventListener("change", handleFileSelect);
+
+            document
+                .getElementById("crop-image-button")
+                .addEventListener("click", cropImage);
+
+            $('#modal').on('hidden.bs.modal', function () {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            });
 
             document
                 .getElementById("add-product")
@@ -355,11 +417,13 @@
             async function addProduct() {
                 event.preventDefault();
 
+                let isValid = true
+
 
                 const name = document.getElementById("name");
                 if (!name.value.trim()) {
                     nameErrorMessage.textContent = "Please enter product name.";
-                    return;
+                    isValid = false
                 } else {
                     nameErrorMessage.textContent = "";
                 }
@@ -368,21 +432,26 @@
                 if (!description.value.trim()) {
                     descriptionErrorMessage.textContent =
                         "Please enter product description.";
-                    return;
+                    isValid = false
                 } else {
                     descriptionErrorMessage.textContent = "";
                 }
 
                 const price = document.getElementById("price");
+                var priceValue = parseFloat(price.value);
                 if (!price.value.trim()) {
                     priceErrorMessage.textContent = "Please enter product price.";
-                    return;
+                    isValid = false
+                } else if (priceValue < 1 || isNaN(priceValue)) {
+                    priceErrorMessage.textContent = "Please enter valid product price.";
+                    isValid = false
                 } else {
                     priceErrorMessage.textContent = "";
                 }
 
                 if (addedFiles.length < 4) {
-                    return (imageErrorMessage.textContent = "Please add 4 images");
+                    imageErrorMessage.textContent = "Please add 4 images";
+                    isValid = false
                 } else {
                     imageErrorMessage.textContent = "";
                 }
@@ -391,7 +460,7 @@
                 if (parentCategory.value == 0) {
                     parentCateErrorMessage.textContent =
                         "Please Select Parent Category.";
-                    return;
+                    isValid = false
                 } else {
                     parentCateErrorMessage.textContent = "";
                 }
@@ -399,7 +468,7 @@
                 const subCategory = document.getElementById("subCategory");
                 if (subCategory.value == 0) {
                     subCateErrorMessage.textContent = "Please Select Sub Category.";
-                    return;
+                    isValid = false
                 } else {
                     subCateErrorMessage.textContent = "";
                 }
@@ -411,7 +480,7 @@
                 );
                 if (colorCheckboxes.length < 1) {
                     colorErrorMessage.textContent = "Please Select Atleast one color.";
-                    return;
+                    isValid = false
                 } else {
                     colorErrorMessage.textContent = "";
                 }
@@ -421,7 +490,7 @@
                 );
                 if (sizeCheckboxes.length < 1) {
                     sizeErrorMessage.textContent = "Please Select Atleast one size.";
-                    return;
+                    isValid = false
                 } else {
                     sizeErrorMessage.textContent = "";
                 }
@@ -446,8 +515,8 @@
                             size
                         );
                         if (quantityInput.value == "") {
-                            return (variantErrorMessages[index].textContent =
-                                "Please Enter the variant quantity");
+                            variantErrorMessages[index].textContent = "Please Enter the variant quantity";
+                            isValid = false
                         } else {
                             variantErrorMessages[index].textContent = "";
                         }
@@ -462,9 +531,14 @@
                     });
                 });
 
+                if (!isValid) {
+                    return
+                }
+
                 try {
 
-                    let formData = new FormData();
+
+                    // let formData = new FormData();
                     formData.append("name", name.value);
                     formData.append("description", description.value);
                     formData.append("price", price.value);
@@ -472,9 +546,9 @@
                     formData.append("subCategory", subCategory.value);
                     formData.append("combinations", JSON.stringify(combinations));
 
-                    for (let i = 0; i < addedFiles.length; i++) {
-                        formData.append("images[]", addedFiles[i]);
-                    }
+                    // for (let i = 0; i < addedFiles.length; i++) {
+                    //     formData.append("images[]", addedFiles[i]);
+                    // }
 
                     // formData.forEach((value, key) => {
                     //     console.log(`${value}`);
@@ -505,89 +579,6 @@
                     window.location.href = "/admin/products";
                 });
 
-            document
-                .getElementById("imageInput")
-                .addEventListener("change", handleFileSelect);
-
-            // Track added file names to prevent duplicates
-            const addedFiles = [];
-
-            function handleFileSelect(event) {
-                const files = event.target.files;
-
-                const maxImages = 4;
-
-                if (files.length + addedFiles.length > maxImages) {
-                    alert(`You can add up to ${maxImages} images.`);
-                    event.target.value = "";
-                    return;
-                }
-
-                for (const file of files) {
-                    let isExist = false;
-                    addedFiles.forEach((addedfile) => {
-                        if (addedfile.name == file.name) {
-                            console.log("setting");
-                            isExist = true;
-                        }
-                    });
-                    if (!isExist) {
-                        previewFile(file);
-                        addedFiles.push(file);
-                    }
-                }
-
-                // Check and hide the button if the limit is reached
-                if (addedFiles.length >= maxImages) {
-                    document.getElementById("custom-button").style.display = "none";
-                    document.getElementsByTagName("p")[0].style.display = "none";
-                }
-                console.log(addedFiles);
-            }
-
-            function previewFile(file) {
-                const reader = new FileReader();
-                const maxImages = 4;
-                reader.onload = function (e) {
-                    const previewImagesContainer =
-                        document.getElementById("preview-images");
-
-                    const imageContainer = document.createElement("div");
-                    imageContainer.classList.add("preview-image-container");
-
-                    const image = new Image();
-                    image.src = e.target.result;
-                    image.classList.add("preview-image");
-
-                    const removeButton = document.createElement("button");
-                    removeButton.innerText = "Remove";
-                    removeButton.addEventListener("click", () => {
-                        previewImagesContainer.removeChild(imageContainer);
-
-                        const index = addedFiles.findIndex(
-                            (obj) => obj.name === file.name
-                        );
-
-                        if (index !== -1) {
-                            addedFiles.splice(index, 1);
-                        }
-
-                        if (addedFiles.length < maxImages) {
-                            document.getElementById("custom-button").style.display =
-                                "inline-block";
-                            document.getElementsByTagName("p")[0].style.display =
-                                "inline-block";
-                        }
-                    });
-
-                    imageContainer.appendChild(image);
-                    imageContainer.appendChild(removeButton);
-
-                    previewImagesContainer.appendChild(imageContainer);
-                };
-
-                reader.readAsDataURL(file);
-            }
 
             const topLevelCategorySelect =
                 document.getElementById("topLevelCategory");
@@ -661,6 +652,129 @@
                 });
             }
         };
+
+        //crop
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return
+            }
+            if (cropper) {
+                console.log("cropper")
+                console.log(cropper)
+            }
+
+            imageName = file.name;
+
+
+            if (addedFiles.length >= maxImages) {
+                alert(`You can add up to ${maxImages} images.`);
+                event.target.value = "";
+
+                document.getElementById("custom-button").style.display = "none";
+                document.getElementById("preview-container-p").style.display = "none";
+                return;
+            }
+
+            $("#cropper-image").attr("src", URL.createObjectURL(file));
+            $("#modal").on("shown.bs.modal", initializeCropper);
+            $("#modal").modal("show");
+
+        }
+
+        function initializeCropper() {
+            var image = document.getElementById("cropper-image");
+
+            if (cropper) {
+                destroyCropper()
+                console.log("cropper initializeCropper")
+                console.log(cropper)
+            }
+
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+            });
+
+        }
+
+        function cropImage() {
+
+            $("#modal").modal("hide");
+            $("#cropper-image").attr("src", "");
+
+            if (!cropper) {
+                alert("No cropper initialized.");
+                return;
+            }
+
+            canvas = cropper.getCroppedCanvas({
+                width: 550,
+                height: 550,
+            });
+
+            canvas.toBlob(function (blob) {
+                formData.append(`images[${count}]`, blob, imageName);
+                addedFiles.push(`images[${count}]`)
+                previewFile(canvas.toDataURL(), `images[${count}]`);
+                count++;
+                if (addedFiles.length >= maxImages) {
+                    document.getElementById("custom-button").style.display = "none";
+                    document.getElementById("preview-container-p").style.display = "none";
+                }
+            })
+
+            destroyCropper()
+        }
+
+        function destroyCropper() {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+
+        function previewFile(file, fileName) {
+            const maxImages = 4;
+            const previewImagesContainer =
+                document.getElementById("preview-images");
+
+            const imageContainer = document.createElement("div");
+            imageContainer.classList.add("preview-image-container");
+
+            const image = new Image();
+            image.src = file;
+            image.classList.add("preview-image");
+
+            const removeButton = document.createElement("button");
+            removeButton.innerText = "Remove";
+            removeButton.addEventListener("click", () => {
+                previewImagesContainer.removeChild(imageContainer);
+
+                const index = addedFiles.findIndex((name) => name === fileName);
+
+                if (index !== -1) {
+                    formData.delete(fileName);
+                    addedFiles.splice(index, 1);
+                }
+
+                if (addedFiles.length < maxImages) {
+                    document.getElementById("custom-button").style.display =
+                        "inline-block";
+                    document.getElementsByTagName("p")[0].style.display =
+                        "inline-block";
+                }
+            });
+
+            imageContainer.appendChild(image);
+            imageContainer.appendChild(removeButton);
+
+            previewImagesContainer.appendChild(imageContainer);
+
+
+        }
+
 
         document.addEventListener("DOMContentLoaded", () => initialize());
     </script>

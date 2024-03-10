@@ -82,6 +82,8 @@ const {
   renderAddCoupon,
   generateCoupon,
   createCoupon,
+  loadEditCoupon,
+  editCoupon,
 } = require("../controllers/couponController");
 
 const {
@@ -89,6 +91,8 @@ const {
   removeProductOffer,
   applyCategoryOffer,
   removeCategoryOffer,
+  loadEditOffer,
+  editOffer,
 } = require("../controllers/offerController");
 
 const { isLogin, isLogout } = require("../middleware/authAdmin");
@@ -106,14 +110,9 @@ router.get("/sales-chart/:period", isLogin, renderSalesChart);
 router.get("/products", isLogin, loadProducts);
 router.get("/add-product", isLogin, loadAddProduct);
 router.post("/subcategory", isLogin, getSubCategory);
-router.post("/add-product", isLogin, upload.array("images[]", 4), addProduct);
+router.post("/add-product", isLogin, upload.any(), addProduct);
 router.get("/edit-product/:id", isLogin, loadEditProduct);
-router.put(
-  "/edit-product/:id",
-  isLogin,
-  upload.array("images[]", 4),
-  editProduct
-);
+router.put("/edit-product/:id", isLogin, upload.any(), editProduct);
 
 //category
 router.get("/category", isLogin, loadCategory);
@@ -151,11 +150,16 @@ router.post("/remove-product-offer", isLogin, removeProductOffer);
 router.post("/apply-category-offer", isLogin, applyCategoryOffer);
 router.post("/remove-category-offer", isLogin, removeCategoryOffer);
 
+router.get("/edit-offer/:id", isLogin, loadEditOffer);
+router.put("/edit-offer/:id", isLogin, editOffer);
+
 //Coupon
 router.get("/coupon", isLogin, renderCoupon);
 router.get("/add-coupon", isLogin, renderAddCoupon);
 router.get("/generate-coupon", isLogin, generateCoupon);
 router.post("/create-coupon", isLogin, createCoupon);
+router.get("/edit-coupon/:id", isLogin, loadEditCoupon);
+router.put("/edit-coupon/:id", isLogin, editCoupon);
 
 //Attribute
 router.get("/attributes", isLogin, renderAttributes);

@@ -1274,9 +1274,9 @@ img {
 .single_product_details_area .single_product_desc {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 50%;
-  flex: 0 0 50%;
-  max-width: 50%;
-  width: 50%;
+  flex: 0 0 75%;
+  /* max-width: 50%;
+  width: 50%; */
   position: relative;
   z-index: 1;
 }
@@ -2390,7 +2390,7 @@ img {
 }
 
 .single-cart-item .product-image img {
-  width: 80px;
+  width: 110px;
   height: 110px;
   border-radius: 8px;
   object-fit: cover;
@@ -2425,105 +2425,104 @@ img {
   margin: 0;
 }
 
-
-
 .widget.color .widget-desc ul li label.color1 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #ffffff;
 }
 .widget.color .widget-desc ul li label.color2 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #969696;
 }
 .widget.color .widget-desc ul li label.color3 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #030303;
 }
 .widget.color .widget-desc ul li label.color4 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #0315ff;
 }
 .widget.color .widget-desc ul li label.color5 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #dc0647;
 }
 .widget.color .widget-desc ul li label.color6 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #fff56a;
 }
 .widget.color .widget-desc ul li label.color7 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #f26e51;
 }
 .widget.color .widget-desc ul li label.color8 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #9a8777;
 }
 .widget.color .widget-desc ul li label.color9 {
-    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
   background-color: #5b862a;
 }
-.widget.color .widget-desc ul li label.color10 {    width: 30px;
-    height: 30px;
-    display: block;
-    background-color: #ffffff;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+.widget.color .widget-desc ul li label.color10 {
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
 
   background-color: #8662a9;
 }
@@ -2531,11 +2530,11 @@ img {
 .xzoom-source img,
 .xzoom-preview img,
 .xzoom-lens img {
-    display: block;
-    max-width: none;
-    max-height: none;
-    -webkit-transition: none;
-    -moz-transition: none;
-    -o-transition: none;
-    transition: none;
+  display: block;
+  max-width: none;
+  max-height: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
 }

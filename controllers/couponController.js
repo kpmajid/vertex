@@ -64,9 +64,100 @@ const createCoupon = async (req, res) => {
   }
 };
 
+const checkCoupon = async (req, res) => {
+  try {
+    console.log("checkCoupon");
+    let { couponCode } = req.params;
+    const { totalAmount } = req.body;
+
+    couponCode = couponCode.toUpperCase();
+
+    console.log("couponCode,totalAmount");
+    console.log(couponCode, totalAmount);
+
+    if (!couponCode || !totalAmount || isNaN(totalAmount)) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Invalid input data" });
+    }
+
+    const couponDoc = await Coupons.findOne({ couponCode: couponCode });
+
+    if (!couponDoc) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Invalid Coupon Code" });
+    }
+
+    const currentDate = new Date();
+
+    if (currentDate < couponDoc.start || currentDate > couponDoc.end) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Coupon is expired" });
+    }
+
+    if (totalAmount < couponDoc.minimumAmount) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Minimum purchase amount is not met" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, discountAmount: couponDoc.discountAmount });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const loadEditCoupon = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const coupon = await Coupons.findById(id);
+    console.log(coupon);
+    res.render("adminViews/edit-coupon", { coupon });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const editCoupon = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { couponCode, discountAmount, minimumAmount, start, end } = req.body;
+
+    const couponDoc = await Coupons.findById(id);
+
+    console.log("editCoupon");
+
+    if (!couponDoc) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Coupon not found." });
+    }
+
+    couponDoc.couponCode = couponCode;
+    couponDoc.discountAmount = discountAmount;
+    couponDoc.minimumAmount = minimumAmount;
+    couponDoc.start = start;
+    couponDoc.end = end;
+
+    await couponDoc.save();
+    res.json({ success: true, message: "Coupon Updated" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   renderCoupon,
   renderAddCoupon,
   generateCoupon,
   createCoupon,
+  checkCoupon,
+  loadEditCoupon,
+  editCoupon,
 };

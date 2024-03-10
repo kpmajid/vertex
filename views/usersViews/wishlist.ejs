@@ -1,448 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <!-- Title  -->
-    <title>Essence - Fashion Ecommerce Template</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <!-- Favicon  -->
-    <link rel="icon" href="img/core-img/favicon.ico" />
+  <!-- Title  -->
+  <title>Essence - Fashion Ecommerce Template</title>
 
-    <!-- Core Style CSS -->
-    <link rel="stylesheet" href="css/core-style.css" />
+  <!-- Favicon  -->
+  <link rel="icon" href="img/core-img/favicon.ico" />
 
-    <style>
-      .profile-sidebar {
-        text-align: center;
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-      }
+  <!-- Core Style CSS -->
+  <link rel="stylesheet" href="css/core-style.css" />
 
-      .profile-options {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
+  <style>
+    .profile-sidebar {
+      text-align: center;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+    }
 
-      .profile-options li {
-        margin-bottom: 10px;
-      }
+    .profile-options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-      .profile-options a {
-        text-decoration: none;
-        display: block;
-        padding: 10px 20px;
-        border-radius: 20px;
-        color: #495057;
-        transition: background-color 0.3s;
-      }
+    .profile-options li {
+      margin-bottom: 10px;
+    }
 
-      .profile-options a:hover {
-        background-color: #e9ecef;
-      }
+    .profile-options a {
+      text-decoration: none;
+      display: block;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #495057;
+      transition: background-color 0.3s;
+    }
 
-      .profile-options a.active {
-        background-color: #000;
-        color: #fff;
-      }
+    .profile-options a:hover {
+      background-color: #e9ecef;
+    }
 
-      .user-details {
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-      }
-      .refferal-link {
-        margin-top: 10px;
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-      }
+    .profile-options a.active {
+      background-color: #000;
+      color: #fff;
+    }
 
-      .link-container {
-        display: flex;
-        align-items: center;
-        width: 100%;
-      }
+    .wishlist-image img {
+      width: 100px;
+      height: 100px;
+    }
 
-      .link {
-        margin-right: 1px;
-        flex-grow: 1;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px 0 0 5px;
-      }
-      .copy-button {
-        padding: 10px 20px;
-        border: none;
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-      }
-    </style>
-  </head>
+    .table td {
+      vertical-align: middle
+    }
 
-  <body>
-    <!-- ##### Header Area Start ##### -->
-    <header class="header_area">
-      <div
-        class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between"
-      >
-        <!-- Classy Menu -->
-        <nav class="classy-navbar" id="essenceNav">
-          <!-- Logo -->
-          <a class="nav-brand" href="/"
-            ><img src="/img/core-img/logo.png" alt=""
-          /></a>
-          <!-- Navbar Toggler -->
-          <div class="classy-navbar-toggler">
-            <span class="navbarToggler"
-              ><span></span><span></span><span></span
-            ></span>
-          </div>
-          <!-- Menu -->
-          <div class="classy-menu">
-            <!-- close btn -->
-            <div class="classycloseIcon">
-              <div class="cross-wrap">
-                <span class="top"></span><span class="bottom"></span>
-              </div>
+    .product-remove {
+      border: 0px;
+      background: none;
+    }
+
+    .product-remove:hover {
+      cursor: pointer;
+      color: #0315ff;
+    }
+
+    .product-remove:focus {
+      outline: 0px;
+    }
+
+    .old-price {
+      display: inline-block;
+      font-family: "Ubuntu", sans-serif;
+
+      color: #787878;
+      font-weight: 700;
+      text-decoration: line-through;
+      margin-right: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ##### Header Area Start ##### -->
+  <header class="header_area">
+    <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+      <!-- Classy Menu -->
+      <nav class="classy-navbar" id="essenceNav">
+        <!-- Logo -->
+        <a class="nav-brand" href="/"><img src="/img/core-img/logo.png" alt="" /></a>
+        <!-- Navbar Toggler -->
+        <div class="classy-navbar-toggler">
+          <span class="navbarToggler"><span></span><span></span><span></span></span>
+        </div>
+        <!-- Menu -->
+        <div class="classy-menu">
+          <!-- close btn -->
+          <div class="classycloseIcon">
+            <div class="cross-wrap">
+              <span class="top"></span><span class="bottom"></span>
             </div>
-            <!-- Nav Start -->
-            <div class="classynav">
+          </div>
+          <!-- Nav Start -->
+          <div class="classynav">
+            <ul>
+              <li><a href="/shop">Shop</a></li>
+              <li><a href="blog.html">Blog</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <!-- Nav End -->
+        </div>
+      </nav>
+
+      <!-- Header Meta Data -->
+      <div class="header-meta d-flex clearfix justify-content-end">
+        <!-- Search Area -->
+        <div class="search-area">
+          <form action="#" method="post">
+            <input type="search" name="search" id="headerSearch" placeholder="Type for search" />
+            <button type="submit">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+        <div class="favourite-area">
+          <a href="#"><img src="/img/core-img/heart.svg" alt="" /></a>
+        </div>
+
+        <!-- User Login Info -->
+        <div class="user-login-info">
+          <a href="/profile"><img src="/img/core-img/user.svg" alt="" /></a>
+        </div>
+        <!-- Cart Area -->
+        <div class="cart-area">
+          <a href="/cart" id="essenceCartBtn"><img src="/img/core-img/bag.svg" alt="" />
+            <!-- <span>3</span> -->
+          </a>
+        </div>
+        <div class="sign-in-area">
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- ##### Header Area End ##### -->
+
+  <!-- ##### Checkout Area Start ##### -->
+  <div class="profile-page section-padding-80">
+    <div class="container">
+      <div class="row">
+        <!-- Sidebar Section -->
+        <div class="col-12 col-md-5 col-lg-3">
+          <div class="profile-sidebar">
+            <ul class="list-unstyled profile-options">
+              <li><a href="/profile">Account</a></li>
+              <li><a href="/password">Change Password</a></li>
+              <li><a href="/orders">Order History</a></li>
+              <li><a href="#">Track Order</a></li>
+              <li><a href="/cart">Shopping Cart</a></li>
+              <li><a href="/wishlist" class="active">Wishlist</a></li>
+              <li><a href="/address">Address</a></li>
+              <li><a href="/add-address">Add Address</a></li>
+              <li><a href="/wallet">wallet</a></li>
+              <li><a href="/logout">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- User Details Section -->
+        <div class="col-12 col-md-7 col-lg-9">
+          <div class="table-responsive-sm">
+            <table id="myTable" class="table text-center table-hover my-0">
+              <thead>
+                <tr>
+                  <th class="">Image</th>
+                  <th class="">Name</th>
+                  <th class="">Price</th>
+                  <!-- <th class=""></th> -->
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (products.length<=0) { %>
+                  <tr>
+                    <td colspan="5">
+                      <h5>NO Products in Wishlist</h5>
+                    </td>
+                  </tr>
+                  <% } else { %>
+                    <% products.forEach(product=> { %>
+                      <tr onclick="redirectToProduct('<%= product._id %>')">
+
+                        <td class="wishlist-image">
+                          <img src="/img/products/<%= product.images[0]%>" class="cart-thumb" alt="" />
+                        </td>
+                        <td>
+                          <%= product.name%>
+                        </td>
+                        <td>
+                          <% if (product.discount) { %>
+                            <span class="old-price original-price">
+                              ₹ <%= product.originalPrice %>
+                            </span>
+                            <span class="discountedPrice price">
+                              ₹ <%= product.discountedPrice %>
+                            </span>
+                            <% } else { %>
+                              <span class="original-price price">
+                                ₹ <%= product.originalPrice %>
+                              </span>
+                              <% } %>
+                        </td>
+                        <!-- <td>
+                            <button type="button" class="addToCart btn btn-primary" data-itemid="<%= product._id %>">
+                              Add To Cart
+                            </button>
+                          </td> -->
+                        <td>
+                          <button type="button" class="product-remove" data-itemid="<%= product._id %>">
+                            <i class="fa fa-close" aria-hidden="true"> </i>
+                          </button>
+                        </td>
+
+                      </tr>
+
+                      <% }) %>
+                        <% } %>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ##### Checkout Area End ##### -->
+
+  <!-- ##### Footer Area Start ##### -->
+  <footer class="footer_area clearfix">
+    <div class="container">
+      <div class="row">
+        <!-- Single Widget Area -->
+        <div class="col-12 col-md-6">
+          <div class="single_widget_area d-flex mb-30">
+            <!-- Logo -->
+            <div class="footer-logo mr-50">
+              <a href="#"><img src="img/core-img/logo2.png" alt="" /></a>
+            </div>
+            <!-- Footer Menu -->
+            <div class="footer_menu">
               <ul>
-                <li><a href="/shop">Shop</a></li>
+                <li><a href="shop.html">Shop</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>
             </div>
-            <!-- Nav End -->
           </div>
-        </nav>
-
-        <!-- Header Meta Data -->
-        <div class="header-meta d-flex clearfix justify-content-end">
-          <!-- Search Area -->
-          <div class="search-area">
-            <form action="#" method="post">
-              <input
-                type="search"
-                name="search"
-                id="headerSearch"
-                placeholder="Type for search"
-              />
-              <button type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </form>
-          </div>
-          <div class="favourite-area">
-            <a href="#"><img src="/img/core-img/heart.svg" alt="" /></a>
-          </div>
-
-          <!-- User Login Info -->
-          <div class="user-login-info">
-            <a href="/profile"><img src="/img/core-img/user.svg" alt="" /></a>
-          </div>
-          <!-- Cart Area -->
-          <div class="cart-area">
-            <a href="/cart" id="essenceCartBtn"
-              ><img src="/img/core-img/bag.svg" alt="" />
-              <!-- <span>3</span> -->
-            </a>
-          </div>
-          <div class="sign-in-area">
-            <a href="/logout">Logout</a>
+        </div>
+        <!-- Single Widget Area -->
+        <div class="col-12 col-md-6">
+          <div class="single_widget_area mb-30">
+            <ul class="footer_widget_menu">
+              <li><a href="#">Order Status</a></li>
+              <li><a href="#">Payment Options</a></li>
+              <li><a href="#">Shipping and Delivery</a></li>
+              <li><a href="#">Guides</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms of Use</a></li>
+            </ul>
           </div>
         </div>
       </div>
-    </header>
-    <!-- ##### Header Area End ##### -->
 
-    <!-- ##### Checkout Area Start ##### -->
-    <div class="profile-page section-padding-80">
-      <div class="container">
-        <div class="row">
-          <!-- Sidebar Section -->
-          <div class="col-12 col-md-5 col-lg-3">
-            <div class="profile-sidebar">
-              <ul class="list-unstyled profile-options">
-                <li><a href="/profile">Account</a></li>
-                <li><a href="/password">Change Password</a></li>
-                <li><a href="/orders">Order History</a></li>
-                <li><a href="#">Track Order</a></li>
-                <li><a href="/cart">Shopping Cart</a></li>
-                <li><a href="/wishlist" class="active">Wishlist</a></li>
-                <li><a href="/address">Address</a></li>
-                <li><a href="/add-address">Add Address</a></li>
-                <li><a href="/wallet">wallet</a></li>
-                <li><a href="/logout">Logout</a></li>
-              </ul>
+      <div class="row align-items-end">
+        <!-- Single Widget Area -->
+        <div class="col-12 col-md-6">
+          <div class="single_widget_area">
+            <div class="footer_heading mb-30">
+              <h6>Subscribe</h6>
+            </div>
+            <div class="subscribtion_form">
+              <form action="#" method="post">
+                <input type="email" name="mail" class="mail" placeholder="Your email here" />
+                <button type="submit" class="submit">
+                  <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                </button>
+              </form>
             </div>
           </div>
+        </div>
+        <!-- Single Widget Area -->
+        <div class="col-12 col-md-6">
+          <div class="single_widget_area">
+            <div class="footer_social_area">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook"
+                  aria-hidden="true"></i></a>
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram"
+                  aria-hidden="true"></i></a>
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter"
+                  aria-hidden="true"></i></a>
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i class="fa fa-pinterest"
+                  aria-hidden="true"></i></a>
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play"
+                  aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          <!-- User Details Section -->
-          <div class="col-12 col-md-7 col-lg-9"></div>
+      <div class="row mt-5">
+        <div class="col-md-12 text-center">
+          <p>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            Copyright &copy;
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            All rights reserved | Made with
+            <i class="fa fa-heart-o" aria-hidden="true"></i> by
+            <a href="https://colorlib.com" target="_blank">Colorlib</a>,
+            distributed by
+            <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+          </p>
         </div>
       </div>
     </div>
+  </footer>
+  <!-- ##### Footer Area End ##### -->
 
-    <!-- ##### Checkout Area End ##### -->
+  <script>
+    function redirectToProduct(productId) {
+      window.location.href = "/product/" + productId;
+    }
+    async function remove(button) {
+      try {
 
-    <!-- ##### Footer Area Start ##### -->
-    <footer class="footer_area clearfix">
-      <div class="container">
-        <div class="row">
-          <!-- Single Widget Area -->
-          <div class="col-12 col-md-6">
-            <div class="single_widget_area d-flex mb-30">
-              <!-- Logo -->
-              <div class="footer-logo mr-50">
-                <a href="#"><img src="img/core-img/logo2.png" alt="" /></a>
-              </div>
-              <!-- Footer Menu -->
-              <div class="footer_menu">
-                <ul>
-                  <li><a href="shop.html">Shop</a></li>
-                  <li><a href="blog.html">Blog</a></li>
-                  <li><a href="contact.html">Contact</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- Single Widget Area -->
-          <div class="col-12 col-md-6">
-            <div class="single_widget_area mb-30">
-              <ul class="footer_widget_menu">
-                <li><a href="#">Order Status</a></li>
-                <li><a href="#">Payment Options</a></li>
-                <li><a href="#">Shipping and Delivery</a></li>
-                <li><a href="#">Guides</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Use</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="row align-items-end">
-          <!-- Single Widget Area -->
-          <div class="col-12 col-md-6">
-            <div class="single_widget_area">
-              <div class="footer_heading mb-30">
-                <h6>Subscribe</h6>
-              </div>
-              <div class="subscribtion_form">
-                <form action="#" method="post">
-                  <input
-                    type="email"
-                    name="mail"
-                    class="mail"
-                    placeholder="Your email here"
-                  />
-                  <button type="submit" class="submit">
-                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-          <!-- Single Widget Area -->
-          <div class="col-12 col-md-6">
-            <div class="single_widget_area">
-              <div class="footer_social_area">
-                <a
-                  href="#"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Facebook"
-                  ><i class="fa fa-facebook" aria-hidden="true"></i
-                ></a>
-                <a
-                  href="#"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Instagram"
-                  ><i class="fa fa-instagram" aria-hidden="true"></i
-                ></a>
-                <a
-                  href="#"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Twitter"
-                  ><i class="fa fa-twitter" aria-hidden="true"></i
-                ></a>
-                <a
-                  href="#"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Pinterest"
-                  ><i class="fa fa-pinterest" aria-hidden="true"></i
-                ></a>
-                <a
-                  href="#"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Youtube"
-                  ><i class="fa fa-youtube-play" aria-hidden="true"></i
-                ></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-5">
-          <div class="col-md-12 text-center">
-            <p>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;
-              <script>
-                document.write(new Date().getFullYear());
-              </script>
-              All rights reserved | Made with
-              <i class="fa fa-heart-o" aria-hidden="true"></i> by
-              <a href="https://colorlib.com" target="_blank">Colorlib</a>,
-              distributed by
-              <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <!-- ##### Footer Area End ##### -->
-
-    <script>
-      function copyReferralLink() {
-        var copyText = document.getElementById("referralLink");
-        copyText.select();
-        document.execCommand("copy");
-
-        Swal.fire("Referral link copied to clipboard!");
+        const id = button.getAttribute("data-itemid")
+        const response = await fetch(`/wishlist/${id}`, { method: 'DELETE' })
+      } catch (error) {
+        console.log(error)
       }
+    }
 
-      const nameValidationMessage = document.getElementById(
-        "nameValidationMessage"
-      );
-      const emailValidationMessage = document.getElementById(
-        "emailValidationMessage"
-      );
+    document.addEventListener("DOMContentLoaded", function () {
+      const removeBtns = document.querySelectorAll(".product-remove")
+      removeBtns.forEach(button => {
+        button.addEventListener("click", () => remove(button))
+      })
+    });
+  </script>
 
-      function validateEmail(email) {
-        let validRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const matches = email.match(validRegex);
-        return matches !== null && matches[0] === email;
-      }
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- jQuery (Necessary for All JavaScript Plugins) -->
+  <script src="js/jquery/jquery-2.2.4.min.js"></script>
+  <!-- Popper js -->
+  <script src="js/popper.min.js"></script>
+  <!-- Bootstrap js -->
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Plugins js -->
+  <script src="js/plugins.js"></script>
+  <!-- Classy Nav js -->
+  <script src="js/classy-nav.min.js"></script>
+  <!-- Active js -->
+  <script src="js/active.js"></script>
 
-      function toggle() {
-        document.getElementById("editBtn").setAttribute("hidden", "true");
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
 
-        const inputFields = document.querySelectorAll("#profileForm input");
-        inputFields.forEach((inputField) => {
-          inputField.removeAttribute("disabled");
-        });
-        document.getElementById("saveBtn").removeAttribute("hidden");
-      }
-
-      async function editProfile() {
-        const name = document.getElementById("profile_first_name").value;
-        const email = document.getElementById("profile_email").value;
-
-        nameValidationMessage.innerText = "";
-        emailValidationMessage.innerText = "";
-
-        if (name.trim() === "" && email.trim() === "") {
-          nameValidationMessage.innerText = "Name is required";
-          emailValidationMessage.innerText = "Email is required";
-          return;
-        }
-        if (name.trim() === "") {
-          nameValidationMessage.innerText = "Name is required";
-
-          if (!validateEmail(email)) {
-            console.log("not epty");
-            emailValidationMessage.textContent = "invalid Email";
-          }
-
-          return;
-        }
-        if (email.trim() === "") {
-          emailValidationMessage.innerText = "Email is required";
-          return;
-        }
-
-        if (!validateEmail(email)) {
-          console.log("not epty");
-          emailValidationMessage.textContent = "invalid Email";
-          return;
-        }
-
-        try {
-          console.log("se");
-          const response = await fetch("/profile", {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: name,
-              email: email,
-            }),
-          });
-          const data = await response.json();
-          console.log(data);
-          if (!response.ok) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: data.message,
-            });
-
-            throw new Error("Failed to update profile");
-          }
-
-          await Swal.fire({
-            icon: "success",
-            title: "Updated",
-            text: data.message,
-          });
-          window.location.reload();
-        } catch (error) {
-          console.log(error);
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("editBtn").addEventListener("click", toggle);
-        document
-          .getElementById("saveBtn")
-          .addEventListener("click", editProfile);
-      });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- jQuery (Necessary for All JavaScript Plugins) -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="js/plugins.js"></script>
-    <!-- Classy Nav js -->
-    <script src="js/classy-nav.min.js"></script>
-    <!-- Active js -->
-    <script src="js/active.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </body>
 </html>
