@@ -88,37 +88,43 @@ const loadSingleOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    const order = await Orders.findById(orderId).populate("products.productId");
+    const order = await Orders.findOne({ _id: orderId }).populate(
+      "products.productId"
+    );
+
+    // const order = await Orders.findById(orderId).populate("products.productId");
 
     console.log(order);
 
-    const {
-      shippingAddress,
-      products,
-      paymentMethod,
-      paymentStatus,
-      orderStatus,
-      total,
-      createdAt,
-      _id,
-      userId,
-    } = order;
+    res.render("adminViews/singleOrder", { order });
 
-    const addressDoc = await Address.findOne({ userId });
-    const address = addressDoc.addresses.find((address) =>
-      address._id.equals(shippingAddress)
-    );
+    // const {
+    //   shippingAddress,
+    //   products,
+    //   paymentMethod,
+    //   paymentStatus,
+    //   orderStatus,
+    //   total,
+    //   createdAt,
+    //   _id,
+    //   userId,
+    // } = order;
 
-    res.render("adminViews/singleOrder", {
-      address,
-      products,
-      paymentMethod,
-      paymentStatus,
-      orderStatus,
-      total,
-      createdAt,
-      _id,
-    });
+    // const addressDoc = await Address.findOne({ userId });
+    // const address = addressDoc.addresses.find((address) =>
+    //   address._id.equals(shippingAddress)
+    // );
+
+    // res.render("adminViews/singleOrder", {
+    //   address,
+    //   products,
+    //   paymentMethod,
+    //   paymentStatus,
+    //   orderStatus,
+    //   total,
+    //   createdAt,
+    //   _id,
+    // });
   } catch (error) {
     console.log(error);
   }
@@ -247,7 +253,6 @@ const createDiscount = async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
-
 
 const getOffers = async (req, res) => {
   try {

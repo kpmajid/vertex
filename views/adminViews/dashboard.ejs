@@ -141,12 +141,12 @@
                     <div class="col-xl-12 col-xxl-5 d-flex">
                         <div class="w-100">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <!-- <div class="col-sm-3">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col mt-0">
-                                                    <h5 class="card-title">Sales</h5>
+                                                    <h5 class="card-title">Total revenue</h5>
                                                 </div>
 
                                                 <div class="col-auto">
@@ -163,13 +163,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-sm-3">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col mt-0">
-                                                    <h5 class="card-title">Visitors</h5>
+                                                    <h5 class="card-title">Users</h5>
                                                 </div>
 
                                                 <div class="col-auto">
@@ -178,12 +178,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h1 class="mt-1 mb-3">14.212</h1>
-                                            <div class="mb-0">
+                                            <h1 class="mt-1 mb-3">
+                                                <%= userCount %>
+                                            </h1>
+
+                                            <!-- <div class="mb-0">
                                                 <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>
                                                     5.25% </span>
                                                 <span class="text-muted">Since last week</span>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -201,12 +204,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h1 class="mt-1 mb-3">$21.300</h1>
-                                            <div class="mb-0">
+
+                                            <h1 class="mt-1 mb-3">₹<%= total.totalAmount %>
+                                            </h1>
+                                            <!-- <div class="mb-0">
                                                 <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>
                                                     6.65% </span>
                                                 <span class="text-muted">Since last week</span>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -224,12 +229,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h1 class="mt-1 mb-3">64</h1>
-                                            <div class="mb-0">
+                                            <h1 class="mt-1 mb-3">
+                                                <%= total.totalOrders %>
+                                            </h1>
+                                            <!-- <div class="mb-0">
                                                 <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i>
                                                     -2.25% </span>
                                                 <span class="text-muted">Since last week</span>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -273,16 +280,16 @@
                                     <table class="table mb-0">
                                         <tbody>
                                             <tr>
-                                                <td>Chrome</td>
-                                                <td class="text-end">4306</td>
+                                                <td>COD</td>
+                                                <td class="text-end" id="COD">0</td>
                                             </tr>
                                             <tr>
-                                                <td>Firefox</td>
-                                                <td class="text-end">3801</td>
+                                                <td>Razor pay</td>
+                                                <td class="text-end" id="paypal">0</td>
                                             </tr>
                                             <tr>
-                                                <td>IE</td>
-                                                <td class="text-end">1689</td>
+                                                <td>Wallet</td>
+                                                <td class="text-end" id="wallet">0</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -309,8 +316,61 @@
                 text.addEventListener("click", () => renderSalesChart(text.innerHTML))
             })
 
+            renderPieChart()
             renderSalesChart("Weekly")
         };
+
+        async function renderPieChart() {
+            try {
+
+                const response = await fetch(`/admin/pie-chart`)
+                const dataJS = await response.json();
+                console.log(dataJS)
+                let data = [];
+                dataJS.forEach((e) => {
+                    console.log()
+                    // let element = document.querySelector(`#${e._id}`)
+                    // console.log(e.totalOrders)
+                    // element.innerHTMl = e.totalOrders
+                    data.push(e.totalOrders)
+                })
+
+
+                console.log(data)
+                new Chart(document.getElementById("chartjs-dashboard-pie"), {
+                    type: "pie",
+                    data: {
+                        labels: ["COD", "Razor pay", "Wallet"],
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                                window.theme.primary,
+                                window.theme.warning,
+                                window.theme.danger
+                            ],
+                            borderWidth: 5
+                        }]
+                    },
+                    options: {
+                        responsive: !window.MSInputMethodContext,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false
+                        },
+                        cutoutPercentage: 75
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    timer: 1500,
+                });
+            }
+        }
+
 
         async function renderSalesChart(period) {
             try {
@@ -321,13 +381,13 @@
                 })
 
                 let element = document.getElementById(period)
-                console.log(element)
+                // console.log(element)
                 element.classList.add("active");
 
                 const response = await fetch(`/admin/sales-chart/${period}`)
                 const data = await response.json();
                 if (!response.ok) {
-                    console.log(data);
+                    // console.log(data);
                     return Swal.showValidationMessage(`${data.message}`);
                 }
 
@@ -340,6 +400,7 @@
                     ordersArray.push(item.orders);
                     timeArray.push(item.time);
                 });
+                // console.log(data)
 
                 const footer = (tooltipItems) => {
                     let orders = 0;
@@ -350,6 +411,10 @@
                     })
                     return 'Orders:' + orders;
                 }
+
+                // console.log(salesArray)
+                // console.log(ordersArray)
+                // console.log(timeArray)
 
                 var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
                 var gradient = ctx.createLinearGradient(0, 0, 0, 225);

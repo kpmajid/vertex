@@ -134,40 +134,44 @@
 
                 <div class="col-12 col-md-7 col-lg-12">
                     <div class="user-details clearfix mb-2">
-                        <h6>Order Id: <%= _id %>
+                        <h6>Order Number: <%= order._id %>
                         </h6>
-                        <h6>Status: <%= orderStatus %>
+                        <h6>Status: <%= order.orderStatus %>
                         </h6>
-                        <h6>Payment Method: <%= paymentMethod %>
+                        <h6>Payment Method: <%= order.paymentMethod %>
                         </h6>
-                        <h6>Ordered: <%= createdAt.toLocaleDateString() %>
+                        <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
                         </h6>
-                        <h6>Total: <%= total %>
+                        <h6>Total: <%= order.finalTotal %>
                         </h6>
+                        <% if (order.orderStatus!=="Delivered" ) { %>
+                            <select id="order_status_select">
+                                <option value="">select </option>
+                                <option value="Cancelled">Cancelled</option>
 
-                        <select id="order_status_select">
-                            <option value="">select </option>
-                            <option value="Cancelled">Cancelled</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Shipped">Shipped</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                            <button type="button" class="btn essence-btn bg-primary" id="order_button"
+                                style="color: white;" disabled data-orderId="<%= order._id %>">Update</button>
 
-                            <option value="Pending">Pending</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Delivered">Delivered</option>
-                        </select>
-                        <button type="button" class="btn essence-btn bg-primary" id="order_button" style="color: white;"
-                            disabled data-orderId="<%= _id %>">Update</button>
+                            <% } %>
 
 
 
-                        <hr>
-                        <h6 class="card-title  mb-0">Delivery Address:</h6>
-                        <p>
-                            <%= address.fullname %><br />
-                                <%= address.mobile %><br />
-                                    <%= address.address %><br />
-                                        <%= address.pincode %><br />
-                                            <%= address.street %>, <%= address.city %>, <%= address.state %>
-                                                        <br />
-                        </p>
+
+                                <hr>
+                                <h6 class="card-title  mb-0">Delivery Address:</h6>
+                                <p>
+                                    <%= order.shippingAddress.fullname %><br />
+                                        <%= order.shippingAddress.mobile %><br />
+                                            <%= order.shippingAddress.address %><br />
+                                                <%= order.shippingAddress.pincode %><br />
+                                                    <%= order.shippingAddress.street %>, <%= order.shippingAddress.city
+                                                            %>, <%= order.shippingAddress.state %>
+                                                                <br />
+                                </p>
                     </div>
                     <div class="table-responsive-sm mb-3">
                         <table id="myTable" class="table text-center table-hover my-0">
@@ -176,13 +180,14 @@
                                     <th class=""></th>
                                     <th class="">Name</th>
                                     <th class="">Variant</th>
+                                    <th class="">status</th>
                                     <th class="">Price</th>
                                     <th class="">Quantity</th>
                                     <th class="">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% products.forEach(product=> { %>
+                                <% order.products.forEach(product=> { %>
                                     <tr>
                                         <td class="product-image">
                                             <img src="/img/products/<%=product.productId.images[0]  %>"
@@ -195,24 +200,59 @@
                                             <%= product.size %>,
                                                 <%= product.color %>
                                         </td>
-                                        <td>
-                                            ₹<%= product.price %>
-                                        </td>
-                                        <td>
-                                            <%= product.quantity %>
-                                        </td>
-                                        <td>
-                                            ₹<%= product.price*product.quantity %>
-                                        </td>
+                                        <% if(product.cancel?.status || product.return?.status){ %>
+                                            <td class="text-danger">
+
+                                                <%= product.cancel?.status ? product.cancel?.status :
+                                                    product.return?.status==="Pending" ? "Return is pending" :
+                                                    product.return?.status %>
+
+                                            </td>
+                                            <% }else{ %>
+                                                <td>
+
+                                                    <%= order.orderStatus %>
+
+                                                </td>
+                                                <% } %>
+
+                                                    <td>
+                                                        ₹<%= product.price %>
+                                                    </td>
+                                                    <td>
+                                                        <%= product.quantity %>
+                                                    </td>
+                                                    <td>
+                                                        ₹<%= product.price*product.quantity %>
+                                                    </td>
                                     </tr>
                                     <% }) %>
-                                        <tr>
-                                            <td colspan="4"></td>
-                                            <td>Total</td>
-                                            <td>
-                                                <%= total %>
-                                            </td>
-                                        </tr>
+                                        <% if (order.coupon.couponId) { %>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td>Subtotal</td>
+                                                <td>
+                                                    ₹<%= order.originalTotal %>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td>Coupon</td>
+                                                <td>
+                                                    -₹<%= order.coupon.discountAmount %>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <% } %>
+                                                <tr>
+                                                    <td colspan="4"></td>
+                                                    <td>Total</td>
+                                                    <td>
+                                                        ₹<%= order.finalTotal %>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -575,7 +575,7 @@
                 const amount = document
                     .querySelector("#total")
                     .innerText.replace("₹", "");
-                    console.log(amount)
+                console.log(amount)
                 const response = await fetch("/create/orderId", {
                     method: "POST",
                     headers: {
@@ -834,8 +834,10 @@
                             },
                             body: JSON.stringify(paymentData),
                         });
-
+                        const data = await response.json;
+                        console.log(data)
                         if (response.ok) {
+                            console.log("placerder for razor pay")
                             placeOrder()
                         }
                     } catch (error) {

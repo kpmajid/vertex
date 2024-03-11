@@ -19,11 +19,12 @@
 
     <style>
         .product-image img {
-            width: 80px;
-            height: 110px;
+            width: 110px;
+            /* height: 110px; */
             border-radius: 8px;
             object-fit: cover;
         }
+
 
         .profile-sidebar {
             text-align: center;
@@ -173,38 +174,46 @@
                 <!-- User Details Section -->
                 <div class="col-12 col-md-7 col-lg-9">
                     <div class="user-details clearfix mb-2">
-                        <h6>Order Id: <%= _id %>
+                        <input type="hidden" name="" id="orderId" <%=order._id %>>
+                        <input type="text" value="<%= order %>">
+                        <h6>Order Number: <%= order.order_number %>
                         </h6>
-                        <h6>Status: <%= orderStatus %>
+                        <h6>Status: <%=order.orderStatus %>
                         </h6>
-                        <h6>Payment Method: <%= paymentMethod %>
+                        <h6>Payment Method: <%= order.paymentMethod %>
                         </h6>
-                        <h6>Ordered: <%= createdAt.toLocaleDateString() %>
+                        <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
                         </h6>
-                        <h6>Total: <%= total %>
+                        <h6>Total: <%= order.finalTotal %>
                         </h6>
-                        <% if (orderStatus=="Delivered" ) { %>
+                        <% if (order.coupon) { %>
 
-                            <button type="button" class=" btn essence-btn bg-danger" data-orderId="<%= _id %>"
-                                id="actionBtn" data-action="return">Return
-                                Order</button>
-                            <% } else { %>
-                                <button type="button" class=" btn essence-btn bg-danger" data-orderId="<%= _id %>"
-                                    id="actionBtn" data-action="cancel">Cancel
-                                    Order</button>
+                            <% } %>
 
-                                <% } %>
-                                    <hr>
+                                <% if (order.orderStatus=="Delivered" ) { %>
 
-                                    <h6 class="card-title  mb-0">Delivery Address:</h6>
-                                    <p>
-                                        <%= address.fullname %><br />
-                                            <%= address.mobile %><br />
-                                                <%= address.address %><br />
-                                                    <%= address.pincode %><br />
-                                                        <%= address.street %>, <%= address.city %>, <%= address.state %>
-                                                                    <br />
-                                    </p>
+                                    <button type="button" class=" btn essence-btn bg-danger"
+                                        data-orderId="<%= order._id %>" id="actionBtn" data-action="return">Return
+                                        Order</button>
+                                    <% } else { %>
+                                        <button type="button" class=" btn essence-btn bg-danger"
+                                            data-orderId="<%= order._id %>" id="actionBtn" data-action="cancel">Cancel
+                                            Order</button>
+
+                                        <% } %>
+                                            <hr>
+
+                                            <h6 class="card-title  mb-0">Delivery Address:</h6>
+                                            <p>
+                                                <%= order.shippingAddress.fullname %><br />
+                                                    <%= order.shippingAddress.mobile %><br />
+                                                        <%= order.shippingAddress.address %><br />
+                                                            <%= order.shippingAddress.pincode %><br />
+                                                                <%= order.shippingAddress.street %>, <%=
+                                                                        order.shippingAddress.city %>, <%=
+                                                                            order.shippingAddress.state %>
+                                                                            <br />
+                                            </p>
                     </div>
                     <div class="table-responsive-sm mb-3">
                         <table id="myTable" class="table text-center table-hover my-0">
@@ -216,10 +225,12 @@
                                     <th class="">Price</th>
                                     <th class="">Quantity</th>
                                     <th class="">Total</th>
+                                    <th class=""></th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <% products.forEach(product=> { %>
+                                <% order.products.forEach(product=> { %>
                                     <tr>
                                         <td class="product-image">
                                             <img src="/img/products/<%=product.productId.images[0]  %>"
@@ -241,15 +252,47 @@
                                         <td>
                                             ₹<%= product.price*product.quantity %>
                                         </td>
+                                        <td>
+                                            <% if(order.orderStatus==="Delivered" && !product.cancel?.status){ %>
+                                                <button class="btn btn-primary" data-btn-rating
+                                                    data-product="<%= product._id%>">Give rating</button>
+                                                <% } %>
+                                                    <% if(order.orderStatus!=="Delivered" && !product.cancel?.status){
+                                                        %>
+                                                        <button class="btn btn-danger cancel-product"
+                                                            data-productsid="<%= product._id %>">
+                                                            Cancel products
+                                                        </button>
+                                                        <% } %>
+                                        </td>
                                     </tr>
                                     <% }) %>
-                                        <tr>
-                                            <td colspan="4"></td>
-                                            <td>Total</td>
-                                            <td>
-                                                <%= total %>
-                                            </td>
-                                        </tr>
+                                        <% if (order.coupon.couponId) { %>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td>Subtotal</td>
+                                                <td>
+                                                    ₹<%= order.originalTotal %>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td>Coupon</td>
+                                                <td>
+                                                    -₹<%= order.coupon.discountAmount %>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <% } %>
+                                                <tr>
+                                                    <td colspan="4"></td>
+                                                    <td>Total</td>
+                                                    <td>
+                                                        ₹<%= order.finalTotal %>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -271,14 +314,14 @@
                         <div class="single_widget_area d-flex mb-30">
                             <!-- Logo -->
                             <div class="footer-logo mr-50">
-                                <a href="#"><img src="img/core-img/logo2.png" alt="" /></a>
+                                <a href="#"><img src="/img/core-img/logo2.png" alt="" /></a>
                             </div>
                             <!-- Footer Menu -->
                             <div class="footer_menu">
                                 <ul>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="/shop">Shop</a></li>
+                                    <!-- <li><a href="/blog.html">Blog</a></li>
+                                    <li><a href="/contact.html">Contact</a></li> -->
                                 </ul>
                             </div>
                         </div>
@@ -365,10 +408,66 @@
                     actionButton.addEventListener("click", cancelOrder)
                 } else {
                     actionButton.addEventListener("click", returnOrder)
-
                 }
 
+                const cancelProductBtns = document.querySelectorAll(".cancel-product")
+                cancelProductBtns.forEach((button) => {
+                    button.addEventListener("click", () => (cancelProduct(button)))
+                })
             }
+
+            async function cancelProduct(button) {
+                try {
+                    const orderId = document.querySelector("#orderId").value
+                    const { value: reason } = await Swal.fire({
+                        input: "textarea",
+                        inputLabel: "Are you sure you want to cancel this product?",
+                        inputPlaceholder: "Type your reason here...",
+                        inputAttributes: {
+                            "aria-label": "Type your message here"
+                        },
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                            return new Promise((resolve) => {
+                                if (value) {
+                                    resolve();
+                                } else {
+                                    resolve("Please enter your reason for product cancel:)");
+                                }
+                            });
+                        }
+                    });
+                    console.log(reason)
+
+                    const productId = button.getAttribute("data-productsid")
+
+                    const response = await fetch("/cancel-products", {
+                        method: "POST",
+                        headers: {
+                            "content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ orderId, productId, reason })
+                    })
+                    const jsonData = await response.json();
+                    if (response.ok) {
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Product has been canceled",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: `Something went wrong!${error}`,
+                    });
+                }
+            }
+
+
             async function returnOrder(e) {
                 console.log("returnng")
             }
@@ -406,17 +505,17 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- jQuery (Necessary for All JavaScript Plugins) -->
-        <script src="js/jquery/jquery-2.2.4.min.js"></script>
+        <script src="/js/jquery/jquery-2.2.4.min.js"></script>
         <!-- Popper js -->
-        <script src="js/popper.min.js"></script>
+        <script src="/js/popper.min.js"></script>
         <!-- Bootstrap js -->
-        <script src="js/bootstrap.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
         <!-- Plugins js -->
-        <script src="js/plugins.js"></script>
+        <script src="/js/plugins.js"></script>
         <!-- Classy Nav js -->
-        <script src="js/classy-nav.min.js"></script>
+        <script src="/js/classy-nav.min.js"></script>
         <!-- Active js -->
-        <script src="js/active.js"></script>
+        <script src="/js/active.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>

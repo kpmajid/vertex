@@ -98,6 +98,12 @@
           unit +
           ui.values[1];
         t.closest(".slider-range").find(".range-price").html(result);
+        t.closest(".slider-range")
+          .find(".range-price")
+          .attr("data-min", ui.values[0]);
+        t.closest(".slider-range")
+          .find(".range-price")
+          .attr("data-max", ui.values[1]);
       },
     });
   });

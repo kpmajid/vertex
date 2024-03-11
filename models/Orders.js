@@ -29,8 +29,15 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-      cancellationReason: {
-        type: String,
+      cancel: {
+        status: { type: String },
+        reason: { type: String },
+        date: { type: Date },
+      },
+      return: {
+        status: { type: String },
+        reason: { type: String },
+        date: { type: Date },
       },
     },
   ],
@@ -82,9 +89,17 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  total: {
+  originalTotal: {
     type: Number,
     required: true,
+  },
+  finalTotal: {
+    type: Number,
+    required: true,
+  },
+  coupon: {
+    couponId: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon" },
+    discountAmount: { type: Number },
   },
   order_number: {
     type: Number,

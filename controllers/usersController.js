@@ -408,6 +408,14 @@ const loadShop = async (req, res) => {
   try {
     const user = req.session?.user ?? null;
 
+    const categoriesQuery = req.query.categories
+      ? req.query.categories.split(",")
+      : [];
+    const colors = req.query.colors ? req.query.colors.split(",") : [];
+    const sizes = req.query.sizes ? req.query.sizes.split(",") : [];
+    const minPrice = req.query.min || "";
+    const maxPrice = req.query.max || "";
+
     const products = await Product.aggregate([
       {
         $lookup: {
@@ -724,8 +732,11 @@ const loadCheckOut = async (req, res) => {
       couponCode = couponCode.toUpperCase();
       couponDoc = await Coupons.findOne({ couponCode: couponCode });
     }
-    console.log("products loadCheclout");
-    console.log(products);
+    // console.log("products loadCheclout");
+    // console.log(products);
+
+    console.log("addresses in load");
+    console.log(addresses);
     res.render("usersViews/checkout", { addresses, products, couponDoc });
   } catch (error) {
     console.log(error);

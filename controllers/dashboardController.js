@@ -10,8 +10,52 @@ const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
 
-const loadDashboard = (req, res) => {
-  res.render("adminViews/dashboard");
+const loadDashboard = async (req, res) => {
+  try {
+    let userCount = await User.aggregate([
+      {
+        $group: {
+          _id: "",
+          totalUsers: { $sum: 1 },
+        },
+      },
+    ]);
+    console.log(userCount);
+
+    userCount = userCount[0].totalUsers;
+
+    let total = await Orders.aggregate([
+      {
+        $group: {
+          _id: "",
+          totalOrders: { $sum: 1 },
+          totalAmount: {
+            $sum: "$finalTotal",
+          },
+        },
+      },
+    ]);
+
+    total = total[0];
+
+    console.log(total);
+
+    const result = await Orders.aggregate([
+      [
+        {
+          $group: {
+            _id: "$paymentMethod",
+            totalOrders: { $sum: 1 },
+          },
+        },
+      ],
+    ]);
+    console.log(result);
+    res.render("adminViews/dashboard", { userCount, total, result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 const renderSalesChart = async (req, res) => {
@@ -81,7 +125,7 @@ const renderSalesChart = async (req, res) => {
                 $sum: 1,
               },
               sales: {
-                $sum: "$total",
+                $sum: "$finalTotal",
               },
             },
           },
@@ -102,7 +146,27 @@ const renderSalesChart = async (req, res) => {
   }
 };
 
+const renderPieChart = async (req, res) => {
+  try {
+    const result = await Orders.aggregate([
+      [
+        {
+          $group: {
+            _id: "$paymentMethod",
+            totalOrders: { $sum: 1 },
+          },
+        },
+      ],
+    ]);
+    console.log(result);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   loadDashboard,
   renderSalesChart,
+  renderPieChart,
 };

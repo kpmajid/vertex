@@ -2,6 +2,7 @@ const Orders = require("../models/Orders");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const Coupons = require("../models/Coupons");
+const Address = require("../models/Address");
 
 const { ObjectId } = require("mongodb");
 
@@ -118,18 +119,21 @@ const createOrder = async (req, res) => {
   try {
     console.log("createOrder");
     console.log(req.body);
+
     const { id } = req.session.user;
-    const { addressId, paymentMethod } = req.body;
+    let { addressId, paymentMethod } = req.body;
     const paymentStatus = paymentMethod === "paypal" ? "Paid" : "Pending";
 
+    // Retrieve cart details and populate products
     const cart = await Cart.findOne({ userId: id }).populate(
       "products.productId",
       "-category -description -variants -status -images"
     );
 
     const products = [];
-    let total = 0;
+    let originalTotal = 0;
     cart.products.forEach((cartItem) => {
+      console.log("cartItem");
       console.log(cartItem);
       const {
         productId: { _id: productId, originalPrice, discountedPrice },
@@ -137,9 +141,18 @@ const createOrder = async (req, res) => {
         size,
         quantity,
       } = cartItem;
+
+      console.log("originalPrice, discountedPrice");
+      console.log(originalPrice, discountedPrice);
+
       const price =
-        discountedPrice !== undefined ? discountedPrice : originalPrice;
-      total += quantity * price;
+        discountedPrice !== undefined && discountedPrice !== null
+          ? discountedPrice
+          : originalPrice;
+
+      console.log(price);
+
+      originalTotal += quantity * price;
 
       products.push({
         productId,
@@ -149,17 +162,54 @@ const createOrder = async (req, res) => {
         quantity,
       });
     });
+    console.log("products array");
+    console.log(products);
+
+    let finalTotal = originalTotal;
+
+    console.log(addressId);
+    addressId = new ObjectId(addressId);
+    const addressDoc = await Address.findOne({
+      userId: id,
+      "addresses._id": addressId,
+    });
+    console.log(addressDoc);
+    console.log(addressDoc.addresses[0]);
+
+    let shippingAddress = {};
+    shippingAddress.fullname = addressDoc.addresses[0].fullname;
+    shippingAddress.mobile = addressDoc.addresses[0].mobile;
+    shippingAddress.address = addressDoc.addresses[0].address;
+    shippingAddress.pincode = addressDoc.addresses[0].pincode;
+    shippingAddress.state = addressDoc.addresses[0].state;
+    shippingAddress.city = addressDoc.addresses[0].city;
+    shippingAddress.street = addressDoc.addresses[0].street;
 
     const latestOrder = await Orders.findOne().sort({ order_number: -1 });
     let order_number = latestOrder?.order_number ?? 10000;
+
+    const coupon = req.session.coupon;
+    let couponDoc;
+    let Coupon = {};
+    console.log(coupon);
+    if (coupon.length > 0) {
+      couponCode = couponCode.toUpperCase();
+      couponDoc = await Coupons.findOne({ couponCode: couponCode });
+      finalTotal -= couponDoc.discountAmount;
+      Coupon.couponId = couponDoc._id;
+      Coupon.discountAmount = couponDoc.discountAmount;
+    }
+
     const order = new Orders({
       userId: id,
       products,
-      shippingAddress: addressId,
+      shippingAddress,
       paymentMethod,
       paymentStatus,
-      total,
+      originalTotal,
+      finalTotal,
       order_number: order_number + 1,
+      coupon: Coupon,
     });
 
     await order.save();
@@ -212,32 +262,27 @@ const LoadSingleOrder = async (req, res) => {
     console.log("order");
     console.log(order);
 
-    const {
-      shippingAddress,
-      products,
-      paymentMethod,
-      paymentStatus,
-      orderStatus,
-      total,
-      createdAt,
-      _id,
-    } = order;
+    // const {
+    //   shippingAddress,
+    //   products,
+    //   paymentMethod,
+    //   paymentStatus,
+    //   orderStatus,
+    //   total,
+    //   createdAt,
+    //   _id,
+    // } = order;
 
-    const addressDoc = await Address.findOne({ userId: id });
+    // const addressDoc = await Address.findOne({ userId: id });
 
-    const address = addressDoc.addresses.find((address) =>
-      address._id.equals(shippingAddress)
-    );
+    // const address = addressDoc.addresses.find((address) =>
+    //   address._id.equals(shippingAddress)
+    // );
+
+    console.log(order);
 
     res.render("usersViews/singleOrder", {
-      address,
-      products,
-      paymentMethod,
-      paymentStatus,
-      orderStatus,
-      total,
-      createdAt,
-      _id,
+      order,
     });
   } catch (error) {
     console.log(error);
@@ -263,10 +308,47 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const cancelProducts = async (req, res) => {
+  try {
+    const { orderId, productId, reason } = req.body;
+
+    const { id } = req.session.user;
+
+    const orderDoc = await Orders.findOneAndUpdate(
+      {
+        _id: orderId,
+        userId: id,
+        products: {
+          $elemMatch: {
+            productId: productId,
+          },
+        },
+      },
+      {
+        $set: {
+          "products.$.cancel.status": "Canceled",
+          "products.$.cancel.reason": reason,
+          "products.$.cancel.date": Date.now(),
+        },
+      }
+    );
+
+    if (!orderDoc) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Product canceled successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   processCheckout,
   createOrder,
   LoadOrders,
   LoadSingleOrder,
   cancelOrder,
+  cancelProducts,
 };

@@ -8,8 +8,13 @@ const instance = new Razorpay({
 
 const razorPayOrder = async (req, res) => {
   try {
+    console.log("razor");
+    console.log(typeof req.body.amount);
+    let { amount } = req.body;
+    amount = parseInt(amount);
+    console.log(typeof amount);
     const options = {
-      amount: req.body.amount,
+      amount: amount * 100,
       currency: "INR",
     };
     const order = await instance.orders.create(options);
@@ -32,14 +37,20 @@ const verifyPayment = (req, res) => {
     .update(data)
     .digest("hex");
 
+  console.log(generated_signature);
+  console.log(signature);
+
   if (generated_signature !== signature) {
     console.log("true?");
-    res.status(200).json({ message: "payment successful" });
+    res
+      .status(400)
+      .json({
+        success: false,
+        message: "Payment signature verification failed",
+      });
     return;
   }
-  res
-    .status(400)
-    .json({ success: false, message: "Payment signature verification failed" });
+  res.status(200).json({ message: "payment successful" });
 };
 
 module.exports = { razorPayOrder, verifyPayment };

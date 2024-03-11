@@ -170,60 +170,117 @@
                 <div class="col-12 col-md-4 col-lg-3">
                     <div class="shop_sidebar_area">
                         <!-- ##### Single Widget ##### -->
-                        <div class="widget catagory">
-                            <!-- Widget Title -->
-                            <h6 class="widget-title ">Catagories</h6>
+                        <h6 class="widget-title mb-30">Filter by</h6>
+                        <form action="">
 
-                            <!--  Catagories  -->
-                            <div class="catagories-menu">
-                                <ul id="menu-content2" class="menu-content collapse show">
-                                    <!-- Single Item -->
-                                    <% if (categories) { %>
-                                        <% categories.forEach(category=> {
-                                            %>
-                                            <li data-toggle="collapse" data-target="#<%= category.name %>">
-                                                <a class="widget-title2" href="/shop/<%= category.name %>">
-                                                    <%= category.name %>
-                                                </a>
-                                                <ul class="sub-menu collapse show" id="abc">
-                                                    <% category.subcategories.forEach(subcategory=>{%>
-                                                        <li>
-                                                            <input type="checkbox" id="<%= subcategory.name %>"
-                                                                name="<%= subcategory.name %>">
-                                                            <label for="<%= subcategory.name %>">
-                                                                <%= subcategory.name %>
-                                                            </label>
-                                                        </li>
-                                                        <% }) %>
-                                                </ul>
-                                            </li>
-                                            <% }) %>
-                                                <% } %>
-                                </ul>
+                            <div class="widget catagory mb-15">
+                                <!-- Widget Title -->
+                                <!-- Widget Title -->
+                                <h6 class="widget-title2 mb-15">Catagories</h6>
+
+                                <!--  Catagories  -->
+                                <div class="catagories-menu">
+                                    <ul id="menu-content2" class="menu-content catetgory">
+                                        <!-- Single Item -->
+                                        <% if (categories) { %>
+                                            <% categories.forEach(category=> {
+                                                %>
+
+                                                <li>
+                                                    <input type="checkbox" id="<%= category.name %>"
+                                                        name="<%= category.name %>" class="category">
+                                                    <label for="<%= category.name %>">
+                                                        <%= category.name %>
+                                                    </label>
+                                                </li>
+                                                <% }) %>
+                                                    <% } %>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
 
+                            <!-- ##### Single Widget ##### -->
+                            <div class="widget price mb-30">
 
+                                <!-- Widget Title 2 -->
+                                <p class="widget-title2 mb-15">Price</p>
 
-                        <!-- ##### Single Widget ##### -->
-                        <!-- Widget Title 2 -->
-                        <!--  <div class="widget color mb-50">
-                            <p class="widget-title2 mb-30">Color</p>
-                            <div class="widget-desc">
-                                <ul class="d-flex">
-                                    <li><a href="#" class="color1"></a></li>
-                                    <li><a href="#" class="color2"></a></li>
-                                    <li><a href="#" class="color3"></a></li>
-                                    <li><a href="#" class="color4"></a></li>
-                                    <li><a href="#" class="color5"></a></li>
-                                    <li><a href="#" class="color6"></a></li>
-                                    <li><a href="#" class="color7"></a></li>
-                                    <li><a href="#" class="color8"></a></li>
-                                    <li><a href="#" class="color9"></a></li>
-                                    <li><a href="#" class="color10"></a></li>
-                                </ul>
+                                <div class="widget-desc">
+                                    <div class="slider-range">
+                                        <div data-min="500" data-max="5000" data-unit="₹"
+                                            class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                                            data-value-min="500" data-value-max="5000" data-label-result="Range:">
+                                            <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                                            <span class="ui-slider-handle ui-state-default ui-corner-all"
+                                                tabindex="0"></span>
+                                            <span class="ui-slider-handle ui-state-default ui-corner-all"
+                                                tabindex="0"></span>
+                                        </div>
+                                        <div class="range-price" id="range-price">Range: ₹500.00 - ₹5000.00</div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>-->
+
+                            <div class="widget widget-color mb-30">
+                                <p class="widget-title2 mb-15">Color</p>
+                                <div class="">
+                                    <ul class="menu-content2 widget-color-content color">
+                                        <li>
+                                            <input type="checkbox" id="colorWhite" class="color" name="White">
+                                            <label for="colorWhite">White</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="colorBlack" class="color" name="Black">
+                                            <label for="colorBlack">Black</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="colorRed" class="color" name="Red">
+                                            <label for="colorRed">Red</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="colorGreen" class="color" name="Green">
+                                            <label for="colorGreen">Green</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="colorYellow" class="color" name="Yellow">
+                                            <label for="colorYellow">Yellow</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="colorBlue" class="color" name="Blue">
+                                            <label for="colorBlue">Blue</label>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="widget widget-size mb-30">
+                                <p class="widget-title2 mb-15">Size</p>
+                                <div class="">
+                                    <ul class="menu-content2 size" id="size" s>
+                                        <li>
+                                            <input type="checkbox" id="sizeSmall" class="size" name="Small">
+                                            <label for="sizeSmall">Small</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="sizeMedium" class="size" name="Medium">
+                                            <label for="sizeMedium">Medium</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="sizeLarge" class="size" name="Large">
+                                            <label for="sizeLarge">Large</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="sizeExtraLarge" class="size" name="ExtraLarge">
+                                            <label for="sizeExtraLarge">ExtraLarge</label>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="applyFilter">Filter</button>
+                        </form>
                     </div>
                 </div>
 
@@ -441,10 +498,59 @@
 
         function updateURL() {
             const sortBy = document.getElementById("sortBySelect").value
+        }
+        window.addEventListener('load', function () {
+            document.getElementById("applyFilter").addEventListener("click", filter)
+        });
 
+        function filter() {
+            let selectedCategories = getSelectedValues('catetgory');
+            let selectedColors = getSelectedValues('color');
+            let selectedSizes = getSelectedValues('size');
+
+            console.log('Selected categories:', selectedCategories);
+            console.log('Selected colors:', selectedColors);
+            console.log('Selected sizes:', selectedSizes);
+
+            var queryURL = 'http://localhost:5000/shop?';
+
+            // Append selected categories to the query URL
+            if (selectedCategories.length > 0) {
+                queryURL += 'categories=' + selectedCategories.join(',') + '&';
+            }
+
+            // Append selected colors to the query URL
+            if (selectedColors.length > 0) {
+                queryURL += 'colors=' + selectedColors.join(',') + '&';
+            }
+
+            // Append selected sizes to the query URL
+            if (selectedSizes.length > 0) {
+                queryURL += 'sizes=' + selectedSizes.join(',');
+            }
+
+            const range = document.querySelector("#range-price")
+            if (range.getAttribute("data-min") && range.getAttribute("data-max")) {
+                queryURL += 'min=' + range.getAttribute("data-min");
+                queryURL += 'max=' + range.getAttribute("data-max");
+
+            }
+
+            // Output or use the constructed query URL as needed
+            console.log('Query URL:', queryURL);
 
         }
 
+        function getSelectedValues(className) {
+            let selectedValues = [];
+            let checkboxes = document.querySelectorAll('.' + className + ' input[type=checkbox]:checked');
+
+            console.log(checkboxes)
+            checkboxes.forEach(function (checkbox) {
+                selectedValues.push(checkbox.name);
+            });
+            return selectedValues;
+        }
     </script>
 </body>
 

@@ -44,6 +44,7 @@ const {
   LoadOrders,
   LoadSingleOrder,
   cancelOrder,
+  cancelProducts,
 } = require("../controllers/orderController");
 
 const {
@@ -132,7 +133,7 @@ router.delete("/removeProduct", isLogin, removeProduct);
 
 router.patch("/updateQuantity", isLogin, updateQuantity);
 
-router.post("/proceed-to-checkout",isLogin,processCheckout)
+router.post("/proceed-to-checkout", isLogin, processCheckout);
 
 router.get("/checkout", isLogin, loadCheckOut);
 
@@ -150,6 +151,8 @@ router.get("/orders", isLogin, LoadOrders);
 router.get("/orders/:orderId", isLogin, LoadSingleOrder);
 
 router.patch("/cancelOrder", isLogin, cancelOrder);
+
+router.post("/cancel-products", isLogin, cancelProducts);
 
 router.get("/wishlist", isLogin, loadWishlist);
 router.get("/addToWishlist/:id", addToWishlist);
