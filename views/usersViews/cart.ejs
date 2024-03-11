@@ -312,7 +312,7 @@
                                                                     <%= product.quantity %>):
                                                                 </span>
                                                         </span>
-                                                        <span>-₹
+                                                        <span class="product-discount">-₹
                                                             <%= product.quantity*product.productId.discount %>
                                                         </span>
                                                     </li>
@@ -337,9 +337,13 @@
                                                             </div>
                         </ul>
 
+
+                        <input type="hidden" name="couponCode" id="hiddenCoupon">
                         <button id="checkOut" class="btn essence-btn">
                             Proceed to checkout
                         </button>
+
+
                     </div>
                 </div>
 
@@ -488,6 +492,7 @@
                 let couponValue = document.querySelector("#coupon-value")
                 couponValue.innerHTML = `-₹${responseData.discountAmount.toFixed(2)}`
 
+                document.querySelector("#hiddenCoupon").value = couponCode
                 calculateTotal(totalAmount)
             } catch (error) {
                 console.log(error)
@@ -510,6 +515,8 @@
             let couponValueElement = document.getElementById("coupon-value");
             console.log(couponValueElement)
             couponValueElement.innerText = "-₹0.00"
+
+            document.querySelector("#hiddenCoupon").value = ""
 
 
         }
@@ -680,10 +687,21 @@
             const couponValueElement = document.querySelector("#coupon-value")
             const couponValue = parseFloat(couponValueElement.innerText.replace("-₹", ""))
 
-            let total = subtotal - couponValue;
 
             console.log(subtotal)
             console.log(couponValue)
+
+            let totalDisocunt = 0;
+            var discounts = document.querySelectorAll('.product-discount');
+            discounts.forEach(function (discount) {
+                var discountAmount = parseFloat(discount.innerText.trim().replace(/[^0-9.]/g, ''));
+                console.log(typeof discountAmount)
+                totalDisocunt += discountAmount;
+            });
+            console.log(couponValue)
+            console.log(totalDisocunt)
+
+            let total = subtotal - couponValue - totalDisocunt;
             // For simplicity, setting total equal to subtotal in this example
             const totalElement = document.getElementById("total");
             if (totalElement) {
@@ -691,7 +709,8 @@
             }
         }
 
-        function proceedToCheckOut() {
+        async function proceedToCheckOut() {
+
             const items = document.querySelectorAll(".single-cart-item");
 
             if (items.length <= 0) {
@@ -718,7 +737,45 @@
                 return;
             }
 
-            window.location.assign("/checkout");
+            try {
+                const subtotalElement = document.getElementById("subtotal");
+                const totalAmount = parseFloat(subtotalElement.innerText.replace("₹", ""));
+
+                const couponCode = document.querySelector("#hiddenCoupon").value
+
+                const response = await fetch("/proceed-to-checkout", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        totalAmount,
+                        coupon: couponCode,
+                    }),
+                })
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    await Swal.fire({
+                        icon: "warning",
+                        html: data.error || "An error occurred during checkout.",
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: `Ok`,
+                    });
+
+                    location.reload();
+                    return
+                }
+
+                window.location.assign("/checkout");
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                });
+            }
         }
 
         document.addEventListener("DOMContentLoaded", () => initialize());

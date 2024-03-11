@@ -7,6 +7,7 @@ const Address = require("../models/Address");
 const Orders = require("../models/Orders");
 const Wallet = require("../models/Wallet");
 const Wishlist = require("../models/Wishlist");
+const Coupons = require("../models/Coupons");
 
 const { ObjectId } = require("mongodb");
 
@@ -605,8 +606,6 @@ const fetchVariants = async (req, res) => {
   }
 };
 
-
-
 const loadProfile = async (req, res) => {
   try {
     const { id } = req.session.user;
@@ -686,7 +685,6 @@ const loadPassword = (req, res) => {
 //   }
 // };
 
-
 // const loadCart = async (req, res) => {
 //   try {
 //     const { id } = req.session.user;
@@ -702,13 +700,12 @@ const loadPassword = (req, res) => {
 //   }
 // };
 
-
-
 const loadCheckOut = async (req, res) => {
   try {
     const { id } = req.session.user;
     const addressesDoc = await Address.findOne({ userId: id });
     const addresses = addressesDoc?.addresses ?? null;
+
     const cart = await Cart.findOne({ userId: id }).populate(
       "products.productId",
       "-description"
@@ -720,7 +717,16 @@ const loadCheckOut = async (req, res) => {
       res.status(400).redirect("/cart");
       return;
     }
-    res.render("usersViews/checkout", { addresses, products });
+
+    const coupon = req.session.coupon;
+    let couponDoc;
+    if (coupon.length > 0) {
+      couponCode = couponCode.toUpperCase();
+      couponDoc = await Coupons.findOne({ couponCode: couponCode });
+    }
+    console.log("products loadCheclout");
+    console.log(products);
+    res.render("usersViews/checkout", { addresses, products, couponDoc });
   } catch (error) {
     console.log(error);
   }

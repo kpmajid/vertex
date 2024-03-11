@@ -39,6 +39,7 @@ const {
 } = require("../controllers/addressController");
 
 const {
+  processCheckout,
   createOrder,
   LoadOrders,
   LoadSingleOrder,
@@ -130,6 +131,8 @@ router.post("/addToCart", addToCart);
 router.delete("/removeProduct", isLogin, removeProduct);
 
 router.patch("/updateQuantity", isLogin, updateQuantity);
+
+router.post("/proceed-to-checkout",isLogin,processCheckout)
 
 router.get("/checkout", isLogin, loadCheckOut);
 

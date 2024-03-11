@@ -43,9 +43,7 @@ const {
   getProducts,
   getCategories,
   createDiscount,
-  removeDiscount,
   getOffers,
-
   logout,
 } = require("../controllers/adminController");
 
@@ -87,6 +85,7 @@ const {
 } = require("../controllers/couponController");
 
 const {
+  removeOffer,
   applyProductOffer,
   removeProductOffer,
   applyCategoryOffer,
@@ -141,7 +140,7 @@ router.get("/get_products", isLogin, getProducts);
 
 router.post("/create-discount", isLogin, createDiscount);
 
-router.post("/remove-discount", isLogin, removeDiscount);
+router.post("/remove-discount", isLogin, removeOffer);
 router.get("/getOffers", isLogin, getOffers);
 
 router.post("/apply-product-offer", isLogin, applyProductOffer);

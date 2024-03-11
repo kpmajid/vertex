@@ -2,6 +2,40 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const Discounts = require("../models/Discounts");
 
+const removeOffer = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { discountId } = req.body;
+
+    await Discounts.findByIdAndDelete(discountId);
+
+    const productsToUpdate = await Product.find({ discountId: discountId });
+    const categoriesToUpdate = await Category.find({ discount: discountId });
+
+    // Update products and categories
+    const updatePromises = [];
+
+    productsToUpdate.forEach(async (product) => {
+      product.discountId = null;
+      product.discount = null;
+      product.discountedPrice = null;
+      updatePromises.push(product.save());
+    });
+
+    categoriesToUpdate.forEach(async (category) => {
+      category.discount = null;
+      updatePromises.push(category.save());
+    });
+
+    await Promise.all(updatePromises);
+
+    res.status(200).json({ message: "Discount removed successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const applyProductOffer = async (req, res) => {
   try {
     console.log("ehid");
@@ -178,6 +212,43 @@ const editOffer = async (req, res) => {
     offerDoc.end = end;
 
     await offerDoc.save();
+
+    const currentDate = new Date();
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const productsToUpdate = await Product.find({ discountId: id });
+
+    const productUpdatePromises = productsToUpdate.map(async (product) => {
+      if (currentDate >= startDate && currentDate <= endDate) {
+        const discount = product.originalPrice * (offerDoc.value / 100);
+        product.discount = discount;
+        product.discountedPrice = product.originalPrice - discount;
+      } else {
+        product.discountId = null;
+        product.discount = null;
+        product.discountedPrice = null;
+      }
+
+      await product.save();
+    });
+
+    await Promise.all(productUpdatePromises);
+
+    if (currentDate <= startDate && currentDate >= endDate) {
+      const categoriesToUpdate = await Category.find({ discount: id });
+
+      const categoryUpdatePromises = categoriesToUpdate.map(
+        async (category) => {
+          category.discount = null;
+          await category.save();
+        }
+      );
+      await Promise.all(categoryUpdatePromises);
+    }
+
+
     res.json({ success: true, message: "Offer Updated" });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
@@ -185,6 +256,7 @@ const editOffer = async (req, res) => {
 };
 
 module.exports = {
+  removeOffer,
   applyProductOffer,
   removeProductOffer,
   applyCategoryOffer,

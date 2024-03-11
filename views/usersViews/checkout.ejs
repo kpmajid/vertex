@@ -78,6 +78,16 @@
             margin-bottom: 0;
             border: 1px solid #000;
         }
+
+        .product-name-head,
+        .product-name {
+            display: inline-block;
+            width: 200px;
+            /* Adjust as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 
@@ -312,33 +322,73 @@
                             <h5>Your Order</h5>
                         </div>
 
-                        <ul class="order-details-form mb-4">
-                            <li class="mb-2"><span>Product</span> <span>Total</span></li>
-                            <% products.forEach(product=> { %>
-                                <li>
-                                    <span>
-                                        <%=product.productId.name%>
-                                    </span>
-                                    <span class="totalPrice">
-                                        <% if (product.productId.discount) { %>
-                                            ₹<%=product.quantity * product.productId.discountedPrice %>
+                        <ul class="order-details-form mb-4" id="cart-summary">
+                            <li class="summary-header">
+                                <span class="product-name-head">Product</span>
+                                <span>Qty</span>
+                                <span>Price</span>
+                            </li>
+                            <% if (products.length>0) { %>
+                                <% products.forEach(product=> { %>
+                                    <li class="summary-item" id="<%=product._id%>">
+                                        <span class="product-name">
+                                            <%= product.productId.name %>
+                                        </span>
+                                        <span class="product-quantity">
+                                            <%= product.quantity %>
+                                        </span>
+                                        <span class="product-originalPrice"> ₹ <%=product.quantity *
+                                                product.productId.originalPrice%>
+                                        </span>
+                                    </li>
+                                    <% }) %>
+                                        <% } %>
 
-                                                <% } else { %>
-                                                    ₹<%=product.quantity * product.productId.originalPrice%>
-                                                        <% } %>
-                                    </span>
-                                </li>
-                                <% }) %>
-                                    <hr />
-                                    <li><span>Subtotal</span> <span id="subtotal"></span></li>
-                                    <li><span>Shipping</span> <span>Free</span></li>
-                                    <hr />
-                                    <li><span>Total</span> <span id="total"></span></li>
+                                            <hr class="summary-divider" />
+
+                                            <li><span>SUBTOTAL</span> <span id="subtotal">₹0.00</span></li>
+                                            <li><span>Discounts &amp; Offers:</span></li>
+                                            <% products.forEach(product=> { %>
+                                                <% if (product.productId.discount) { %>
+                                                    <li id="<%=product._id%>">
+                                                        <span class="product-name">
+                                                            -<%= product.productId.name %> (x<span class="quantity">
+                                                                    <%= product.quantity %>):
+                                                                </span>
+                                                        </span>
+                                                        <span class="product-discount">-₹
+                                                            <%= product.quantity*product.productId.discount %>
+                                                        </span>
+                                                    </li>
+                                                    <% } %>
+                                                        <% }) %>
+
+                                                            <% if (couponDoc) { %>
+
+
+                                                                <li id="coupon">
+                                                                    <span id="coupon-name">- <%= couponDoc.couponCode %>
+                                                                            :</span>
+                                                                    <span id="coupon-value">-₹ <%=
+                                                                            couponDoc.discountAmount %>.00</span>
+                                                                </li>
+
+                                                                <% } %>
+
+
+                                                                    <hr />
+                                                                    <li><span>Total</span> <span id="total">₹0.00</span>
+                                                                    </li>
+                                                                    <hr />
                         </ul>
+
+
                         <div class="form-group">
                             <label for="paymentMethod">Select Payment Method:</label><br />
-                            <input type="radio" id="creditCard" name="paymentMethod" value="COD" />
-                            <label for="creditCard">Cash On Delivery</label><br />
+                            <input type="radio" id="cashOnDelivery" name="paymentMethod" value="COD" />
+                            <label for="cashOnDelivery">Cash On Delivery</label><br />
+                            <input type="radio" id="wallet" name="paymentMethod" value="wallet" />
+                            <label for="wallet">Wallet</label><br />
 
                             <input type="radio" id="paypal" name="paymentMethod" value="paypal" />
                             <label for="razorpay">RazorPay</label><br />
@@ -452,8 +502,8 @@
         let orderId;
 
         const initialize = () => {
-            calculateSubtotal();
-
+            // calculateSubtotal();
+            calculateTotal()
             createOrder();
 
             const btn = document.getElementById("saveBtn");
@@ -462,6 +512,41 @@
             const placeOrderBtn = document.getElementById("placeOrderBtn");
             placeOrderBtn.addEventListener("click", checkPlaceOrder);
         };
+
+        function calculateTotal() {
+            var subtotal = 0;
+            var items = document.querySelectorAll('.summary-item');
+
+            items.forEach(function (item) {
+                var price = parseFloat(item.querySelector('.product-originalPrice').innerText.trim().replace(/[^\d.-]/g, ''));
+                subtotal += price;
+            });
+
+            var subtotalElement = document.getElementById('subtotal');
+
+            subtotalElement.textContent = '₹' + subtotal.toFixed(2);
+
+            let totalDisocunt = 0;
+            var discounts = document.querySelectorAll('.product-discount');
+            discounts.forEach(function (discount) {
+
+                var discountAmount = parseFloat(discount.innerText.trim().replace(/[^0-9.]/g, ''));
+                console.log(typeof discountAmount)
+                totalDisocunt += discountAmount;
+            });
+
+
+            let couponValue = 0;
+            if (document.getElementById("coupon")) {
+                const couponValueElement = document.querySelector("#coupon-value")
+                couponValue = parseFloat(couponValueElement.innerText.replace("-₹", ""))
+            }
+
+            var totalElement = document.getElementById('total');
+            const total = subtotal - totalDisocunt - couponValue;
+            totalElement.textContent = '₹' + total.toFixed(2);
+        }
+
 
         const fullNameValidationMessage = document.getElementById(
             "fullNameValidationMessage"
@@ -490,6 +575,7 @@
                 const amount = document
                     .querySelector("#total")
                     .innerText.replace("₹", "");
+                    console.log(amount)
                 const response = await fetch("/create/orderId", {
                     method: "POST",
                     headers: {
@@ -608,6 +694,8 @@
             }
         }
 
+
+
         function calculateSubtotal() {
             let subtotal = 0;
             const totalPrices = document.querySelectorAll(".totalPrice");
@@ -627,6 +715,7 @@
             if (totalElement) {
                 totalElement.innerText = `₹${subtotal.toFixed(2)}`;
             }
+            console.log(subtotal)
         }
 
         function checkPlaceOrder() {

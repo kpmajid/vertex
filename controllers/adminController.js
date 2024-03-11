@@ -248,51 +248,6 @@ const createDiscount = async (req, res) => {
   }
 };
 
-const removeDiscount = async (req, res) => {
-  try {
-    console.log(req.body);
-    const { discountId } = req.body;
-    const discount = await Discounts.findById(discountId);
-
-    let productsToUpdate = [];
-
-    // if (discount.offerType === "category") {
-    //   const categoryObjectIds = discount.applicableTo.map(
-    //     (id) => new mongoose.Types.ObjectId(id)
-    //   );
-    //   productsToUpdate = await Product.aggregate([
-    //     {
-    //       $match: {
-    //         $or: [
-    //           { "category.parentCategory": { $in: categoryObjectIds } },
-    //           { "category.subCategory": { $in: categoryObjectIds } },
-    //         ],
-    //       },
-    //     },
-    //   ]);
-    // } else {
-    //   const productObjectIds = discount.applicableTo.map(
-    //     (id) => new mongoose.Types.ObjectId(id)
-    //   );
-    //   productsToUpdate = await Product.find({ _id: { $in: productObjectIds } });
-    // }
-
-    // for (const product of productsToUpdate) {
-    //   console.log("updating product");
-    //   console.log(product);
-
-    //   product.discount = null;
-    //   product.discountedPrice = null;
-
-    //   await product.save();
-    //   console.log("saved product");
-    // }
-    await Discounts.findByIdAndDelete(discountId);
-    res.status(200).json({ message: "Discount removed successfully" });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const getOffers = async (req, res) => {
   try {
@@ -341,7 +296,6 @@ module.exports = {
   loadAddDiscount,
   getProducts,
   createDiscount,
-  removeDiscount,
   getOffers,
   logout,
 };
