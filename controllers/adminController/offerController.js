@@ -1,6 +1,6 @@
-const Product = require("../models/Product");
-const Category = require("../models/Category");
-const Discounts = require("../models/Discounts");
+const Product = require("../../models/Product");
+const Category = require("../../models/Category");
+const Discounts = require("../../models/Discounts");
 
 const removeOffer = async (req, res) => {
   try {

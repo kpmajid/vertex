@@ -1,6 +1,6 @@
-const Product = require("../models/Product");
-const User = require("../models/User");
-const Orders = require("../models/Orders");
+const Product = require("../../models/Product");
+const User = require("../../models/User");
+const Orders = require("../../models/Orders");
 
 const dayjs = require("dayjs");
 

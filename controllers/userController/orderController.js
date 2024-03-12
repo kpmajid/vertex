@@ -1,8 +1,8 @@
-const Orders = require("../models/Orders");
-const Cart = require("../models/Cart");
-const Product = require("../models/Product");
-const Coupons = require("../models/Coupons");
-const Address = require("../models/Address");
+const Orders = require("../../models/Orders");
+const Cart = require("../../models/Cart");
+const Product = require("../../models/Product");
+const Coupons = require("../../models/Coupons");
+const Address = require("../../models/Address");
 
 const { ObjectId } = require("mongodb");
 

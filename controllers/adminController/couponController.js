@@ -1,4 +1,4 @@
-const Coupons = require("../models/Coupons");
+const Coupons = require("../../models/Coupons");
 
 const renderCoupon = async (req, res) => {
   try {

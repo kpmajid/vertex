@@ -1,19 +1,19 @@
-const User = require("../models/User");
-const Otp = require("../models/OTP");
-const Product = require("../models/Product");
-const Category = require("../models/Category");
-const Cart = require("../models/Cart");
-const Address = require("../models/Address");
-const Orders = require("../models/Orders");
-const Wallet = require("../models/Wallet");
-const Wishlist = require("../models/Wishlist");
-const Coupons = require("../models/Coupons");
+const User = require("../../models/User");
+const Otp = require("../../models/OTP");
+const Product = require("../../models/Product");
+const Category = require("../../models/Category");
+const Cart = require("../../models/Cart");
+const Address = require("../../models/Address");
+const Orders = require("../../models/Orders");
+const Wallet = require("../../models/Wallet");
+const Wishlist = require("../../models/Wishlist");
+const Coupons = require("../../models/Coupons");
 
 const { ObjectId } = require("mongodb");
 
 const bcrypt = require("bcrypt");
-const sendEmail = require("../services/sendEmail");
-const generateOTP = require("../utils/generateOTP");
+const sendEmail = require("../../services/sendEmail");
+const generateOTP = require("../../utils/generateOTP");
 
 function generateReferralCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();

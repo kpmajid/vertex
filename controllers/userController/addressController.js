@@ -1,4 +1,4 @@
-const Address = require("../models/Address");
+const Address = require("../../models/Address");
 
 const loadAddress = async (req, res) => {
   try {
