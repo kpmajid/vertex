@@ -84,8 +84,8 @@
                     </li>
 
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/discount">
-                            <span class="align-middle">Discount</span>
+                        <a class="sidebar-link" href="/admin/offers">
+                            <span class="align-middle">Offer</span>
                         </a>
                     </li>
 
@@ -249,11 +249,11 @@
                         <div class="card flex-fill w-100">
                             <div class="d-flex justify-content-between card-header">
                                 <span class="card-title">Sale Statistics</span>
-                                <div>
-                                    <button class="text-interactive badge bg-primary" id="Daily">Daily</button>
-                                    <button class="text-interactive badge bg-primary" id="Weekly">Weekly</button>
-                                    <button class="text-interactive badge bg-primary" id="Monthly">Monthly</button>
-                                </div>
+                                <select id="frequency" onchange="handleChange()">
+                                    <option value="Daily">Daily</option>
+                                    <option value="Weekly">Weekly</option>
+                                    <option value="Monthly">Monthly</option>
+                                </select>
 
                             </div>
                             <div class="card-body py-3">
@@ -311,13 +311,13 @@
             initializeSimplebar();
             initializeSidebarCollapse();
 
-            let interactiveText = document.querySelectorAll(".text-interactive")
-            interactiveText.forEach((text) => {
-                text.addEventListener("click", () => renderSalesChart(text.innerHTML))
-            })
+            // let interactiveText = document.querySelectorAll(".text-interactive")
+            // interactiveText.forEach((text) => {
+            //     text.addEventListener("click", () => renderSalesChart(text.innerHTML))
+            // })
 
             renderPieChart()
-            renderSalesChart("Weekly")
+            renderSalesChart("Daily")
         };
 
         async function renderPieChart() {
@@ -371,18 +371,25 @@
             }
         }
 
+        function handleChange() {
+            var selectedValue = document.getElementById("frequency").value;
+            console.log("Selected value: " + selectedValue);
+            // You can perform any action based on the selected value here
+            renderSalesChart(selectedValue)
+        }
+
 
         async function renderSalesChart(period) {
             try {
-                let interactiveText = document.querySelectorAll(".text-interactive")
-                interactiveText.forEach((element) => {
+                // let interactiveText = document.querySelectorAll(".text-interactive")
+                // interactiveText.forEach((element) => {
 
-                    element.classList.remove("active");
-                })
+                //     element.classList.remove("active");
+                // })
 
-                let element = document.getElementById(period)
+                // let element = document.getElementById(period)
                 // console.log(element)
-                element.classList.add("active");
+                // element.classList.add("active");
 
                 const response = await fetch(`/admin/sales-chart/${period}`)
                 const data = await response.json();

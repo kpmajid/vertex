@@ -191,6 +191,7 @@ const verifyOTP = async (req, res) => {
     }).sort({ timeStamp: -1 });
 
     const otpMatch = bcrypt.compare(otp, otpDoc.otp);
+    console.log(otpMatch)
     if (!otpMatch) {
       return res.json({ status: "", message: "invalid OTP" });
     }
@@ -281,28 +282,7 @@ async function handleRefferal(referralCode, userId) {
   }
 }
 
-const changeUserStatus = async (req, res) => {
-  try {
-    const userId = req.params.id;
 
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).json({ success: false, message: "User not found." });
-    }
-
-    const newStatus = !user.isBlocked;
-    console.log(user.isBlocked, newStatus);
-    await User.findByIdAndUpdate(userId, {
-      $set: { isBlocked: newStatus },
-    });
-
-    res.json({ success: true, message: "User status updated." });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 const renderForgotPasswordForm = (req, res) => {
   res.render("usersViews/forgot-password");
@@ -792,7 +772,7 @@ module.exports = {
   initiateUserRegister,
   loadValidateOTP,
   verifyOTP,
-  changeUserStatus,
+
   renderForgotPasswordForm,
   initiateForgotPassword,
   verifyForgotPasswordOTP,

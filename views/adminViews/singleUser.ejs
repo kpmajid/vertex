@@ -67,8 +67,8 @@
                     </li>
 
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/discount">
-                            <span class="align-middle">Discount</span>
+                        <a class="sidebar-link" href="/admin/offers">
+                            <span class="align-middle">Offer</span>
                         </a>
                     </li>
 
@@ -128,7 +128,7 @@
                                             <thead>
                                                 <tr>
 
-                                                    <th class="">Order Id</th>
+                                                    <th class="">Order Number</th>
                                                     <th class="">Date</th>
                                                     <th class="">Payment Status</th>
                                                     <th class="">Order Status</th>
@@ -147,7 +147,7 @@
 
                                                                 <td>
                                                                     <a href='/admin/orders/<%=order._id %>'>
-                                                                        <%= order._id %>
+                                                                        <%= order.order_number %>
                                                                     </a>
                                                                 </td>
                                                                 <td>
@@ -160,7 +160,7 @@
                                                                     <%= order.orderStatus %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= order.total %>
+                                                                    <%= order.finalTotal %>
                                                                 </td>
                                                             </tr>
 

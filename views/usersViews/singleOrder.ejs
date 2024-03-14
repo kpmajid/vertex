@@ -192,7 +192,7 @@
 
                                 <% if (order.orderStatus=="Delivered" ) { %>
 
-                                    <button type="button" class=" btn essence-btn bg-danger"
+                                    <button type="button" class="btn essence-btn bg-danger"
                                         data-orderId="<%= order._id %>" id="actionBtn" data-action="return">Return
                                         Order</button>
                                     <% } else { %>
@@ -404,9 +404,11 @@
                 const actionButton = document.querySelector("#actionBtn")
                 const action = actionButton.getAttribute('data-action')
                 console.log(action)
-                if (action !== "Delivered") {
+                if (action == "cancel") {
+                    console.log("cancel Order")
                     actionButton.addEventListener("click", cancelOrder)
                 } else {
+                    console.log("return Order")
                     actionButton.addEventListener("click", returnOrder)
                 }
 

@@ -5,11 +5,13 @@ const {
   addCategory,
   editCategory,
   changeCategoryStatus,
-} = require("../controllers/categoryController");
+} = require("../controllers/admin/categoryController");
 
-const { changeUserStatus } = require("../controllers/usersController");
+const { changeUserStatus } = require("../controllers/user/usersController");
 
-const { changeProductStatus } = require("../controllers/productController");
+const {
+  changeProductStatus,
+} = require("../controllers/admin/productController");
 
 router.post("/categories/add", addCategory);
 router.put("/categories/:id", editCategory);
@@ -17,6 +19,6 @@ router.patch("/categories/:id", changeCategoryStatus);
 
 router.patch("/products/:id", changeProductStatus);
 
-router.patch("/users/:id", changeUserStatus);
+
 
 module.exports = router;

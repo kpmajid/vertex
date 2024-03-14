@@ -1,7 +1,7 @@
 const Admin = require("../../models/Admin");
 const Category = require("../../models/Category");
 const Product = require("../../models/Product");
-const User = require("../../models/User");
+
 const Orders = require("../../models/Orders");
 const Address = require("../../models/Address");
 const Discounts = require("../../models/Discounts");
@@ -11,58 +11,6 @@ const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
-
-const loadLogin = (req, res) => {
-  res.render("adminViews/login");
-};
-
-const authenticateAdmin = async (req, res) => {
-  try {
-    console.log("admin login");
-    const { email, password } = req.body;
-
-    const admin = await Admin.findOne({ email: email });
-
-    if (!admin) {
-      return res.json({ message: "Invalid username or password" });
-    }
-
-    const passwordMatch = await bcrypt.compare(password, admin.password);
-
-    if (!passwordMatch) {
-      return res.json({ message: "Invalid username or password" });
-    }
-
-    req.session.admin = admin._id;
-    res.redirect("/admin/dashboard");
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-const registerAdmin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const isExist = await Admin.findOne({ email: email });
-
-    if (isExist) {
-      return res.json({ success: false, message: "admin already exist." });
-    }
-    let hashedPassword = await bcrypt.hash(password, 10);
-
-    const admin = new Admin({
-      email,
-      password: hashedPassword,
-    });
-    await admin.save();
-    res.json({ success: true, message: "new admin created." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 const getCategories = async (req, res) => {
   try {
@@ -155,26 +103,7 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-const loadUsers = async (req, res) => {
-  try {
-    let filter = {};
 
-    if (req.query.status) {
-      filter.isBlocked = req.query.status;
-    }
-    console.log(filter);
-    const users = await User.find(filter).select({ password: 0 });
-
-    users.forEach((user) => {
-      user.formattedCreatedAt = user.createdAt.toLocaleDateString("en-GB");
-    });
-
-    const status = filter.isBlocked;
-    res.render("adminViews/users", { users, status });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const getSubCategory = async (req, res) => {
   try {
@@ -190,20 +119,7 @@ const getSubCategory = async (req, res) => {
   }
 };
 
-const loadSingleUser = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await User.findById(id);
-    user.formattedCreatedAt = user.createdAt.toLocaleDateString("en-GB");
-    const userId = user._id.toString();
-    console.log(userId);
-    const orders = await Orders.find({ userId: userId });
-    console.log(orders);
-    res.render("adminViews/singleUser", { user, orders });
-  } catch (error) {
-    console.log(error);
-  }
-};
+
 
 const loadDiscount = async (req, res) => {
   try {
@@ -276,31 +192,16 @@ const getOffers = async (req, res) => {
   }
 };
 
-const logout = async (req, res) => {
-  try {
-    req.session.destroy();
-    res.redirect("/admin");
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).render("error", { error: error.message });
-  }
-};
-
 module.exports = {
-  loadLogin,
-  authenticateAdmin,
-  registerAdmin,
   getSubCategory,
   getCategories,
   loadOrders,
   loadSingleOrder,
   updateOrderStatus,
-  loadUsers,
-  loadSingleUser,
+
   loadDiscount,
   loadAddDiscount,
   getProducts,
   createDiscount,
   getOffers,
-  logout,
 };

@@ -32,26 +32,32 @@ const {
   loadLogin,
   authenticateAdmin,
   registerAdmin,
+  logout,
+} = require("../controllers/admin/authContoller");
+const {
+  loadUsers,
+  loadSingleUser,
+  changeUserStatus,
+} = require("../controllers/admin/userManagementController");
+
+const {
   getSubCategory,
   loadOrders,
   loadSingleOrder,
   updateOrderStatus,
-  loadUsers,
-  loadSingleUser,
   loadDiscount,
   loadAddDiscount,
   getProducts,
   getCategories,
   createDiscount,
   getOffers,
-  logout,
-} = require("../controllers/adminController");
+} = require("../controllers/admin/adminController");
 
 const {
   loadDashboard,
   renderSalesChart,
   renderPieChart,
-} = require("../controllers/dashboardController");
+} = require("../controllers/admin/dashboardController");
 
 const {
   loadProducts,
@@ -60,7 +66,7 @@ const {
   loadEditProduct,
   editProduct,
   changeProductStatus,
-} = require("../controllers/productController");
+} = require("../controllers/admin/productController");
 
 const {
   loadCategory,
@@ -69,12 +75,12 @@ const {
   loadEditCategory,
   editCategory,
   changeCategoryStatus,
-} = require("../controllers/categoryController");
+} = require("../controllers/admin/categoryController");
 
 const {
   renderAttributes,
   renderAddAttributes,
-} = require("../controllers/attributeController");
+} = require("../controllers/admin/attributeController");
 
 const {
   renderCoupon,
@@ -83,7 +89,7 @@ const {
   createCoupon,
   loadEditCoupon,
   editCoupon,
-} = require("../controllers/couponController");
+} = require("../controllers/admin/couponController");
 
 const {
   removeOffer,
@@ -93,7 +99,7 @@ const {
   removeCategoryOffer,
   loadEditOffer,
   editOffer,
-} = require("../controllers/offerController");
+} = require("../controllers/admin/offerController");
 
 const { isLogin, isLogout } = require("../middleware/authAdmin");
 
@@ -132,10 +138,11 @@ router.patch("/updateOrder", isLogin, updateOrderStatus);
 //users
 router.get("/users", isLogin, loadUsers);
 router.get("/users/:id", isLogin, loadSingleUser);
+router.patch("/users/:id", changeUserStatus);
 
 //discount offer
-router.get("/discount", isLogin, loadDiscount);
-router.get("/add-discount", isLogin, loadAddDiscount);
+router.get("/offers", isLogin, loadDiscount);
+router.get("/add-offer", isLogin, loadAddDiscount);
 router.get("/get_products", isLogin, getProducts);
 
 // router.get("/get_categories", isLogin, getCategories);

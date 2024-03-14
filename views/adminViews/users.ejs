@@ -67,8 +67,8 @@
                     </li>
 
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/discount">
-                            <span class="align-middle">Discount</span>
+                        <a class="sidebar-link" href="/admin/offers">
+                            <span class="align-middle">Offer</span>
                         </a>
                     </li>
 
@@ -171,11 +171,9 @@
                                     </thead>
                                     <tbody>
                                         <% if (users.length<=0 ) { %>
-
                                             <tr>
                                                 <td colspan="7">No Users</td>
                                             </tr>
-
                                             <% } else { %>
                                                 <% users.forEach(user=> { %>
 
@@ -191,15 +189,19 @@
                                                         <td>
                                                             <%= user.formattedCreatedAt %>
                                                         </td>
-                                                        <td class="block-Unblock-btn">
+                                                        <td class="">
                                                             <% if (user.isBlocked) { %>
 
-                                                                <button class="btn btn-success btn-md">
-                                                                    unBlock
+                                                                <button class="btn block-Unblock-btn btn-success btn-md"
+                                                                    data-userId="<%= user._id%>" data-action="Unblock">
+                                                                    Unbock
                                                                 </button>
                                                                 <% } else { %>
 
-                                                                    <button class="btn btn-danger btn-md">Block</button>
+                                                                    <button
+                                                                        class="btn block-Unblock-btn btn-danger btn-md"
+                                                                        data-userId="<%= user._id%>"
+                                                                        data-action="Block">Block</button>
                                                                     <% } %>
                                                         </td>
                                                         <td>
@@ -288,41 +290,49 @@
 
 
             blockUnblockbtns.forEach((button, index) => {
-                button.childNodes[1].addEventListener("click", async () => {
-                    let action = button.childNodes[1].innerText;
-                    let name = userNames[index].innerText;
-                    let id = userIds[index].value;
-                    const url = `/api/admin/users/${id}`;
-                    try {
-                        const result = await Swal.fire({
-                            title: "Are you sure?",
-                            text: `do you want ${action} ${name} User!`,
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: `Yes, ${action} it!`,
-                        });
-                        if (result.isConfirmed) {
-                            const response = await fetch(url, {
-                                method: "PATCH",
-                            });
-
-
-                            if (response.ok) {
-                                await Swal.fire({
-                                    title: `${action}ed!`,
-                                    text: `${name} category has been ${action}ed.`,
-                                    icon: "success",
-                                });
-                                window.location.reload();
-                            }
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                });
+                button.addEventListener("click", () => blockUnblock(button));
             });
+        }
+
+        async function blockUnblock(button) {
+            let action = button.getAttribute("data-action")
+            let id = button.getAttribute("data-userId")
+            // let name = userNames[index].innerText;
+            const url = `/admin/users/${id}`;
+            try {
+                const result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: `do you want ${action} User!`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: `Yes, ${action} it!`,
+                });
+                if (result.isConfirmed) {
+                    const response = await fetch(url, {
+                        method: "PATCH",
+                    });
+
+
+                    if (response.ok) {
+                        await Swal.fire({
+                            title: `${action}ed!`,
+                            text: `User has been ${action}ed.`,
+                            icon: "success",
+                        });
+                        window.location.reload();
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    timer: 1500,
+                });
+            }
         }
 
 

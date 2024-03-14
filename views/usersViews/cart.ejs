@@ -518,6 +518,10 @@
 
             document.querySelector("#hiddenCoupon").value = ""
 
+            const subtotalElement = document.getElementById("subtotal");
+            const totalAmount = parseFloat(subtotalElement.innerText.replace("₹", ""));
+
+            calculateTotal(totalAmount)
 
         }
 
@@ -724,19 +728,19 @@
                 return;
             }
 
-            const problems = document.querySelectorAll(".problem");
+            // const problems = document.querySelectorAll(".problem");
 
-            if (problems.length) {
-                Swal.fire({
-                    icon: "warning",
-                    html: `Please remove unavilable and out of stock products from cart.`,
-                    showCloseButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: `Ok`,
-                });
-                return;
-            }
-
+            // if (problems.length) {
+            //     Swal.fire({
+            //         icon: "warning",
+            //         html: `Please remove unavilable and out of stock products from cart.`,
+            //         showCloseButton: true,
+            //         focusConfirm: false,
+            //         confirmButtonText: `Ok`,
+            //     });
+            //     return;
+            // }
+            console.log("problem?")
             try {
                 const subtotalElement = document.getElementById("subtotal");
                 const totalAmount = parseFloat(subtotalElement.innerText.replace("₹", ""));

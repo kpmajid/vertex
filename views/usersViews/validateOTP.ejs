@@ -349,38 +349,45 @@
 
         console.log(enteredOTP);
 
-        if (enteredOTP.length === 6) {
-          try {
-            const response = await fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                otp: enteredOTP,
-              }),
-            });
-            if (response.redirected) {
-              await Swal.fire({
-                icon: "success",
-                title: "Registration Successfull",
-                html: ` Please login to continue`,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              window.location.href = response.url;
-            } else {
-              const jsonData = await response.json();
-              console.log(jsonData.message);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
+        if (enteredOTP.length !== 6) {
           otpValidationMessage.textContent =
             "Please enter all six digits of the OTP.";
           // document.getElementById("otpValidationMessage").value = "Please enter all six digits of the OTP."
           console.log("Please enter all six digits of the OTP.");
+        }
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              otp: enteredOTP,
+            }),
+          });
+          if (!response.ok) {
+            const jsonData = await response.json();
+            console.log(jsonData.message);
+            return
+          }
+          await Swal.fire({
+            icon: "success",
+            title: "Registration Successfull",
+            html: ` Please login to continue`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          window.location.href = response.url;
+
+        } catch (error) {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+            timer: 1500,
+          });
         }
       });
     });

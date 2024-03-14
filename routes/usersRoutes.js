@@ -27,7 +27,7 @@ const {
   changePassword,
   loadWallet,
   logout,
-} = require("../controllers/usersController");
+} = require("../controllers/user/usersController");
 
 const {
   loadAddress,
@@ -36,7 +36,7 @@ const {
   addAddress,
   loadEditAddress,
   editAddress,
-} = require("../controllers/addressController");
+} = require("../controllers/user/addressController");
 
 const {
   processCheckout,
@@ -45,22 +45,22 @@ const {
   LoadSingleOrder,
   cancelOrder,
   cancelProducts,
-} = require("../controllers/orderController");
+} = require("../controllers/user/orderController");
 
 const {
   loadWishlist,
   addToWishlist,
   removeProductFromWishlist,
-} = require("../controllers/wishlistController");
+} = require("../controllers/user/wishlistController");
 
 const {
   loadCart,
   addToCart,
   removeProduct,
   updateQuantity,
-} = require("../controllers/cartController");
+} = require("../controllers/user/cartController");
 
-const { checkCoupon } = require("../controllers/couponController");
+const { checkCoupon } = require("../controllers/user/couponController");
 
 const { isLogin, isLogout } = require("../middleware/authUser");
 

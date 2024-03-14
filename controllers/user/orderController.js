@@ -241,7 +241,7 @@ const createOrder = async (req, res) => {
 const LoadOrders = async (req, res) => {
   try {
     const { id } = req.session.user;
-    const orders = await Orders.find({ userId: id });
+    const orders = await Orders.find({ userId: id }).sort({ createdAt: -1 });
     res.render("usersViews/orders", { orders });
   } catch (error) {
     console.log(error);
