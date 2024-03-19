@@ -4,6 +4,8 @@ const Product = require("../../models/Product");
 const Coupons = require("../../models/Coupons");
 const Address = require("../../models/Address");
 
+const { createInvoice } = require("../../utils/createInvoice");
+
 const { ObjectId } = require("mongodb");
 
 const processCheckout = async (req, res) => {
@@ -259,26 +261,6 @@ const LoadSingleOrder = async (req, res) => {
       "products.productId"
     );
 
-    console.log("order");
-    console.log(order);
-
-    // const {
-    //   shippingAddress,
-    //   products,
-    //   paymentMethod,
-    //   paymentStatus,
-    //   orderStatus,
-    //   total,
-    //   createdAt,
-    //   _id,
-    // } = order;
-
-    // const addressDoc = await Address.findOne({ userId: id });
-
-    // const address = addressDoc.addresses.find((address) =>
-    //   address._id.equals(shippingAddress)
-    // );
-
     console.log(order);
 
     res.render("usersViews/singleOrder", {
@@ -299,8 +281,12 @@ const cancelOrder = async (req, res) => {
     if (order.paymentStatus == "paid") {
       //return payment,
     }
+    order.products.forEach((product) => {
+      console.log(product);
+    });
     console.log(order);
-    await order.save();
+
+    // await order.save();
     res.status(200).json({ message: "order canceled successfully" });
   } catch (error) {
     console.log(error);
@@ -344,6 +330,61 @@ const cancelProducts = async (req, res) => {
   }
 };
 
+const returnProducts = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const invoice = async (req, res) => {
+  try {
+    console.log("invoice");
+    const invoice = {
+      shipping: {
+        name: "John Doe",
+        address: "1234 Main Street",
+        city: "San Francisco",
+        state: "CA",
+        country: "US",
+        postal_code: 94111,
+      },
+      items: [
+        {
+          item: "TC 100",
+          description: "Toner Cartridge",
+          quantity: 2,
+          amount: 6000,
+        },
+        {
+          item: "USB_EXT",
+          description: "USB Cable Extender",
+          quantity: 1,
+          amount: 2000,
+        },
+      ],
+      subtotal: 8000,
+      paid: 0,
+
+      invoice_nr: 1234,
+    };
+
+    const generatedPDF = createInvoice(invoice);
+    console.log("pdf generated");
+
+    // Set the appropriate headers for PDF response
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'attachment; filename="example.pdf"');
+
+    // Send the generated PDF buffer as a response
+    generatedPDF.pipe(res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   processCheckout,
   createOrder,
@@ -351,4 +392,5 @@ module.exports = {
   LoadSingleOrder,
   cancelOrder,
   cancelProducts,
+  invoice,
 };

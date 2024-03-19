@@ -1027,7 +1027,7 @@ img {
 .single-product-wrapper .product-img {
   background-color: #f0eeed;
   width: 255px;
-  height: 348px;
+  height: 255px;
   object-fit: contain;
   position: relative;
   z-index: 1;
@@ -1035,7 +1035,7 @@ img {
 }
 
 .single-product-wrapper .product-img img {
-  height: 348px;
+  height: 255px;
   object-fit: cover;
   width: 100%;
   -webkit-transition-duration: 500ms;

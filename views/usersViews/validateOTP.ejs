@@ -367,8 +367,10 @@
             }),
           });
           if (!response.ok) {
+
             const jsonData = await response.json();
             console.log(jsonData.message);
+            otpValidationMessage.textContent = jsonData.message
             return
           }
           await Swal.fire({

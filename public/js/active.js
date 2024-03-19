@@ -81,6 +81,7 @@
     var value_min = jQuery(this).data("value-min");
     var value_max = jQuery(this).data("value-max");
     var label_result = jQuery(this).data("label-result");
+    var step = jQuery(this).data("step");
 
     var t = $(this);
     $(this).slider({
@@ -88,6 +89,7 @@
       min: min,
       max: max,
       values: [value_min, value_max],
+      step: step,
       slide: function (event, ui) {
         var result =
           label_result +

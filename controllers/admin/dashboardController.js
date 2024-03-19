@@ -165,6 +165,64 @@ const renderPieChart = async (req, res) => {
   }
 };
 
+const top10Products = async (req, res) => {
+  try {
+    /*
+    [
+      {
+        $match: {
+          orderStatus: {
+            $nin: ["Cancelled", "Returned"],
+          },
+        },
+      },
+      { $unwind: "$products" },
+      {
+        $match: {
+          "products.status": {
+            $nin: ["Cancelled", "Returned"],
+          },
+        },
+      },
+    ]
+    */
+    const products = await Orders.aggregate([
+      { $unwind: "$products" },
+      {
+        $group: {
+          _id: "$products.productId",
+          totalOrders: {
+            $sum: "$products.quantity",
+          },
+        },
+      },
+      {
+        $sort: {
+          totalOrders: -1,
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "result",
+        },
+      },
+    ]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const top10Category = async (req, res) => {
+  try {
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   loadDashboard,
   renderSalesChart,

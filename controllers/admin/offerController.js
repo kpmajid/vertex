@@ -12,22 +12,23 @@ const removeOffer = async (req, res) => {
     const productsToUpdate = await Product.find({ discountId: discountId });
     const categoriesToUpdate = await Category.find({ discount: discountId });
 
-    // Update products and categories
-    const updatePromises = [];
-
-    productsToUpdate.forEach(async (product) => {
+    // Update products
+    const productUpdatePromises = [];
+    for (const product of productsToUpdate) {
       product.discountId = null;
       product.discount = null;
       product.discountedPrice = null;
-      updatePromises.push(product.save());
-    });
+      productUpdatePromises.push(product.save());
+    }
+    await Promise.all(productUpdatePromises);
 
-    categoriesToUpdate.forEach(async (category) => {
+    // Update categories
+    const categoryUpdatePromises = [];
+    for (const category of categoriesToUpdate) {
       category.discount = null;
-      updatePromises.push(category.save());
-    });
-
-    await Promise.all(updatePromises);
+      categoryUpdatePromises.push(category.save());
+    }
+    await Promise.all(categoryUpdatePromises);
 
     res.status(200).json({ message: "Discount removed successfully" });
   } catch (error) {
@@ -231,7 +232,7 @@ const editOffer = async (req, res) => {
         product.discountedPrice = null;
       }
 
-      await product.save();
+      return product.save();
     });
 
     await Promise.all(productUpdatePromises);
@@ -242,12 +243,11 @@ const editOffer = async (req, res) => {
       const categoryUpdatePromises = categoriesToUpdate.map(
         async (category) => {
           category.discount = null;
-          await category.save();
+          return category.save();
         }
       );
       await Promise.all(categoryUpdatePromises);
     }
-
 
     res.json({ success: true, message: "Offer Updated" });
   } catch (error) {

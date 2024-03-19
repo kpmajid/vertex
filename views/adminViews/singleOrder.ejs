@@ -144,8 +144,8 @@
                         </h6>
                         <h6>Total: <%= order.finalTotal %>
                         </h6>
-                        <% if (order.orderStatus!=="Delivered" ) { %>
-                            <select id="order_status_select">
+                        <% if (order.orderStatus!=="Delivered" && order.orderStatus!=="Cancelled" ) { %>
+                            <select id=" order_status_select">
                                 <option value="">select </option>
                                 <option value="Cancelled">Cancelled</option>
 
@@ -179,7 +179,7 @@
                                 <tr>
                                     <th class=""></th>
                                     <th class="">Name</th>
-                                    <th class="">Variant</th>
+
                                     <th class="">status</th>
                                     <th class="">Price</th>
                                     <th class="">Quantity</th>
@@ -194,12 +194,11 @@
                                                 class="cart-thumb" alt="" />
                                         </td>
                                         <td>
-                                            <%=product.productId.name %>
+                                            <%=product.productId.name %><br>
+                                                <%= product.size %>,
+                                                    <%= product.color %>
                                         </td>
-                                        <td>
-                                            <%= product.size %>,
-                                                <%= product.color %>
-                                        </td>
+
                                         <% if(product.cancel?.status || product.return?.status){ %>
                                             <td class="text-danger">
 
@@ -218,9 +217,9 @@
 
                                                     <td>
                                                         ₹<%= product.price %>
-                                                    </td>
                                                     <td>
                                                         <%= product.quantity %>
+                                                    </td>
                                                     </td>
                                                     <td>
                                                         ₹<%= product.price*product.quantity %>

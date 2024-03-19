@@ -27,6 +27,15 @@
 
   <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
   <style>
+    .dt-layout-row {
+      padding: 6px;
+    }
+
+    #dt-length-0 {
+      margin-right: 6px;
+    }
+  </style>
+  <style>
     /* Internal (inline) style */
     .accordion-button:focus {
       /* border-color: transparent; */
@@ -152,7 +161,7 @@
         </div>
         <div class="card flex-fill w-100">
           <div class="table-responsive-sm">
-            <table id="example" class="table text-center table-hover my-0 display" style="width:100%">
+            <table id="myTable" class="table text-center table-hover my-0 display" style="width:100%">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -250,6 +259,18 @@
 
       initializeSimplebar();
       initializeSidebarCollapse();
+
+      new DataTable('#myTable', {
+        ordering: false,
+      });
+
+      // Get all elements with the class '.dt-orderable-none'
+      var elements = document.querySelectorAll('.dt-orderable-none');
+
+      // Loop through each element and set its text-align property to 'center'
+      elements.forEach(function (element) {
+        element.style.textAlign = 'center';
+      });
 
       document
         .getElementById("add-category")

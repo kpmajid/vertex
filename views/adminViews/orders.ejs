@@ -26,6 +26,23 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
   <style></style>
   <link href="./css/uploadImage.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
+
+  <style>
+    .dt-layout-row {
+      padding: 6px;
+    }
+
+    #dt-length-0 {
+      margin-right: 6px;
+    }
+
+    table.dataTable>thead>tr>th,
+    table.dataTable>tbody>tr>td,
+    table.dataTable>tfoot>tr>th {
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
@@ -177,6 +194,17 @@
                           <% }) %>
                             <% } %>
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <th class=""></th>
+                      <th class=""></th>
+                      <th class=""></th>
+                      <th class="">Order Status</th>
+                      <th class="">Payment Status</th>
+                      <th class="">Payment Method</th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             </div>
@@ -186,7 +214,54 @@
     </div>
   </div>
 
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      let specificColumnsIndices = [3, 4, 5]; // Columns you want to apply individual searching to
+
+      new DataTable('#myTable', {
+        initComplete: function () {
+          let api = this.api();
+
+          specificColumnsIndices.forEach(function (columnIndex) {
+            api.columns(columnIndex).every(function () {
+              let column = this;
+
+              // Create select element
+              let select = document.createElement('select');
+              select.add(new Option('')); // Add an empty option
+
+              column.footer().replaceChildren(select);
+
+              // Apply listener for user change in value
+              select.addEventListener('change', function () {
+                column
+                  .search(select.value, { exact: true })
+                  .draw();
+              });
+
+              // Optional: Set initial value for the select box
+              column
+                .data()
+                .unique()
+                .sort()
+                .each(function (d, j) {
+                  if (d !== '') {
+                    select.add(new Option(d));
+                  }
+                });
+            });
+          });
+        }, ordering: false,
+      });
+    });  
+  </script>
   <script>
     const initialize = () => {
       initializeSimplebar();
@@ -234,9 +309,14 @@
       }
     };
 
+
+
     document.addEventListener("DOMContentLoaded", () => initialize());
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 </body>
 
 </html>

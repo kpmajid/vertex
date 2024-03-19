@@ -175,32 +175,34 @@ const verifyOTP = async (req, res) => {
     console.log("verifyOTP");
     console.log(req.body);
 
-    const email = req.session.email;
+    const { email, ref } = req.session;
+    const { otp } = req.body;
+
     if (!email) {
       return res.redirect("/login");
     }
 
-    const { otp } = { ...req.body };
-
     if (!otp) {
-      return res.json({ status: "", message: "please provide otp" });
+      return res.status(400).json({ status: "", message: "OTP not found" });
     }
 
     const otpDoc = await Otp.findOne({
       email,
     }).sort({ timeStamp: -1 });
 
-    const otpMatch = bcrypt.compare(otp, otpDoc.otp);
-    console.log(otpMatch)
+    console.log(otpDoc);
+
+    const otpMatch = await bcrypt.compare(otp, otpDoc.otp);
+    console.log("otpMatch");
+    console.log(otpMatch);
+
     if (!otpMatch) {
-      return res.json({ status: "", message: "invalid OTP" });
+      return res.status(401).json({ status: "", message: "invalid OTP" });
     }
 
     const user = await User.findOne({ email });
     user.isVerified = true;
     await user.save();
-
-    const ref = req.session.ref;
 
     if (ref) {
       await handleRefferal(ref, user._id);
@@ -281,8 +283,6 @@ async function handleRefferal(referralCode, userId) {
     console.log(error);
   }
 }
-
-
 
 const renderForgotPasswordForm = (req, res) => {
   res.render("usersViews/forgot-password");
@@ -395,6 +395,13 @@ const loadShop = async (req, res) => {
     const sizes = req.query.sizes ? req.query.sizes.split(",") : [];
     const minPrice = req.query.min || "";
     const maxPrice = req.query.max || "";
+
+    console.log("colors,sizes,minPrice,maxPrice");
+    console.log(categoriesQuery);
+    console.log(colors);
+    console.log(sizes);
+    console.log(minPrice);
+    console.log(maxPrice);
 
     const products = await Product.aggregate([
       {

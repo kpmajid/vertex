@@ -72,6 +72,44 @@
             color: #000;
             border: 1px solid #000;
         }
+
+        .category-title,
+        .color-title,
+        .size-title {
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .category-title::after,
+        .color-title::after,
+        .size-title::after {
+            border-bottom: 2px solid #999;
+            border-right: 2px solid #999;
+            content: '';
+            height: 5px;
+            pointer-events: none;
+
+            transform-origin: 66% 66%;
+
+            transition: all 0.15s ease-in-out;
+            width: 5px;
+
+            transform: rotate(-135deg);
+        }
+
+        .category-title.collapsed::after,
+        .color-title.collapsed::after,
+        .size-title.collapsed::after {
+            border-bottom: 2px solid #999;
+            border-right: 2px solid #999;
+            content: '';
+            height: 5px;
+            pointer-events: none;
+            transform-origin: 66% 66%;
+            transform: rotate(45deg);
+            transition: all 0.15s ease-in-out;
+            width: 5px;
+        }
     </style>
 </head>
 
@@ -176,11 +214,13 @@
                             <div class="widget catagory mb-15">
                                 <!-- Widget Title -->
                                 <!-- Widget Title -->
-                                <h6 class="widget-title2 mb-15">Catagories</h6>
+                                <h6 class="widget-title2 category-title collapsed mb-15" data-toggle="collapse"
+                                    data-target="#menu-content2" style="display: flex;">
+                                    Catagories</h6>
 
                                 <!--  Catagories  -->
                                 <div class="catagories-menu">
-                                    <ul id="menu-content2" class="menu-content catetgory">
+                                    <ul id="menu-content2" class="menu-content catetgory collapse">
                                         <!-- Single Item -->
                                         <% if (categories) { %>
                                             <% categories.forEach(category=> {
@@ -207,9 +247,9 @@
 
                                 <div class="widget-desc">
                                     <div class="slider-range">
-                                        <div data-min="500" data-max="5000" data-unit="₹"
-                                            class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                                            data-value-min="500" data-value-max="5000" data-label-result="Range:">
+                                        <div data-min="500" data-max="5000" data-unit="₹" data-step="500" class="slider-range-price ui-slider ui-slider-horizontal ui-widget
+                                            ui-widget-content ui-corner-all" data-value-min="500" data-value-max="5000"
+                                            data-label-result="Range:">
                                             <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                                             <span class="ui-slider-handle ui-state-default ui-corner-all"
                                                 tabindex="0"></span>
@@ -219,12 +259,14 @@
                                         <div class="range-price" id="range-price">Range: ₹500.00 - ₹5000.00</div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <div class="widget widget-color mb-30">
-                                <p class="widget-title2 mb-15">Color</p>
+                                <p class="widget-title2 color-title collapsed mb-15" data-toggle="collapse"
+                                    data-target="#colors" style="display: flex;">Color</p>
                                 <div class="">
-                                    <ul class="menu-content2 widget-color-content color">
+                                    <ul id="colors" class="menu-content2 widget-color-content color collapse">
                                         <li>
                                             <input type="checkbox" id="colorWhite" class="color" name="White">
                                             <label for="colorWhite">White</label>
@@ -255,9 +297,10 @@
                             </div>
 
                             <div class="widget widget-size mb-30">
-                                <p class="widget-title2 mb-15">Size</p>
+                                <p class="widget-title2 mb-15 size-title collapsed" data-toggle="collapse"
+                                    data-target="#size" style="display: flex;">Size</p>
                                 <div class="">
-                                    <ul class="menu-content2 size" id="size" s>
+                                    <ul class="menu-content2 size collapse" id="size">
                                         <li>
                                             <input type="checkbox" id="sizeSmall" class="size" name="Small">
                                             <label for="sizeSmall">Small</label>
@@ -499,6 +542,7 @@
         function updateURL() {
             const sortBy = document.getElementById("sortBySelect").value
         }
+
         window.addEventListener('load', function () {
             document.getElementById("applyFilter").addEventListener("click", filter)
         });
@@ -508,11 +552,7 @@
             let selectedColors = getSelectedValues('color');
             let selectedSizes = getSelectedValues('size');
 
-            console.log('Selected categories:', selectedCategories);
-            console.log('Selected colors:', selectedColors);
-            console.log('Selected sizes:', selectedSizes);
-
-            var queryURL = 'http://localhost:5000/shop?';
+            var queryURL = '/shop?';
 
             // Append selected categories to the query URL
             if (selectedCategories.length > 0) {
@@ -526,19 +566,18 @@
 
             // Append selected sizes to the query URL
             if (selectedSizes.length > 0) {
-                queryURL += 'sizes=' + selectedSizes.join(',');
+                queryURL += 'sizes=' + selectedSizes.join(',') + '&';
             }
 
             const range = document.querySelector("#range-price")
             if (range.getAttribute("data-min") && range.getAttribute("data-max")) {
-                queryURL += 'min=' + range.getAttribute("data-min");
+                queryURL += 'min=' + range.getAttribute("data-min") + '&';
                 queryURL += 'max=' + range.getAttribute("data-max");
-
             }
 
             // Output or use the constructed query URL as needed
             console.log('Query URL:', queryURL);
-
+            window.location.href = queryURL
         }
 
         function getSelectedValues(className) {

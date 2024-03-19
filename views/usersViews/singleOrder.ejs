@@ -79,6 +79,22 @@
             font-family: "Poppins", sans-serif;
             font-size: 14px;
         }
+
+        .user-details>.row {
+            justify-content: space-between;
+            margin: 0;
+        }
+
+        .product-row,
+        .order-button {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-row button,
+        .order-button button {
+            margin-bottom: 5px;
+        }
     </style>
 
 </head>
@@ -150,7 +166,7 @@
 
 
     <!-- ##### Checkout Area Start ##### -->
-    <div class="profile-page section-padding-80">
+    <div class="profile-page section-padding-80 pb-0">
         <div class="container">
             <div class="row">
                 <!-- Sidebar Section -->
@@ -174,46 +190,63 @@
                 <!-- User Details Section -->
                 <div class="col-12 col-md-7 col-lg-9">
                     <div class="user-details clearfix mb-2">
-                        <input type="hidden" name="" id="orderId" <%=order._id %>>
-                        <input type="text" value="<%= order %>">
-                        <h6>Order Number: <%= order.order_number %>
-                        </h6>
-                        <h6>Status: <%=order.orderStatus %>
-                        </h6>
-                        <h6>Payment Method: <%= order.paymentMethod %>
-                        </h6>
-                        <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
-                        </h6>
-                        <h6>Total: <%= order.finalTotal %>
-                        </h6>
-                        <% if (order.coupon) { %>
+                        <div class="row">
+                            <div class="order-details">
+                                <input type="hidden" name="" id="orderId" value="<%= order._id %>">
+                                <h6>Order Number: <%= order.order_number %>
+                                </h6>
+                                <h6>Status: <%=order.orderStatus %>
+                                </h6>
+                                <h6>Payment Method: <%= order.paymentMethod %>
+                                </h6>
+                                <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
+                                </h6>
+                                <h6>Total: <%= order.finalTotal %>
+                                </h6>
+                                <% if (order.coupon) { %>
 
-                            <% } %>
+                                    <% } %>
 
-                                <% if (order.orderStatus=="Delivered" ) { %>
+                            </div>
 
-                                    <button type="button" class="btn essence-btn bg-danger"
-                                        data-orderId="<%= order._id %>" id="actionBtn" data-action="return">Return
-                                        Order</button>
-                                    <% } else { %>
-                                        <button type="button" class=" btn essence-btn bg-danger"
-                                            data-orderId="<%= order._id %>" id="actionBtn" data-action="cancel">Cancel
+
+
+                            <div class="order-button">
+
+                                <% if (order.orderStatus!=="Cancelled" && order.orderStatus!=="Returned" ) { %>
+                                    <% if (order.orderStatus=="Delivered" ) { %>
+
+                                        <button type="button" class="btn btn-danger bg-danger"
+                                            data-orderId="<%= order._id %>" id="actionBtn" data-action="return">Return
                                             Order</button>
 
-                                        <% } %>
-                                            <hr>
+                                        <% } else { %>
+                                            <button type="button" class=" btn  btn-danger bg-danger"
+                                                data-orderId="<%= order._id %>" id="actionBtn"
+                                                data-action="cancel">Cancel
+                                                Order</button>
 
-                                            <h6 class="card-title  mb-0">Delivery Address:</h6>
-                                            <p>
-                                                <%= order.shippingAddress.fullname %><br />
-                                                    <%= order.shippingAddress.mobile %><br />
-                                                        <%= order.shippingAddress.address %><br />
-                                                            <%= order.shippingAddress.pincode %><br />
-                                                                <%= order.shippingAddress.street %>, <%=
-                                                                        order.shippingAddress.city %>, <%=
-                                                                            order.shippingAddress.state %>
-                                                                            <br />
-                                            </p>
+                                            <% } %>
+                                                <button onclick="downloadInvoice()"
+                                                    class="btn btn-primary">Invoice</button>
+
+                                                <% } %>
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <h6 class="card-title  mb-0">Delivery Address:</h6>
+                        <p>
+                            <%= order.shippingAddress.fullname %><br />
+                                <%= order.shippingAddress.mobile %><br />
+                                    <%= order.shippingAddress.address %><br />
+                                        <%= order.shippingAddress.pincode %><br />
+                                            <%= order.shippingAddress.street %>, <%= order.shippingAddress.city %>, <%=
+                                                        order.shippingAddress.state %>
+                                                        <br />
+                        </p>
                     </div>
                     <div class="table-responsive-sm mb-3">
                         <table id="myTable" class="table text-center table-hover my-0">
@@ -238,6 +271,7 @@
                                         </td>
                                         <td>
                                             <%=product.productId.name %>
+                                                <br>
                                         </td>
                                         <td>
                                             <%= product.size %>,
@@ -253,17 +287,32 @@
                                             ₹<%= product.price*product.quantity %>
                                         </td>
                                         <td>
-                                            <% if(order.orderStatus==="Delivered" && !product.cancel?.status){ %>
-                                                <button class="btn btn-primary" data-btn-rating
-                                                    data-product="<%= product._id%>">Give rating</button>
-                                                <% } %>
-                                                    <% if(order.orderStatus!=="Delivered" && !product.cancel?.status){
-                                                        %>
-                                                        <button class="btn btn-danger cancel-product"
-                                                            data-productsid="<%= product._id %>">
-                                                            Cancel products
-                                                        </button>
-                                                        <% } %>
+                                            <div class="product-row">
+
+                                                <% if (order.orderStatus==="Cancelled" || product.cancel?.status) { %>
+                                                    Cancelled
+                                                    <% } else if (order.orderStatus==="Returned" ||
+                                                        product.return?.status) { %>
+                                                        Returned
+                                                        <% } else if (order.orderStatus==="Delivered" ) { %>
+                                                            <button class="btn btn-danger return-product"
+                                                                data-productsid="<%= product._id %>">
+                                                                return product
+                                                            </button>
+                                                            <button class="btn btn-primary" data-btn-rating
+                                                                data-product="<%= product._id%>">Give rating</button>
+
+                                                            <% } else { %>
+                                                                <button class="btn btn-danger cancel-product"
+                                                                    data-productsid="<%= product._id %>">
+                                                                    Cancel product
+                                                                </button>
+
+                                                                <% } %>
+                                            </div>
+
+
+
                                         </td>
                                     </tr>
                                     <% }) %>
@@ -399,6 +448,35 @@
         <!-- ##### Footer Area End ##### -->
 
         <script>
+            async function downloadInvoice() {
+                try {
+                    const response = await fetch(`/invoice`);
+
+                    // Check if the response is successful
+                    if (response.ok) {
+                        // Create a blob from the response data
+                        const blob = await response.blob();
+
+                        // Create a temporary URL for the blob
+                        const url = window.URL.createObjectURL(blob);
+
+                        // Create an anchor element to trigger the download
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'invoice.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+
+                        // Clean up by revoking the URL object
+                        window.URL.revokeObjectURL(url);
+                    } else {
+                        console.error('Failed to download invoice. Status:', response.status);
+                    }
+                } catch (error) {
+                    console.error('Error downloading invoice:', error);
+                }
+            }
+
 
             const initialize = () => {
                 const actionButton = document.querySelector("#actionBtn")

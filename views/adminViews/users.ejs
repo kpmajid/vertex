@@ -24,6 +24,24 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
+    <style>
+        .dt-layout-row {
+            padding: 6px;
+        }
+
+        #dt-length-0 {
+            margin-right: 6px;
+        }
+
+        table.dataTable>thead>tr>th,
+        table.dataTable>tbody>tr>td,
+        table.dataTable>tfoot>tr>th {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -117,43 +135,7 @@
                 <div class="container-fluid p-0">
                     <h1 class="h3 mb-3"><strong>Users</strong></h1>
                 </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-between">
-                        <div class=" ">
-                            <div class="btn-group btn-group-lg mb-3" role="group" aria-label="Large button group">
 
-                                <a href="/admin/users"
-                                    class="btn  <%= status !== 'false' && status!=='true' ? 'active btn-secondary' : 'btn-outline-secondary' %>">
-                                    All
-                                </a>
-
-                                <a href="/admin/users?status=false"
-                                    class="btn <%= status === 'false' ? 'active btn-secondary' : 'btn-outline-secondary' %>">
-                                    Active
-                                </a>
-
-                                <a href="/admin/users?status=true"
-                                    class="btn  <%= status === 'true' ? 'active btn-secondary' : 'btn-outline-secondary' %>">
-                                    Blocked
-                                </a>
-
-                            </div>
-                        </div>
-                        <!-- <div class="">
-                            <button class="d-flex btn  text-center btn-secondary btn-lg">Select Date
-                                <div class="calendar"></div>
-                            </button>
-                        </div> -->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 d-flex">
-                        <div class="card flex-fill">
-                            <input type="text" id="myInput" onkeyup="myFunction()" class="form-control"
-                                placeholder="Search..." />
-                        </div>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-12 d-flex">
                         <div class="card flex-fill">
@@ -230,8 +212,19 @@
         </div>
     </div>
 
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
     <script>
+
+        new DataTable('#myTable', {
+            ordering: false,
+        });
+
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
@@ -339,27 +332,6 @@
         document.addEventListener("DOMContentLoaded", () => initialize());
 
         // --------------------
-        function myFunction() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("myTable");
-            tr = table.getElementsByTagName("tr");
-
-            // Loop through all table rows, and hide those who don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
