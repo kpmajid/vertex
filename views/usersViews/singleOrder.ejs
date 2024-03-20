@@ -217,13 +217,14 @@
                                     <% if (order.orderStatus=="Delivered" ) { %>
 
                                         <button type="button" class="btn btn-danger bg-danger"
-                                            data-orderId="<%= order._id %>" id="actionBtn" data-action="return">Return
+                                            data-orderId="<%= order._id %>" id="actionBtn" data-action="return"
+                                            onclick="returnOrder(this)">Return
                                             Order</button>
 
                                         <% } else { %>
                                             <button type="button" class=" btn  btn-danger bg-danger"
-                                                data-orderId="<%= order._id %>" id="actionBtn"
-                                                data-action="cancel">Cancel
+                                                data-orderId="<%= order._id %>" id="actionBtn" data-action="cancel"
+                                                onclick="cancelOrder(this)">Cancel
                                                 Order</button>
 
                                             <% } %>
@@ -304,7 +305,8 @@
 
                                                             <% } else { %>
                                                                 <button class="btn btn-danger cancel-product"
-                                                                    data-productsid="<%= product._id %>">
+                                                                    data-productsid="<%= product._id %>"
+                                                                    onclick="cancelProduct(this)">
                                                                     Cancel product
                                                                 </button>
 
@@ -450,7 +452,9 @@
         <script>
             async function downloadInvoice() {
                 try {
-                    const response = await fetch(`/invoice`);
+                    const orderId = document.querySelector("#orderId").value
+
+                    const response = await fetch(`/invoice/${orderId}`);
 
                     // Check if the response is successful
                     if (response.ok) {
@@ -479,21 +483,21 @@
 
 
             const initialize = () => {
-                const actionButton = document.querySelector("#actionBtn")
-                const action = actionButton.getAttribute('data-action')
-                console.log(action)
-                if (action == "cancel") {
-                    console.log("cancel Order")
-                    actionButton.addEventListener("click", cancelOrder)
-                } else {
-                    console.log("return Order")
-                    actionButton.addEventListener("click", returnOrder)
-                }
+                // const actionButton = document.querySelector("#actionBtn")
+                // const action = actionButton.getAttribute('data-action')
+                // console.log(action)
+                // if (action == "cancel") {
+                //     console.log("cancel Order")
+                //     actionButton.addEventListener("click", cancelOrder)
+                // } else {
+                //     console.log("return Order")
+                //     actionButton.addEventListener("click", returnOrder)
+                // }
 
-                const cancelProductBtns = document.querySelectorAll(".cancel-product")
-                cancelProductBtns.forEach((button) => {
-                    button.addEventListener("click", () => (cancelProduct(button)))
-                })
+                // const cancelProductBtns = document.querySelectorAll(".cancel-product")
+                // cancelProductBtns.forEach((button) => {
+                //     button.addEventListener("click", () => (cancelProduct(button)))
+                // })
             }
 
             async function cancelProduct(button) {
@@ -512,7 +516,7 @@
                                 if (value) {
                                     resolve();
                                 } else {
-                                    resolve("Please enter your reason for product cancel:)");
+                                    resolve("Please enter your reason for product cancel");
                                 }
                             });
                         }
@@ -554,8 +558,30 @@
 
             async function cancelOrder(e) {
                 try {
+                    console.log(e)
                     const button = event.target;
                     const orderId = button.dataset.orderid;
+
+                    const { value: reason } = await Swal.fire({
+                        input: "textarea",
+                        inputLabel: "Are you sure you want to cancel this product?",
+                        inputPlaceholder: "Type your reason here...",
+                        inputAttributes: {
+                            "aria-label": "Type your message here"
+                        },
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                            return new Promise((resolve) => {
+                                if (value) {
+                                    resolve();
+                                } else {
+                                    resolve("Please enter your reason for product cancel");
+                                }
+                            });
+                        }
+                    });
+
+
                     const response = await fetch('/cancelOrder', {
                         method: "PATCH",
                         headers: {

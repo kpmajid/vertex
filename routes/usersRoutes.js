@@ -141,7 +141,7 @@ router.get("/orders", isLogin, LoadOrders);
 router.get("/orders/:orderId", isLogin, LoadSingleOrder);
 router.patch("/cancelOrder", isLogin, cancelOrder);
 router.post("/cancel-products", isLogin, cancelProducts);
-router.get("/invoice", isLogin, invoice);
+router.get("/invoice/:id", isLogin, invoice);
 
 //wishlist
 router.get("/wishlist", isLogin, loadWishlist);

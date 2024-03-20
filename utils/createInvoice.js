@@ -39,15 +39,17 @@ function generateCustomerInformation(doc, invoice) {
 
   doc
     .fontSize(10)
-    .text("Invoice Number:", 50, customerInformationTop)
+    .text("Order Number:", 50, customerInformationTop)
     .font("Helvetica-Bold")
-    .text(invoice.invoice_nr, 150, customerInformationTop)
+    .text(invoice.Order_nr, 150, customerInformationTop)
     .font("Helvetica")
     .text("Invoice Date:", 50, customerInformationTop + 15)
     .text(formatDate(new Date()), 150, customerInformationTop + 15)
     .text("Balance Due:", 50, customerInformationTop + 30)
     .text(
-      formatCurrency(invoice.subtotal - invoice.paid),
+      formatCurrency(
+        invoice.subtotal - invoice.paid - (invoice?.coupon?.value || 0)
+      ),
       150,
       customerInformationTop + 30
     )
@@ -125,19 +127,16 @@ function generateInvoiceTable(doc, invoice) {
     formatCurrency(invoice.paid)
   );
 
-  let couponPosition = paidToDatePosition + 0;
-  if (invoice.coupon) {
-    couponPosition += 20;
-    generateTableRow(
-      doc,
-      couponPosition,
-      "",
-      "",
-      "Coupon",
-      "",
-      formatCurrency(invoice.coupon)
-    );
-  }
+  let couponPosition = paidToDatePosition + 20;
+  generateTableRow(
+    doc,
+    couponPosition,
+    "",
+    "",
+    `Coupon-${invoice?.coupon?.code}`,
+    "",
+    formatCurrency(invoice?.coupon?.value || 0)
+  );
 
   const duePosition = couponPosition + 25;
   doc.font("Helvetica-Bold");
@@ -148,20 +147,15 @@ function generateInvoiceTable(doc, invoice) {
     "",
     "Balance Due",
     "",
-    formatCurrency(invoice.subtotal - invoice.paid - (invoice.coupon || 0))
+    formatCurrency(
+      invoice.subtotal - invoice.paid - (invoice?.coupon?.value || 0)
+    )
   );
   doc.font("Helvetica");
 }
 
 function generateFooter(doc) {
-  doc
-    .fontSize(10)
-    .text(
-      "Payment is due within 15 days. Thank you for your business.",
-      50,
-      780,
-      { align: "center", width: 500 }
-    );
+  doc.fontSize(10).text("", 50, 780, { align: "center", width: 500 });
 }
 
 function generateTableRow(

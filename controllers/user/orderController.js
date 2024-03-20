@@ -190,16 +190,18 @@ const createOrder = async (req, res) => {
     const latestOrder = await Orders.findOne().sort({ order_number: -1 });
     let order_number = latestOrder?.order_number ?? 10000;
 
-    const coupon = req.session.coupon;
+    const { coupon } = req.session;
     let couponDoc;
-    let Coupon = {};
+    let couponDetails = {};
     console.log(coupon);
+
     if (coupon.length > 0) {
-      couponCode = couponCode.toUpperCase();
+      couponCode = coupon.toUpperCase();
       couponDoc = await Coupons.findOne({ couponCode: couponCode });
       finalTotal -= couponDoc.discountAmount;
-      Coupon.couponId = couponDoc._id;
-      Coupon.discountAmount = couponDoc.discountAmount;
+      couponDetails.code = couponCode;
+      couponDetails.couponId = couponDoc._id;
+      couponDetails.discountAmount = couponDoc.discountAmount;
     }
 
     const order = new Orders({
@@ -211,7 +213,7 @@ const createOrder = async (req, res) => {
       originalTotal,
       finalTotal,
       order_number: order_number + 1,
-      coupon: Coupon,
+      coupon: couponDetails,
     });
 
     await order.save();
@@ -319,6 +321,8 @@ const cancelProducts = async (req, res) => {
       }
     );
 
+    console.log(orderDoc);
+
     if (!orderDoc) {
       return res.status(404).json({ error: "Order not found" });
     }
@@ -332,7 +336,6 @@ const cancelProducts = async (req, res) => {
 
 const returnProducts = async (req, res) => {
   try {
-    
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -341,33 +344,36 @@ const returnProducts = async (req, res) => {
 const invoice = async (req, res) => {
   try {
     console.log("invoice");
+    const { id } = req.params;
+    console.log(id);
+
+    const orderDoc = await Orders.findById(id);
+    console.log(orderDoc);
+    let items = [];
+    orderDoc.products.forEach((item) => {});
+    let subtotal;
+    let paid = 0;
+    if (orderDoc.paymentStatus == "Paid") {
+      paid = orderDoc.finalTotal * 100;
+    }
+
     const invoice = {
       shipping: {
-        name: "John Doe",
-        address: "1234 Main Street",
-        city: "San Francisco",
-        state: "CA",
-        country: "US",
-        postal_code: 94111,
+        name: orderDoc.shippingAddress.fullname,
+        address: orderDoc.shippingAddress.address,
+        city: orderDoc.shippingAddress.city,
+        state: orderDoc.shippingAddress.state,
+        country: "India",
+        postal_code: orderDoc.shippingAddress.pincode,
       },
-      items: [
-        {
-          item: "TC 100",
-          description: "Toner Cartridge",
-          quantity: 2,
-          amount: 6000,
-        },
-        {
-          item: "USB_EXT",
-          description: "USB Cable Extender",
-          quantity: 1,
-          amount: 2000,
-        },
-      ],
-      subtotal: 8000,
-      paid: 0,
-
-      invoice_nr: 1234,
+      items: items,
+      subtotal: orderDoc.originalTotal * 100,
+      paid,
+      coupon: {
+        code: orderDoc?.coupon?.code || "none",
+        value: orderDoc?.coupon?.discountAmount * 100 || 0,
+      },
+      Order_nr: orderDoc.order_number,
     };
 
     const generatedPDF = createInvoice(invoice);

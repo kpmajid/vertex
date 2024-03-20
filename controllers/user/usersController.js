@@ -470,7 +470,8 @@ const loadShop = async (req, res) => {
         },
       },
     ]);
-    console.log(categories);
+    // console.log(categories);
+    console.log(products.length);
 
     res.render("usersViews/shop", { products, categories, user });
   } catch (error) {
