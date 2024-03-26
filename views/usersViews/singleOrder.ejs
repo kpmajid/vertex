@@ -9,7 +9,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>Essence - Fashion Ecommerce Template</title>
+    <title>Vertex</title>
 
     <!-- Favicon  -->
     <link rel="icon" href="/img/core-img/favicon.ico" />
@@ -199,6 +199,8 @@
                                 </h6>
                                 <h6>Payment Method: <%= order.paymentMethod %>
                                 </h6>
+                                <h6>Payment Status: <%= order.paymentStatus %>
+                                </h6>
                                 <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
                                 </h6>
                                 <h6>Total: <%= order.finalTotal %>
@@ -216,20 +218,19 @@
                                 <% if (order.orderStatus!=="Cancelled" && order.orderStatus!=="Returned" ) { %>
                                     <% if (order.orderStatus=="Delivered" ) { %>
 
-                                        <button type="button" class="btn btn-danger bg-danger"
+                                        <!-- <button type="button" class="btn btn-danger bg-danger"
                                             data-orderId="<%= order._id %>" id="actionBtn" data-action="return"
                                             onclick="returnOrder(this)">Return
-                                            Order</button>
+                                            Order</button> -->
+                                        <button onclick="downloadInvoice()" class="btn btn-primary">Invoice</button>
 
                                         <% } else { %>
-                                            <button type="button" class=" btn  btn-danger bg-danger"
+                                            <!-- <button type="button" class=" btn  btn-danger bg-danger"
                                                 data-orderId="<%= order._id %>" id="actionBtn" data-action="cancel"
                                                 onclick="cancelOrder(this)">Cancel
-                                                Order</button>
+                                                Order</button> -->
 
                                             <% } %>
-                                                <button onclick="downloadInvoice()"
-                                                    class="btn btn-primary">Invoice</button>
 
                                                 <% } %>
 
@@ -297,7 +298,9 @@
                                                         Returned
                                                         <% } else if (order.orderStatus==="Delivered" ) { %>
                                                             <button class="btn btn-danger return-product"
-                                                                data-productsid="<%= product._id %>">
+                                                                data-itemid="<%= product._id %>"
+                                                                data-productid="<%= product.productId._id %>"
+                                                                onclick="returnProduct(this)">
                                                                 return product
                                                             </button>
                                                             <button class="btn btn-primary" data-btn-rating
@@ -305,7 +308,8 @@
 
                                                             <% } else { %>
                                                                 <button class="btn btn-danger cancel-product"
-                                                                    data-productsid="<%= product._id %>"
+                                                                    data-itemid="<%= product._id %>"
+                                                                    data-productid="<%= product.productId._id %>"
                                                                     onclick="cancelProduct(this)">
                                                                     Cancel product
                                                                 </button>
@@ -523,14 +527,15 @@
                     });
                     console.log(reason)
 
-                    const productId = button.getAttribute("data-productsid")
+                    const productId = button.getAttribute("data-productid")
+                    const itemId = button.getAttribute("data-itemid")
 
                     const response = await fetch("/cancel-products", {
                         method: "POST",
                         headers: {
                             "content-Type": "application/json"
                         },
-                        body: JSON.stringify({ orderId, productId, reason })
+                        body: JSON.stringify({ orderId, productId, itemId, reason })
                     })
                     const jsonData = await response.json();
                     if (response.ok) {
@@ -550,6 +555,61 @@
                     });
                 }
             }
+
+            async function returnProduct(button) {
+                try {
+                    const orderId = document.querySelector("#orderId").value
+                    const { value: reason } = await Swal.fire({
+                        input: "textarea",
+                        inputLabel: "Are you sure you want to return this product?",
+                        inputPlaceholder: "Type your reason here...",
+                        inputAttributes: {
+                            "aria-label": "Type your message here"
+                        },
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                            return new Promise((resolve) => {
+                                if (value) {
+                                    resolve();
+                                } else {
+                                    resolve("Please enter your reason for product return");
+                                }
+                            });
+                        }
+                    });
+                    console.log(reason)
+
+                    const productId = button.getAttribute("data-productid")
+                    const itemId = button.getAttribute("data-itemid")
+
+                    console.log(productId, itemId)
+
+                    const response = await fetch("/return-products", {
+                        method: "POST",
+                        headers: {
+                            "content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ orderId, productId, itemId, reason })
+                    })
+                    const jsonData = await response.json();
+                    if (response.ok) {
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Product has been Returned",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: `Something went wrong!${error}`,
+                    });
+                }
+            }
+
 
 
             async function returnOrder(e) {

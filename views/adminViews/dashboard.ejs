@@ -15,7 +15,7 @@
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <title>Vertex</title>
 
     <link href="/admin/css/app.css" rel="stylesheet" />
 
@@ -56,6 +56,12 @@
                     <li class="sidebar-item active">
                         <a class="sidebar-link" href="/admin/dashboard">
                             <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/sales">
+                            <span class="align-middle">Sales</span>
                         </a>
                     </li>
 
@@ -240,7 +246,6 @@
                                         </div>
                                     </div>
                                 </div>
-<
 
                             </div>
                         </div>
@@ -469,28 +474,19 @@
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
-
-            // let interactiveText = document.querySelectorAll(".text-interactive")
-            // interactiveText.forEach((text) => {
-            //     text.addEventListener("click", () => renderSalesChart(text.innerHTML))
-            // })
-
             renderPieChart()
             renderSalesChart("Daily")
         };
 
         async function renderPieChart() {
             try {
-
                 const response = await fetch(`/admin/pie-chart`)
                 const dataJS = await response.json();
                 console.log(dataJS)
                 let data = [];
                 dataJS.forEach((e) => {
-                    console.log()
-                    // let element = document.querySelector(`#${e._id}`)
-                    // console.log(e.totalOrders)
-                    // element.innerHTMl = e.totalOrders
+                    let element = document.querySelector(`#${e._id}`)
+                    element.textContent = e.totalOrders
                     data.push(e.totalOrders)
                 })
 

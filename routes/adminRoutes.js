@@ -57,6 +57,8 @@ const {
   loadDashboard,
   renderSalesChart,
   renderPieChart,
+  loadSales,
+  generateSales,
 } = require("../controllers/admin/dashboardController");
 
 const {
@@ -112,6 +114,9 @@ router.post("/register", isLogout, registerAdmin);
 router.get("/dashboard", isLogin, loadDashboard);
 router.get("/sales-chart/:period", isLogin, renderSalesChart);
 router.get("/pie-chart", isLogin, renderPieChart);
+
+router.get("/sales", isLogin, loadSales);
+router.get("/generate-report", isLogin, generateSales);
 
 //Product
 router.get("/products", isLogin, loadProducts);

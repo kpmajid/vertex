@@ -15,7 +15,7 @@
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <title>Vertex</title>
 
     <link href="/admin/css/app.css" rel="stylesheet" />
     <link href="/admin/css/sample.css" rel="stylesheet" />
@@ -48,6 +48,12 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/dashboard">
                             <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/sales">
+                            <span class="align-middle">Sales</span>
                         </a>
                     </li>
 
@@ -134,27 +140,23 @@
 
                 <div class="col-12 col-md-7 col-lg-12">
                     <div class="user-details clearfix mb-2">
-                        <h6>Order Number: <%= order._id %>
+                        <h6>Order Number: <%= order.order_number %>
                         </h6>
-                        <h6>Status: <%= order.orderStatus %>
+                        <h6>Order Status: <%= order.orderStatus %>
                         </h6>
                         <h6>Payment Method: <%= order.paymentMethod %>
+                        </h6>
+                        <h6>Payment Status: <%= order.paymentStatus %>
                         </h6>
                         <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
                         </h6>
                         <h6>Total: <%= order.finalTotal %>
                         </h6>
-                        <% if (order.orderStatus!=="Delivered" && order.orderStatus!=="Cancelled" ) { %>
-                            <select id=" order_status_select">
-                                <option value="">select </option>
-                                <option value="Cancelled">Cancelled</option>
-
-                                <option value="Pending">Pending</option>
-                                <option value="Shipped">Shipped</option>
-                                <option value="Delivered">Delivered</option>
-                            </select>
-                            <button type="button" class="btn essence-btn bg-primary" id="order_button"
-                                style="color: white;" disabled data-orderId="<%= order._id %>">Update</button>
+                        <% if (order.orderStatus!=="Delivered" && order.orderStatus!=="Cancelled" &&
+                            order.orderStatus!=="Returned" ) { %>
+                            <button type="button" class="btn essence-btn bg-primary"
+                                onclick="updateStatus('<%= order._id %>')" style="color: white;"
+                                data-orderId="<%= order._id %>">Update</button>
 
                             <% } %>
 
@@ -266,27 +268,35 @@
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
-
-            const button = document.querySelector("#order_button")
-            button.addEventListener("click", updateStatus)
-
-            document.querySelector('#order_status_select').addEventListener("change", () => {
-                button.disabled = false
-            })
         };
 
-        async function updateStatus(e) {
+        async function updateStatus(orderId) {
             try {
                 console.log('updating status')
-                const button = event.target;
-                console.log(button)
-                const selectedStatus = document.getElementById('order_status_select').value;
+                const { value: selectedStatus } = await Swal.fire({
+                    title: "Select order Status",
+                    input: "select",
+                    inputOptions: {
+                        Pending: "Pending",
+                        Shipped: "Shipped",
+                        Delivered: "Delivered",
+                    },
+                    inputPlaceholder: "Select a status",
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        return new Promise((resolve) => {
+                            if (!value || value.length < 0) {
+                                resolve("You need to select a status");
+                            } else {
+                                resolve();
+                            }
+                        });
+                    }
+                });
 
                 console.log(selectedStatus)
-                const orderId = button.dataset.orderid;
-                console.log(orderId)
-                console.log(orderId)
 
+                // return;
                 const response = await fetch('/admin/updateOrder', {
                     method: "PATCH",
                     headers: {

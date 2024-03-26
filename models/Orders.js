@@ -77,12 +77,12 @@ const orderSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ["Pending", "Paid", "Failed"],
+    enum: ["Pending", "Paid", "Failed", "Refunded"],
     default: "Pending",
   },
   orderStatus: {
     type: String,
-    enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+    enum: ["Pending", "Shipped", "Delivered", "Cancelled", "Returned"],
     default: "Pending",
   },
   createdAt: {
@@ -98,7 +98,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
   coupon: {
-    code: { type: String, required: true },
+    code: { type: String },
     couponId: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon" },
     discountAmount: { type: Number },
   },

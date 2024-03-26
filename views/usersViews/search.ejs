@@ -72,44 +72,6 @@
             color: #000;
             border: 1px solid #000;
         }
-
-        .category-title,
-        .color-title,
-        .size-title {
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .category-title::after,
-        .color-title::after,
-        .size-title::after {
-            border-bottom: 2px solid #999;
-            border-right: 2px solid #999;
-            content: '';
-            height: 5px;
-            pointer-events: none;
-
-            transform-origin: 66% 66%;
-
-            transition: all 0.15s ease-in-out;
-            width: 5px;
-
-            transform: rotate(-135deg);
-        }
-
-        .category-title.collapsed::after,
-        .color-title.collapsed::after,
-        .size-title.collapsed::after {
-            border-bottom: 2px solid #999;
-            border-right: 2px solid #999;
-            content: '';
-            height: 5px;
-            pointer-events: none;
-            transform-origin: 66% 66%;
-            transform: rotate(45deg);
-            transition: all 0.15s ease-in-out;
-            width: 5px;
-        }
     </style>
 </head>
 
@@ -193,7 +155,7 @@
             <div class="row h-100 align-items-center">
                 <div class="col-12">
                     <div class="page-title text-center">
-                        <h2>dresses</h2>
+                        <h2>Search</h2>
                     </div>
                 </div>
             </div>
@@ -205,129 +167,8 @@
     <section class="shop_grid_area section-padding-80">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="shop_sidebar_area">
-                        <!-- ##### Single Widget ##### -->
-                        <h6 class="widget-title mb-30">Filter by</h6>
-                        <form action="">
 
-                            <div class="widget catagory mb-15">
-                                <!-- Widget Title -->
-                                <!-- Widget Title -->
-                                <h6 class="widget-title2 category-title collapsed mb-15" data-toggle="collapse"
-                                    data-target="#menu-content2" style="display: flex;">
-                                    Catagories</h6>
-
-                                <!--  Catagories  -->
-                                <div class="catagories-menu">
-                                    <ul id="menu-content2" class="menu-content catetgory collapse">
-                                        <!-- Single Item -->
-                                        <% if (categories) { %>
-                                            <% categories.forEach(category=> {
-                                                %>
-
-                                                <li>
-                                                    <input type="checkbox" id="<%= category.name %>"
-                                                        name="<%= category.name %>" class="category">
-                                                    <label for="<%= category.name %>">
-                                                        <%= category.name %>
-                                                    </label>
-                                                </li>
-                                                <% }) %>
-                                                    <% } %>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- ##### Single Widget ##### -->
-                            <div class="widget price mb-30">
-
-                                <!-- Widget Title 2 -->
-                                <p class="widget-title2 mb-15">Price</p>
-
-                                <div class="widget-desc">
-                                    <div class="slider-range">
-                                        <div data-min="500" data-max="5000" data-unit="₹" data-step="500" class="slider-range-price ui-slider ui-slider-horizontal ui-widget
-                                            ui-widget-content ui-corner-all" data-value-min="500" data-value-max="5000"
-                                            data-label-result="Range:">
-                                            <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all"
-                                                tabindex="0"></span>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all"
-                                                tabindex="0"></span>
-                                        </div>
-                                        <div class="range-price" id="range-price">Range: ₹500.00 - ₹5000.00</div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="widget widget-color mb-30" style="display: none;">
-                                <p class="widget-title2 color-title collapsed mb-15" data-toggle="collapse"
-                                    data-target="#colors" style="display: flex;">Color</p>
-                                <div class="">
-                                    <ul id="colors" class="menu-content2 widget-color-content color collapse">
-                                        <li>
-                                            <input type="checkbox" id="colorWhite" class="color" name="White">
-                                            <label for="colorWhite">White</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorBlack" class="color" name="Black">
-                                            <label for="colorBlack">Black</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorRed" class="color" name="Red">
-                                            <label for="colorRed">Red</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorGreen" class="color" name="Green">
-                                            <label for="colorGreen">Green</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorYellow" class="color" name="Yellow">
-                                            <label for="colorYellow">Yellow</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorBlue" class="color" name="Blue">
-                                            <label for="colorBlue">Blue</label>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="widget widget-size mb-30" style="display: none;">
-                                <p class="widget-title2 mb-15 size-title collapsed" data-toggle="collapse"
-                                    data-target="#size" style="display: flex;">Size</p>
-                                <div class="">
-                                    <ul class="menu-content2 size collapse" id="size">
-                                        <li>
-                                            <input type="checkbox" id="sizeSmall" class="size" name="Small">
-                                            <label for="sizeSmall">Small</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="sizeMedium" class="size" name="Medium">
-                                            <label for="sizeMedium">Medium</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="sizeLarge" class="size" name="Large">
-                                            <label for="sizeLarge">Large</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="sizeExtraLarge" class="size" name="ExtraLarge">
-                                            <label for="sizeExtraLarge">ExtraLarge</label>
-                                        </li>
-
-
-                                    </ul>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary" id="applyFilter">Filter</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-8 col-lg-9">
+                <div class="col-12 ">
                     <div class="shop_grid_product_area">
                         <div class="row">
                             <div class="col-12">
@@ -349,10 +190,9 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <!-- Single Product -->
-                            <% if (products) { %>
+                        <!-- Single Product -->
+                        <% if (products.length>0) { %>
+                            <div class="row">
                                 <% products.forEach(product=> { %>
                                     <div class="col-12 col-sm-6 col-lg-4">
                                         <div class="single-product-wrapper">
@@ -400,24 +240,29 @@
                                         </div>
                                     </div>
 
-                                    <% }) %>
-                                        <% } %>
-                        </div>
-                        <!-- Pagination -->
-                        <nav aria-label="navigation">
-                            <ul class="pagination mt-50 mb-70">
-                                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">...</a></li>
-                                <li class="page-item"><a class="page-link" href="#">21</a></li>
-                                <li class="page-item"><a class="page-link" href="#"><i
-                                            class="fa fa-angle-right"></i></a>
-                                </li>
-                            </ul>
-                        </nav>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <div class="row justify-content-center">
+                                        There is no product to display
+                                    </div>
+                                    <% } %>
+                                        <!-- Pagination -->
+                                        <nav aria-label="navigation">
+                                            <ul class="pagination mt-50 mb-70 justify-content-center">
+                                                <li class="page-item"><a class="page-link" href="#"><i
+                                                            class="fa fa-angle-left"></i></a>
+                                                </li>
+                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">21</a></li>
+                                                <li class="page-item"><a class="page-link" href="#"><i
+                                                            class="fa fa-angle-right"></i></a>
+                                                </li>
+                                            </ul>
+                                        </nav>
                     </div>
                 </div>
             </div>
@@ -555,55 +400,6 @@
 
         }
 
-
-        function filter() {
-            let selectedCategories = getSelectedValues('catetgory');
-            let selectedColors = getSelectedValues('color');
-            let selectedSizes = getSelectedValues('size');
-
-            let queryParams = new URLSearchParams();
-
-            // Append selected categories to the query URL
-            if (selectedCategories.length > 0) {
-                selectedCategories.forEach(category => queryParams.append('categories', category));
-            }
-
-            // Append selected colors to the query URL
-            if (selectedColors.length > 0) {
-
-                selectedColors.forEach(color => queryParams.append('colors', color));
-            }
-
-            // Append selected sizes to the query URL
-            if (selectedSizes.length > 0) {
-
-                selectedSizes.forEach(size => queryParams.append('sizes', size));
-            }
-
-            const range = document.querySelector("#range-price")
-            if (range.getAttribute("data-min") && range.getAttribute("data-max")) {
-                queryParams.append('min', range.getAttribute("data-min"));
-                queryParams.append('max', range.getAttribute("data-max"));
-            }
-
-
-            let queryURL = '/shop?' + queryParams.toString();
-
-            // Output or use the constructed query URL as needed
-            console.log('Query URL:', queryURL);
-            window.location.href = queryURL;
-        }
-
-        function getSelectedValues(className) {
-            let selectedValues = [];
-            let checkboxes = document.querySelectorAll('.' + className + ' input[type=checkbox]:checked');
-
-            console.log(checkboxes)
-            checkboxes.forEach(function (checkbox) {
-                selectedValues.push(checkbox.name);
-            });
-            return selectedValues;
-        }
 
 
         window.addEventListener('DOMContentLoaded', (event) => {

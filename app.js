@@ -28,9 +28,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render("error", { error: err.message });
+});
+
 app.use("/admin", adminRouter);
 app.use("/api/admin", apiAdminRoutes);
 app.use("/", usersRouter);
+
+app.get("*", function (req, res) {
+  res.status(404).render("404");
+});
 
 app.listen(5000, () => {
   console.log("server is running");

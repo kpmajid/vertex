@@ -15,7 +15,7 @@
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <title>Vertex</title>
 
     <link href="/admin/css/app.css" rel="stylesheet" />
 
@@ -25,6 +25,8 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
 
     <style>
         .text-interactive {
@@ -40,6 +42,20 @@
             text-decoration: underline;
             background-color: aqua;
         }
+
+        .dt-layout-row {
+            padding: 6px;
+        }
+
+        #dt-length-0 {
+            margin-right: 6px;
+        }
+
+        table.dataTable>thead>tr>th,
+        table.dataTable>tbody>tr>td,
+        table.dataTable>tfoot>tr>th {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -53,9 +69,15 @@
                 <ul class="sidebar-nav">
                     <li class="sidebar-header">Menu</li>
 
-                    <li class="sidebar-item active">
+                    <li class="sidebar-item ">
                         <a class="sidebar-link" href="/admin/dashboard">
                             <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item active">
+                        <a class="sidebar-link" href="/admin/sales">
+                            <span class="align-middle">Sales</span>
                         </a>
                     </li>
 
@@ -122,6 +144,7 @@
             </div>
         </nav>
 
+
         <div class="main">
             <nav class="navbar navbar-expand navbar-light navbar-bg">
                 <a class="sidebar-toggle js-sidebar-toggle">
@@ -134,327 +157,60 @@
             </nav>
 
             <main class="content">
-                <div class="container-fluid p-0">
-                    <h1 class="h3 mb-3"><strong>Dashboard</strong></h1>
-                </div>
-                <div class="row">
-                    <div class="col-xl-12  d-flex">
-                        <div class="w-100">
-                            <div class="row">
-                                <!-- <div class="col-sm-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col mt-0">
-                                                    <h5 class="card-title">Total revenue</h5>
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <div class="stat text-primary">
-                                                        <i class="align-middle" data-feather="truck"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h1 class="mt-1 mb-3">2.382</h1>
-                                            <div class="mb-0">
-                                                <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i>
-                                                    -3.65% </span>
-                                                <span class="text-muted">Since last week</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <div class="col-sm-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col mt-0">
-                                                    <h5 class="card-title">Users</h5>
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <div class="stat text-primary">
-                                                        <i class="align-middle" data-feather="users"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h1 class="mt-1 mb-3">
-                                                <%= userCount %>
-                                            </h1>
-
-                                            <!-- <div class="mb-0">
-                                                <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>
-                                                    5.25% </span>
-                                                <span class="text-muted">Since last week</span>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col mt-0">
-                                                    <h5 class="card-title">Earnings</h5>
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <div class="stat text-primary">
-                                                        <i class="align-middle" data-feather="dollar-sign"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <h1 class="mt-1 mb-3">₹<%= total.totalAmount %>
-                                            </h1>
-                                            <!-- <div class="mb-0">
-                                                <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>
-                                                    6.65% </span>
-                                                <span class="text-muted">Since last week</span>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col mt-0">
-                                                    <h5 class="card-title">Orders</h5>
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <div class="stat text-primary">
-                                                        <i class="align-middle" data-feather="shopping-cart"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h1 class="mt-1 mb-3">
-                                                <%= total.totalOrders %>
-                                            </h1>
-                                            <!-- <div class="mb-0">
-                                                <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i>
-                                                    -2.25% </span>
-                                                <span class="text-muted">Since last week</span>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                <div class="row pb-3">
+                    <div class="container-fluid justify-content-between d-flex">
+                        <h1 class="h3 mb-3" style="width: fit-content">
+                            <strong>Sales Report</strong>
+                        </h1>
                     </div>
                 </div>
+
                 <div class="row">
-                    <div class="col-xl-7 col-xxl-7">
-                        <div class="card flex-fill w-100">
-                            <div class="d-flex justify-content-between card-header">
-                                <span class="card-title">Sale Statistics</span>
-                                <select id="frequency" class="form-select mb-3" onchange="handleChange()"
-                                    style="width: auto;">
-                                    <option value="Daily">Daily</option>
-                                    <option value="Weekly">Weekly</option>
-                                    <option value="Monthly">Monthly</option>
-                                </select>
-
-                            </div>
-                            <div class="card-body py-3">
-                                <div class="chart chart-sm">
-                                    <canvas id="chartjs-dashboard-line"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-5 col-xxl-5 ">
-                        <div class="card flex-fill w-100">
-                            <div class="card-header">
-
-                                <h5 class="card-title mb-0">Browser Usage</h5>
-                            </div>
-                            <div class="card-body d-flex">
-                                <div class="align-self-center w-100">
-                                    <div class="py-3">
-                                        <div class="chart chart-xs">
-                                            <canvas id="chartjs-dashboard-pie"></canvas>
-                                        </div>
-                                    </div>
-
-                                    <table class="table mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <td>COD</td>
-                                                <td class="text-end" id="COD">0</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Razor pay</td>
-                                                <td class="text-end" id="paypal">0</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Wallet</td>
-                                                <td class="text-end" id="wallet">0</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-6 col-xxl-6 d-flex">
+                    <div class="col-12 d-flex">
                         <div class="card flex-fill">
-                            <div class="card-header">
+                            <div class="card-body d-flex" style="justify-content: space-between;">
 
-                                <h5 class="card-title mb-0">TOP Selling Products</h5>
+                                <div class="col-md-3">
+                                    <div class="date-div">
+                                        <div class="date-title">Start Date :</div>
+                                        <input type="date" name="" id="start-date" class="form-control" />
+                                        <div id="startErrorMessage" class="text-danger mt-2"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="date-div">
+                                        <div class="date-title">End Date :</div>
+                                        <input type="date" id="end-date" name="" class="form-control" />
+                                        <div id="endErrorMessage" class="text-danger mt-2"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 pt-3">
+                                    <button class="btn btn-primary" id="generateReport">
+                                        Generate Report
+                                    </button>
+                                </div>
+
                             </div>
-                            <table class="table table-hover my-0">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th class="d-none d-xl-table-cell">Start Date</th>
-                                        <th class="d-none d-xl-table-cell">End Date</th>
-                                        <th>Status</th>
-                                        <th class="d-none d-md-table-cell">Assignee</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Project Apollo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Fireball</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-danger">Cancelled</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Hades</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Nitro</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Phoenix</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project X</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Romeo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Christina Mason</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Wombat</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 col-xxl-6 d-flex">
-                        <div class="card flex-fill">
-                            <div class="card-header">
 
-                                <h5 class="card-title mb-0">TOP Selling Categories</h5>
+                    <div class="col-12 d-flex">
+                        <div class="card flex-fill">
+                            <div class="table-responsive-md">
+                                <table id="myTable" class="table text-center table-hover my-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="">Order</th>
+                                            <th class="">User</th>
+                                            <th class="">Date</th>
+                                            <th class="">Total</th>
+                                            <th class="">Payment Status</th>
+                                            <th class="">Order Status</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
                             </div>
-                            <table class="table table-hover my-0">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th class="d-none d-xl-table-cell">Start Date</th>
-                                        <th class="d-none d-xl-table-cell">End Date</th>
-                                        <th>Status</th>
-                                        <th class="d-none d-md-table-cell">Assignee</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Project Apollo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Fireball</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-danger">Cancelled</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Hades</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Nitro</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Phoenix</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project X</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Romeo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Christina Mason</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Wombat</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -464,180 +220,103 @@
     <script src="/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+
+
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+
+
     <script>
         const initialize = () => {
             initializeSimplebar();
             initializeSidebarCollapse();
 
-            // let interactiveText = document.querySelectorAll(".text-interactive")
-            // interactiveText.forEach((text) => {
-            //     text.addEventListener("click", () => renderSalesChart(text.innerHTML))
-            // })
-
-            renderPieChart()
-            renderSalesChart("Daily")
+            document.querySelector("#generateReport").addEventListener("click", generateReport)
         };
 
-        async function renderPieChart() {
-            try {
+        const startErrorMessage = document.getElementById("startErrorMessage");
+        const endErrorMessage = document.getElementById("endErrorMessage");
 
-                const response = await fetch(`/admin/pie-chart`)
-                const dataJS = await response.json();
-                console.log(dataJS)
-                let data = [];
-                dataJS.forEach((e) => {
-                    console.log()
-                    // let element = document.querySelector(`#${e._id}`)
-                    // console.log(e.totalOrders)
-                    // element.innerHTMl = e.totalOrders
-                    data.push(e.totalOrders)
-                })
+        async function generateReport() {
+            startErrorMessage.textContent = "";
+            endErrorMessage.textContent = "";
 
-
-                console.log(data)
-                new Chart(document.getElementById("chartjs-dashboard-pie"), {
-                    type: "pie",
-                    data: {
-                        labels: ["COD", "Razor pay", "Wallet"],
-                        datasets: [{
-                            data: data,
-                            backgroundColor: [
-                                window.theme.primary,
-                                window.theme.warning,
-                                window.theme.danger
-                            ],
-                            borderWidth: 5
-                        }]
-                    },
-                    options: {
-                        responsive: !window.MSInputMethodContext,
-                        maintainAspectRatio: false,
-                        legend: {
-                            display: false
-                        },
-                        cutoutPercentage: 75
-                    }
-                });
-            } catch (error) {
-                console.log(error)
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Something went wrong!",
-                    timer: 1500,
-                });
+            const start = document.getElementById("start-date").value;
+            const end = document.getElementById("end-date").value;
+            if (!start) {
+                startErrorMessage.textContent = "Start date is required";
+                isValidated = false;
             }
-        }
+            if (!end) {
+                endErrorMessage.textContent = "End date is required";
+                isValidated = false;
+            }
 
-        function handleChange() {
-            var selectedValue = document.getElementById("frequency").value;
-            console.log("Selected value: " + selectedValue);
-            // You can perform any action based on the selected value here
-            renderSalesChart(selectedValue)
-        }
+            console.log(start, end)
 
+            if (end && start && end < start) {
+                startErrorMessage.textContent = "Invalid dates: End date must be after start date.";
+                endErrorMessage.textContent = "Invalid dates: End date must be after start date.";
+                console.log("error")
+            }
 
-        async function renderSalesChart(period) {
             try {
-                // let interactiveText = document.querySelectorAll(".text-interactive")
-                // interactiveText.forEach((element) => {
-
-                //     element.classList.remove("active");
-                // })
-
-                // let element = document.getElementById(period)
-                // console.log(element)
-                // element.classList.add("active");
-
-                const response = await fetch(`/admin/sales-chart/${period}`)
-                const data = await response.json();
-                if (!response.ok) {
-                    // console.log(data);
-                    return Swal.showValidationMessage(`${data.message}`);
-                }
-
-                const salesArray = [];
-                const ordersArray = [];
-                const timeArray = [];
-
-                data.forEach(item => {
-                    salesArray.push(item.sales);
-                    ordersArray.push(item.orders);
-                    timeArray.push(item.time);
-                });
-                // console.log(data)
-
-                const footer = (tooltipItems) => {
-                    let orders = 0;
-                    data.forEach((report) => {
-                        if (report.time == tooltipItems[0].label) {
-                            orders = report.orders
+                new DataTable('#myTable', {
+                    ordering: false,
+                    layout: {
+                        topStart: {
+                            buttons: [
+                                {
+                                    extend: 'csv',
+                                    filename: 'sales_report'
+                                },
+                                {
+                                    extend: 'pdf',
+                                    filename: 'sales_report'
+                                }
+                            ]
                         }
-                    })
-                    return 'Orders:' + orders;
-                }
-
-                // console.log(salesArray)
-                // console.log(ordersArray)
-                // console.log(timeArray)
-
-                var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-                var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-                gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-                gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-                // Line chart
-                new Chart(document.getElementById("chartjs-dashboard-line"), {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            label: "Sales (₹)",
-                            fill: true,
-                            backgroundColor: gradient,
-                            borderColor: window.theme.primary,
-                            data: salesArray
-                        }]
                     },
-                    options: {
-                        maintainAspectRatio: false,
-                        legend: {
-                            display: false
-                        },
-                        tooltips: {
-                            callbacks: {
-                                footer: footer
+                    ajax: {
+                        url: `/admin/generate-report?start=${start}&end=${end}`,
+                        dataSrc: 'report',
+                        error: function (xhr, error, thrown) {
+                            console.error('DataTables error:', error);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Something went wrong!",
+                                timer: 1500,
+                            });
+                        }
+                    },
+                    columns: [
+                        { data: 'order_number', title: 'Order' }, // Adjusted to match the property name in your data
+                        { data: 'user', title: 'User' },
+                        {
+                            data: 'createdAt', title: 'Date', render: function (data) {
+                                return new Date(data).toLocaleDateString(); // Format the date as needed
                             }
                         },
-                        hover: {
-                            intersect: true
-                        },
-                        plugins: {
-                            filler: {
-                                propagate: false
-                            },
-                        },
-                        scales: {
-                            xAxes: [{
-                                reverse: true,
-                                gridLines: {
-                                    color: "rgba(0,0,0,0.0)"
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 2500
-                                },
-                                display: true,
-                                borderDash: [3, 3],
-                                gridLines: {
-                                    color: "rgba(0,0,0,0.0)"
-                                }
-                            }]
-                        }
-                    }
+                        { data: 'finalTotal', title: 'Total' },
+                        { data: 'paymentStatus', title: 'Payment Status' },
+                        { data: 'orderStatus', title: 'Order Status' }
+                    ]
                 });
+
+
             } catch (error) {
-                console.log(error)
+
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
@@ -647,7 +326,6 @@
             }
 
         }
-
 
         const initializeSimplebar = () => {
             const simplebarElement =

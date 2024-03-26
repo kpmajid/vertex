@@ -9,13 +9,15 @@
   <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
   <!-- Title  -->
-  <title>Essence - Fashion Ecommerce Template</title>
+  <title>Vertex</title>
 
   <!-- Favicon  -->
   <link rel="icon" href="img/core-img/favicon.ico" />
 
   <!-- Core Style CSS -->
   <link rel="stylesheet" href="css/core-style.css" />
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
 
   <style>
     .profile-sidebar {
@@ -163,7 +165,7 @@
         <!-- User Details Section -->
         <div class="col-12 col-md-7 col-lg-9">
           <div class="table-responsive-sm">
-            <table id="myTable" class="table text-center table-hover my-0">
+            <table id="myTable" class="table  table-hover my-0">
               <thead>
                 <tr>
                   <th class="">Order Id</th>
@@ -323,6 +325,16 @@
   <script src="js/active.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+  <script>
+    new DataTable('#myTable', {
+      ordering: false,
+    });
+  </script>
+
 </body>
 
 </html>

@@ -9,7 +9,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>Essence - Fashion Ecommerce Template</title>
+    <title>Vertex</title>
 
     <!-- Favicon  -->
     <link rel="icon" href="/img/core-img/favicon.ico" />
@@ -694,8 +694,6 @@
             }
         }
 
-
-
         function calculateSubtotal() {
             let subtotal = 0;
             const totalPrices = document.querySelectorAll(".totalPrice");
@@ -753,6 +751,7 @@
             }
 
             const paymentMethod = selectedPaymentMethod.value;
+
             if (paymentMethod == "paypal") {
                 console.log("payapl aan");
                 const amount = document
@@ -761,6 +760,8 @@
                 console.log(orderId);
                 setupRazorpay(orderId, amount);
             } else if (paymentMethod == "COD") {
+                placeOrder()
+            } else if (paymentMethod == "wallet") {
                 placeOrder()
             }
         }
@@ -790,16 +791,27 @@
                         paymentMethod,
                     }),
                 });
-                if (response.ok) {
-                    await Swal.fire({
+                const data = await response.json()
+                if (!response.ok) {
 
-                        icon: "success",
-                        title: "Your Order has been placed",
-                        showConfirmButton: false,
-                        timer: 1500,
+                    // Handle error response
+                    console.error("Error placing order:", data);
+                    // Optionally, display an error message to the user
+                    await Swal.fire({
+                        icon: "error",
+                        title: "Error placing order",
+                        text: data.message || "An error occurred while placing your order.",
+                        showConfirmButton: true,
                     });
-                    window.location.assign("/orders");
+                    return
                 }
+                await Swal.fire({
+                    icon: "success",
+                    title: "Your Order has been placed",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                window.location.assign("/orders");
             } catch (error) {
                 console.log(error);
             }

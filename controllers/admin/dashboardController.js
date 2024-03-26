@@ -222,9 +222,60 @@ const top10Category = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const loadSales = async (req, res) => {
+  res.render("adminViews/sales");
+};
+
+const generateSales = async (req, res) => {
+  try {
+    let { start, end } = req.query;
+    console.log("start end");
+
+    start = `${dayjs(start).format("YYYY-MM-DD").toString()} 00:00:00`;
+    end = `${dayjs(end).format("YYYY-MM-DD").toString()} 23:59:59`;
+
+    const report = await Orders.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(start),
+            $lte: new Date(end),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          order_number: 1,
+          paymentStatus: 1,
+          orderStatus: 1,
+          user: {
+            $arrayElemAt: ["$user.name", 0],
+          },
+          finalTotal: 1,
+          createdAt: 1,
+          _id: 0,
+        },
+      },
+    ]);
+    console.log(report);
+    res.status(200).json({ report });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 module.exports = {
   loadDashboard,
   renderSalesChart,
   renderPieChart,
+  loadSales,
+  generateSales,
 };

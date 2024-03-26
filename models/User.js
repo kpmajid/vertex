@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
+    unique: true,
   },
   isVerified: {
     type: Boolean,
@@ -30,9 +31,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  referralCode:{
-    type:String,
-    required:true
+  referralCode: {
+    type: String,
+    required: true,
   },
 });
 

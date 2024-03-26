@@ -25,7 +25,9 @@ const getCategories = async (req, res) => {
 
 const loadOrders = async (req, res) => {
   try {
-    const orders = await Orders.find().populate("userId").sort({ order_number: -1 });
+    const orders = await Orders.find()
+      .populate("userId")
+      .sort({ order_number: -1 });
     res.render("adminViews/orders", { orders });
   } catch (error) {
     console.log(error);
@@ -96,6 +98,11 @@ const updateOrderStatus = async (req, res) => {
 
     order.orderStatus = selectedStatus;
     let message = `products ${selectedStatus}`;
+
+    if (selectedStatus == "Delivered") {
+      order.paymentStatus = "Paid";
+    }
+
     order.save();
     res.status(200).json({ message });
   } catch (error) {

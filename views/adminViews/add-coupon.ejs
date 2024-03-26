@@ -15,7 +15,7 @@
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <title>Vertex</title>
 
     <link href="/admin/css/app.css" rel="stylesheet" />
     <link href="css/sample.css" rel="stylesheet" />
@@ -65,6 +65,12 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="/admin/dashboard">
                             <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item ">
+                        <a class="sidebar-link" href="/admin/sales">
+                            <span class="align-middle">Sales</span>
                         </a>
                     </li>
 
@@ -348,6 +354,7 @@
             console.log(start, end)
 
             if (end && start && end < start) {
+                isValidated = false;
                 startErrorMessage.textContent = "Invalid dates: End date must be after start date.";
                 endErrorMessage.textContent = "Invalid dates: End date must be after start date.";
                 console.log("error")
@@ -383,6 +390,12 @@
                 }
             } catch (error) {
                 console.log(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    timer: 1500,
+                });
             }
         }
 

@@ -4,7 +4,6 @@ const router = express.Router();
 const { isBlocked } = require("../middleware/isBlocked");
 
 const {
-  loadHome,
   loadLogin,
   authUser,
   renderRegisterForm,
@@ -16,16 +15,27 @@ const {
   updatePassword,
   verifyForgotPasswordOTP,
   resendOTP,
+} = require("../controllers/user/authController");
+
+const {
+  loadProfile,
+  editProfile,
+  loadWallet,
+} = require("../controllers/user/profileContoller");
+
+const {
+  loadPassword,
+  changePassword,
+} = require("../controllers/user/passwordController");
+
+const {
+  loadHome,
   loadShop,
+  loadSearch,
   loadCategoryShop,
   loadProduct,
   fetchVariants,
-  loadProfile,
-  editProfile,
   loadCheckOut,
-  loadPassword,
-  changePassword,
-  loadWallet,
   logout,
 } = require("../controllers/user/usersController");
 
@@ -45,6 +55,7 @@ const {
   LoadSingleOrder,
   cancelOrder,
   cancelProducts,
+  returnProducts,
   invoice,
 } = require("../controllers/user/orderController");
 
@@ -91,14 +102,12 @@ router.post("/update-password", updatePassword);
 //resend OTP
 router.get("/resend", resendOTP);
 
-router.get("/home", (req, res) => {
-  res.send("verified successfully");
-});
-
 // router.use("/", isBlocked);
 
 router.get("/shop", loadShop);
 router.get("/shop/:category", loadCategoryShop);
+
+router.get("/search", loadSearch);
 
 router.get("/product/:id", loadProduct);
 router.get("/variants/:id/:color", fetchVariants);
@@ -141,6 +150,7 @@ router.get("/orders", isLogin, LoadOrders);
 router.get("/orders/:orderId", isLogin, LoadSingleOrder);
 router.patch("/cancelOrder", isLogin, cancelOrder);
 router.post("/cancel-products", isLogin, cancelProducts);
+router.post("/return-products", isLogin, returnProducts);
 router.get("/invoice/:id", isLogin, invoice);
 
 //wishlist
