@@ -4,6 +4,8 @@ const Cart = require("../../models/Cart");
 const Address = require("../../models/Address");
 const Coupons = require("../../models/Coupons");
 
+const mongoose = require("mongoose");
+
 const { ObjectId } = require("mongodb");
 
 const loadHome = (req, res) => {
@@ -15,33 +17,66 @@ const loadShop = async (req, res) => {
   try {
     const user = req.session?.user ?? null;
 
-    const categoriesQuery = req.query.categories
-      ? req.query.categories.split(",")
-      : [];
-    const colors = req.query.colors ? req.query.colors.split(",") : [];
-    const sizes = req.query.sizes ? req.query.sizes.split(",") : [];
+    let categoriesQuery;
+    if (req.query.categories) {
+      categoriesQuery = Array.isArray(req.query.categories)
+        ? req.query.categories
+        : [req.query.categories];
+    }
+
     const minPrice = req.query?.min || "";
     const maxPrice = req.query?.max || "";
 
     const sort = req.query?.sort || "";
 
-    console.log("colors,sizes,minPrice,maxPrice");
-    console.log(categoriesQuery);
-    console.log(colors);
-    console.log(sizes);
-    console.log(minPrice);
-    console.log(maxPrice);
-    console.log(sort);
-
-    const products = await Product.aggregate([
+    let query = [
       {
         $lookup: {
           from: "categories",
           localField: "category.parentCategory",
           foreignField: "_id",
-          as: "parentCategory",
+          as: "category",
         },
       },
+      { $unwind: "$category" },
+    ];
+
+    if (categoriesQuery) {
+      query.push({
+        $match: {
+          "category.name": { $in: categoriesQuery },
+        },
+      });
+      console.log(categoriesQuery);
+    }
+
+    if (minPrice && maxPrice) {
+      query.push({
+        $match: {
+          originalPrice: { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) },
+        },
+      });
+      console.log(typeof minPrice, typeof maxPrice);
+    }
+
+    if (sort == "lowToHigh") {
+      query.push({
+        $sort: {
+          originalPrice: 1,
+        },
+      });
+    } else if (sort == "highToLow") {
+      query.push({
+        $sort: {
+          originalPrice: -1,
+        },
+      });
+    }
+
+    console.log("query");
+    console.log(query);
+
+    query.push(
       {
         $lookup: {
           from: "discounts",
@@ -57,21 +92,6 @@ const loadShop = async (req, res) => {
         },
       },
       {
-        $lookup: {
-          from: "categories",
-          localField: "category.subCategory",
-          foreignField: "_id",
-          as: "subCategory",
-        },
-      },
-      {
-        $match: {
-          status: "listed",
-          "parentCategory.status": "listed",
-          "subCategory.status": "listed",
-        },
-      },
-      {
         $project: {
           name: 1,
           originalPrice: 1,
@@ -80,15 +100,16 @@ const loadShop = async (req, res) => {
           discountPercent: "$discountDetails.value",
           images: 1,
         },
-      },
-    ]);
+      }
+    );
+
+    const products = await Product.aggregate(query);
 
     const categories = await Category.aggregate([
       {
         $match: {
           isParentCategory: true,
           status: "listed",
-          subcategories: { $ne: [] },
         },
       },
       {
@@ -100,10 +121,13 @@ const loadShop = async (req, res) => {
         },
       },
     ]);
-    // console.log(categories);
-    console.log(products.length);
 
-    res.render("usersViews/shop", { products, categories, user });
+    console.log(categories);
+    console.log(products);
+    console.log(products.length);
+    let currentPage = 2;
+
+    res.render("usersViews/shop", { products, categories, user, currentPage });
   } catch (error) {
     console.log(error);
   }
@@ -189,11 +213,37 @@ const loadCategoryShop = async (req, res) => {
 const loadSearch = async (req, res) => {
   try {
     const user = req.session?.user ?? null;
-    const { keyword } = req.query;
-    console.log(keyword);
-    const products = [];
+    const { keyword, sort } = req.query;
+
+    let query = [
+      {
+        $match: {
+          name: {
+            $regex: keyword,
+            $options: "i",
+          },
+        },
+      },
+    ];
+    if (sort == "lowToHigh") {
+      query.push({
+        $sort: {
+          originalPrice: 1,
+        },
+      });
+    } else if (sort == "highToLow") {
+      query.push({
+        $sort: {
+          originalPrice: -1,
+        },
+      });
+    }
+    console.log(query);
+    const products = await Product.aggregate(query);
+    console.log(products);
     res.render("usersViews/search", { user, products, keyword });
   } catch (error) {
+    console.log(error);
     res.status(500).render("error", { error: error.message });
   }
 };
@@ -202,7 +252,14 @@ const loadProduct = async (req, res) => {
   try {
     console.log("working?");
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).render("404");
+    }
     const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).render("404");
+    }
 
     console.log(product);
     const uniqueColorsWithQuantity = product.variants

@@ -50,7 +50,10 @@ const verifyPayment = (req, res) => {
       });
     return;
   }
-  res.status(200).json({ message: "payment successful" });
+
+
+
+  res.status(200).json({ message: "payment successful", });
 };
 
 module.exports = { razorPayOrder, verifyPayment };

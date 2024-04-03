@@ -1,11 +1,18 @@
 const User = require("../../models/User");
 const Wallet = require("../../models/Wallet");
+const Coupons = require("../../models/Coupons");
 
 const loadProfile = async (req, res) => {
   try {
     const { id } = req.session.user;
     const user = await User.findById(id);
-    res.render("usersViews/profile", { user });
+    const currentDate = new Date();
+    const coupons = await Coupons.find({
+      start: { $lte: currentDate },
+      end: { $gte: currentDate },
+    });
+    console.log(coupons);
+    res.render("usersViews/profile", { user,coupons });
   } catch (error) {
     console.log(error);
   }

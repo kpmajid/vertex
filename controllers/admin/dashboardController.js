@@ -10,6 +10,106 @@ const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
 
+async function top10Products() {
+  try {
+    const products = await Orders.aggregate([
+      {
+        $match: {
+          orderStatus: "Delivered",
+        },
+      },
+      { $unwind: "$products" },
+      {
+        $match: {
+          $or: [
+            { "products.status": { $exists: false } },
+            { "products.return": { $exists: false } },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: "$products.productId",
+          totalQuantity: {
+            $sum: "$products.quantity",
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "Product",
+        },
+      },
+      { $sort: { totalQuantity: -1 } },
+    ]);
+    return products;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function top10Category() {
+  try {
+    const products = await Orders.aggregate([
+      {
+        $match: {
+          orderStatus: "Delivered",
+        },
+      },
+      { $unwind: "$products" },
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "Product",
+        },
+      },
+      { $unwind: "$Product" },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "Product.category.parentCategory",
+          foreignField: "_id",
+          as: "parentCategory",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "Product.category.subCategory",
+          foreignField: "_id",
+          as: "subCategory",
+        },
+      },
+      { $unwind: "$parentCategory" },
+      { $unwind: "$subCategory" },
+      {
+        $addFields: {
+          category: {
+            $concat: ["$parentCategory.name", " - ", "$subCategory.name"],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          totalQuantity: {
+            $sum: "$products.quantity",
+          },
+        },
+      },
+      { $sort: { totalQuantity: -1 } },
+    ]);
+    return products;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const loadDashboard = async (req, res) => {
   try {
     let userCount = await User.aggregate([
@@ -51,7 +151,16 @@ const loadDashboard = async (req, res) => {
       ],
     ]);
     console.log(result);
-    res.render("adminViews/dashboard", { userCount, total, result });
+
+    let top10ProductsList = await top10Products();
+    let top10CategoryList = await top10Category();
+    res.render("adminViews/dashboard", {
+      userCount,
+      total,
+      result,
+      top10ProductsList,
+      top10CategoryList,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });
@@ -165,63 +274,6 @@ const renderPieChart = async (req, res) => {
   }
 };
 
-const top10Products = async (req, res) => {
-  try {
-    /*
-    [
-      {
-        $match: {
-          orderStatus: {
-            $nin: ["Cancelled", "Returned"],
-          },
-        },
-      },
-      { $unwind: "$products" },
-      {
-        $match: {
-          "products.status": {
-            $nin: ["Cancelled", "Returned"],
-          },
-        },
-      },
-    ]
-    */
-    const products = await Orders.aggregate([
-      { $unwind: "$products" },
-      {
-        $group: {
-          _id: "$products.productId",
-          totalOrders: {
-            $sum: "$products.quantity",
-          },
-        },
-      },
-      {
-        $sort: {
-          totalOrders: -1,
-        },
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "_id",
-          foreignField: "_id",
-          as: "result",
-        },
-      },
-    ]);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-const top10Category = async (req, res) => {
-  try {
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
 const loadSales = async (req, res) => {
   res.render("adminViews/sales");
 };

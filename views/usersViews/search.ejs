@@ -98,10 +98,7 @@
                     <!-- Nav Start -->
                     <div class="classynav">
                         <ul>
-                            <li><a href="#">Shop</a></li>
-
-
-
+                            <li><a href="/shop">Shop</a></li>
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -113,11 +110,9 @@
                 <!-- Search Area -->
 
                 <div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search" />
-                        <button type="submit">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
+                    <form action="/search" method="get">
+                        <input type="search" name="keyword" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>
                 <% if (!user) { %>
@@ -127,7 +122,7 @@
                     <% } else { %>
 
                         <div class="favourite-area">
-                            <a href="#"><img src="/img/core-img/heart.svg" alt="" /></a>
+                            <a href="/wishlist"><img src="/img/core-img/heart.svg" alt="" /></a>
                         </div>
 
                         <!-- User Login Info -->
@@ -163,6 +158,7 @@
     </div>
     <!-- ##### Breadcumb Area End ##### -->
 
+
     <!-- ##### Shop Grid Area Start ##### -->
     <section class="shop_grid_area section-padding-80">
         <div class="container">
@@ -182,7 +178,6 @@
                                         <p>Sort by:</p>
                                         <select name="sortBy" onchange="updateURL()" id="sortBySelect">
                                             <option value="default">None</option>
-                                            <option value="rated">Highest Rated</option>
                                             <option value="lowToHigh">Price: Low to High</option>
                                             <option value="highToLow">Price: High to Low</option>
                                         </select>
@@ -193,76 +188,81 @@
                         <!-- Single Product -->
                         <% if (products.length>0) { %>
                             <div class="row">
-                                <% products.forEach(product=> { %>
-                                    <div class="col-12 col-sm-6 col-lg-4">
-                                        <div class="single-product-wrapper">
-                                            <!-- Product Image -->
-                                            <div class="product-img">
-                                                <a href="/product/<%= product._id %>">
-                                                    <img src="/img/products/<%= product.images[0] %>" alt="" />
-                                                    <!-- Hover Thumb -->
-                                                    <img class="hover-img" src="/img/products/<%= product.images[1] %>"
-                                                        alt="" />
-                                                </a>
+                                <!-- Single Product -->
+                                <% if (products) { %>
+                                    <% products.forEach(product=> { %>
+                                        <div class="col-12 col-sm-6 col-lg-3">
+                                            <div class="single-product-wrapper">
+                                                <!-- Product Image -->
+                                                <div class="product-img">
+                                                    <a href="/product/<%= product._id %>">
+                                                        <img src="/img/products/<%= product.images[0] %>" alt="" />
+                                                        <!-- Hover Thumb -->
+                                                        <img class="hover-img"
+                                                            src="/img/products/<%= product.images[1] %>" alt="" />
+                                                    </a>
 
-                                                <!-- Product Badge -->
-                                                <% if (product.discount) { %>
-                                                    <div class="product-badge offer-badge">
-                                                        <span>
-                                                            <%= product.discountPercent %> %
-                                                        </span>
-                                                    </div>
-                                                    <% } else { %> ₹ <%= product.originalPrice %>
-                                                            <% } %>
-
-
-                                            </div>
-
-                                            <!-- Product Description -->
-                                            <div class="product-description">
-                                                <!-- <span>topshop</span> -->
-                                                <a href="/product/<%= product._id %>">
-                                                    <h6>
-                                                        <%= product.name %>
-                                                    </h6>
-                                                </a>
-
-                                                <p class="product-price">
+                                                    <!-- Product Badge -->
                                                     <% if (product.discount) { %>
-                                                        <span class="old-price">
-                                                            ₹ <%= product.originalPrice %>
-                                                        </span>
-                                                        ₹ <%= product.discountedPrice %>
-                                                            <% } else { %> ₹ <%= product.originalPrice %>
-                                                                    <% } %>
-                                                </p>
+                                                        <div class="product-badge offer-badge">
+                                                            <span>
+                                                                <%= product.discountPercent %> %
+                                                            </span>
+                                                        </div>
+                                                        <% } else { %> ₹ <%= product.originalPrice %>
+                                                                <% } %>
+
+
+                                                </div>
+
+                                                <!-- Product Description -->
+                                                <div class="product-description">
+                                                    <!-- <span>topshop</span> -->
+                                                    <a href="/product/<%= product._id %>">
+                                                        <h6>
+                                                            <%= product.name %>
+                                                        </h6>
+                                                    </a>
+
+                                                    <p class="product-price">
+                                                        <% if (product.discount) { %>
+                                                            <span class="old-price">
+                                                                ₹ <%= product.originalPrice %>
+                                                            </span>
+                                                            ₹ <%= product.discountedPrice %>
+                                                                <% } else { %> ₹ <%= product.originalPrice %>
+                                                                        <% } %>
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                        <% }) %>
+                                            <% } %>
                             </div>
-                            <% }) %>
-                                <% } else { %>
-                                    <div class="row justify-content-center">
-                                        There is no product to display
-                                    </div>
-                                    <% } %>
-                                        <!-- Pagination -->
-                                        <nav aria-label="navigation">
-                                            <ul class="pagination mt-50 mb-70 justify-content-center">
-                                                <li class="page-item"><a class="page-link" href="#"><i
-                                                            class="fa fa-angle-left"></i></a>
-                                                </li>
-                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">21</a></li>
-                                                <li class="page-item"><a class="page-link" href="#"><i
-                                                            class="fa fa-angle-right"></i></a>
-                                                </li>
-                                            </ul>
-                                        </nav>
+
+
+                            <% } else { %>
+                                <div class="row justify-content-center">
+                                    There is no product to display
+                                </div>
+                                <% } %>
+                                    <!-- Pagination -->
+                                    <nav aria-label="navigation">
+                                        <ul class="pagination mt-50 mb-70 justify-content-center">
+                                            <li class="page-item"><a class="page-link" href="#"><i
+                                                        class="fa fa-angle-left"></i></a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">21</a></li>
+                                            <li class="page-item"><a class="page-link" href="#"><i
+                                                        class="fa fa-angle-right"></i></a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                     </div>
                 </div>
             </div>

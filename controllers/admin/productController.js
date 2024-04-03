@@ -156,6 +156,7 @@ const editProduct = async (req, res) => {
   try {
     console.log("edit product");
     console.log(req.body);
+
     const {
       name,
       description,
@@ -165,6 +166,7 @@ const editProduct = async (req, res) => {
       combinations,
       removedFiles,
     } = req.body;
+
     const id = req.params.id;
 
     const variants = JSON.parse(combinations);
@@ -180,8 +182,9 @@ const editProduct = async (req, res) => {
       );
       console.log(removedFilesArray);
       const files = req.files;
-      const uploadedImages = files.map((file) => file.filename);
-      product.images.push(...uploadedImages);
+      const images = files.map((file) => file.filename);
+      console.log(images);
+      product.images.push(...images);
     }
 
     product.name = name;

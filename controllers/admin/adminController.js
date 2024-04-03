@@ -48,33 +48,6 @@ const loadSingleOrder = async (req, res) => {
 
     res.render("adminViews/singleOrder", { order });
 
-    // const {
-    //   shippingAddress,
-    //   products,
-    //   paymentMethod,
-    //   paymentStatus,
-    //   orderStatus,
-    //   total,
-    //   createdAt,
-    //   _id,
-    //   userId,
-    // } = order;
-
-    // const addressDoc = await Address.findOne({ userId });
-    // const address = addressDoc.addresses.find((address) =>
-    //   address._id.equals(shippingAddress)
-    // );
-
-    // res.render("adminViews/singleOrder", {
-    //   address,
-    //   products,
-    //   paymentMethod,
-    //   paymentStatus,
-    //   orderStatus,
-    //   total,
-    //   createdAt,
-    //   _id,
-    // });
   } catch (error) {
     console.log(error);
   }
@@ -88,13 +61,6 @@ const updateOrderStatus = async (req, res) => {
 
     const order = await Orders.findById(orderId);
     console.log(order);
-    // if (order.orderStatus == "Pending") {
-    //   order.orderStatus = "Shipped";
-    //   message = "products shipped";
-    // } else if (order.orderStatus == "Shipped") {
-    //   order.orderStatus = "Delivered";
-    //   message = "products shipped";
-    // }
 
     order.orderStatus = selectedStatus;
     let message = `products ${selectedStatus}`;
@@ -201,7 +167,6 @@ module.exports = {
   loadOrders,
   loadSingleOrder,
   updateOrderStatus,
-
   loadDiscount,
   loadAddDiscount,
   getProducts,

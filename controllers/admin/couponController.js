@@ -64,8 +64,6 @@ const createCoupon = async (req, res) => {
   }
 };
 
-
-
 const loadEditCoupon = async (req, res) => {
   try {
     const { id } = req.params;

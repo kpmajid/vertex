@@ -118,8 +118,6 @@
                                 <a href="/shop">Shop</a>
                             </li>
 
-
-
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -130,15 +128,13 @@
             <div class="header-meta d-flex clearfix justify-content-end">
                 <!-- Search Area -->
                 <div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search" />
-                        <button type="submit">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
+                    <form action="/search" method="get">
+                        <input type="search" name="keyword" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>
                 <div class="favourite-area">
-                    <a href="#"><img src="/img/core-img/heart.svg" alt="" /></a>
+                    <a href="/wishlist"><img src="/img/core-img/heart.svg" alt="" /></a>
                 </div>
 
                 <!-- User Login Info -->
@@ -264,56 +260,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="checkout_details_areaclearfix  ">
-                        <hr>
-                        <div class="cart-page-heading mb-30">
-                            <h5>Add Address</h5>
-                        </div>
-                        <form action="#" method="post">
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="full_name">First Name<span>*</span></label>
-                                    <input type="text" class="form-control" id="full_name" value="" required>
-                                    <div id="fullNameValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="mobile">Mobile No <span>*</span></label>
-                                    <input type="number" class="form-control" id="mobile" Mobile="0" value="">
-                                    <div id="mobileValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="street_address">Address <span>*</span></label>
-                                    <input type="text" class="form-control" id="street_address" value="">
-                                    <div id="streetAddressValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="pincode">Pincode <span>*</span></label>
-                                    <input type="text" class="form-control" id="pincode" value="">
-                                    <div id="pincodeValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="state">State <span>*</span></label>
-                                    <input type="text" class="form-control" id="state" name="state" />
-                                    <div id="stateValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="town_city">Town/City <span>*</span></label>
-                                    <input type="text" class="form-control" id="town_city" value="">
-                                    <div id="townCityValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="street">Street <span>*</span></label>
-                                    <input type="text" class="form-control" id="street" name="street" />
-                                    <div id="streetValidationMessage" class="text-danger mb-2"></div>
-                                </div>
-                                <div class="col-12">
-                                    <button type="button" class="btn essence-btn" id="saveBtn">
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div> -->
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
@@ -766,7 +712,7 @@
             }
         }
 
-        async function placeOrder() {
+        async function placeOrder(paymentStatus = null, payment_id = null) {
             console.log("placing Order")
 
             const selectedAddress = document.querySelector(
@@ -789,6 +735,8 @@
                     body: JSON.stringify({
                         addressId,
                         paymentMethod,
+                        paymentStatus,
+                        payment_id,
                     }),
                 });
                 const data = await response.json()
@@ -811,7 +759,7 @@
                     showConfirmButton: false,
                     timer: 1500,
                 });
-                window.location.assign("/orders");
+                window.location.assign(`/checkout-success/${data.orderId}`);
             } catch (error) {
                 console.log(error);
             }
@@ -827,11 +775,12 @@
                 key: "rzp_test_XmE1i9cQzXOgPU",
                 amount: amount * 100,
                 currency: "INR",
-                name: "Acme Corp",
+                name: "Vertex",
                 description: "Test Transaction",
                 image: "https://example.com/your_logo",
                 order_id: orderId,
                 handler: async function (response) {
+                    let payment_id = response.razorpay_payment_id
                     const paymentData = {
                         payment_id: response.razorpay_payment_id,
                         order_id: response.razorpay_order_id,
@@ -850,7 +799,8 @@
                         console.log(data)
                         if (response.ok) {
                             console.log("placerder for razor pay")
-                            placeOrder()
+                            console.log(payment_id)
+                            placeOrder(undefined, payment_id)
                         }
                     } catch (error) {
                         console.log(error);
@@ -866,7 +816,10 @@
             var rzp1 = new Razorpay(options);
 
             rzp1.on("payment.failed", function (response) {
-                alert(response.error.description);
+                document.querySelector(".razorpay-container").style.display = "none";
+                let paymentStatus = "Failed"
+                placeOrder(paymentStatus)
+                return
             });
             rzp1.open(); // Open the Razorpay Checkout form immediately after creating the instance
         }

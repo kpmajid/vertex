@@ -51,12 +51,14 @@ const {
 const {
   processCheckout,
   createOrder,
+  loadSuccessCheckout,
   LoadOrders,
   LoadSingleOrder,
   cancelOrder,
   cancelProducts,
   returnProducts,
   invoice,
+  pay,
 } = require("../controllers/user/orderController");
 
 const {
@@ -146,12 +148,15 @@ router.post("/verify-payment", isLogin, verifyPayment);
 
 //order
 router.post("/placeOrder", isLogin, createOrder);
+router.get("/checkout-success/:id", isLogin, loadSuccessCheckout);
+
 router.get("/orders", isLogin, LoadOrders);
 router.get("/orders/:orderId", isLogin, LoadSingleOrder);
 router.patch("/cancelOrder", isLogin, cancelOrder);
 router.post("/cancel-products", isLogin, cancelProducts);
 router.post("/return-products", isLogin, returnProducts);
 router.get("/invoice/:id", isLogin, invoice);
+router.post("/pay", isLogin, pay);
 
 //wishlist
 router.get("/wishlist", isLogin, loadWishlist);

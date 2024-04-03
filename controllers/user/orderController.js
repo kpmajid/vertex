@@ -124,9 +124,12 @@ const createOrder = async (req, res) => {
     console.log(req.body);
 
     const { id } = req.session.user;
-    let { addressId, paymentMethod } = req.body;
-    let paymentStatus = paymentMethod === "paypal" ? "Paid" : "Pending";
+    let { addressId, paymentMethod, paymentStatus } = req.body;
+    if (!paymentStatus) {
+      paymentStatus = paymentMethod === "paypal" ? "Paid" : "Pending";
+    }
 
+    console.log(paymentStatus);
     // Retrieve cart details and populate products
     const cart = await Cart.findOne({ userId: id }).populate(
       "products.productId",
@@ -233,7 +236,7 @@ const createOrder = async (req, res) => {
     shippingAddress.city = addressDoc.addresses[0].city;
     shippingAddress.street = addressDoc.addresses[0].street;
 
-    const order = new Orders({
+    let orderData = {
       userId: id,
       products,
       shippingAddress,
@@ -243,7 +246,12 @@ const createOrder = async (req, res) => {
       finalTotal,
       order_number: order_number + 1,
       coupon: couponDetails,
-    });
+    };
+    if (paymentMethod == "paypal" && req.body.payment_id) {
+      orderData.paymentId = req.body.payment_id;
+    }
+
+    const order = new Orders(orderData);
 
     await order.save();
 
@@ -264,9 +272,27 @@ const createOrder = async (req, res) => {
       }
     }
 
-    res.status(200).json({ message: "order placed successfully" });
+    res
+      .status(200)
+      .json({ message: "order placed successfully", orderId: order._id });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const loadSuccessCheckout = async (req, res) => {
+  try {
+    const { id } = req.session.user;
+    const orderId = req.params.id;
+    console.log(orderId);
+
+    const order = await Orders.findOne({ userId: id, _id: orderId })
+      .populate("products.productId")
+      .populate("userId");
+    console.log(order);
+    res.render("usersViews/checkoutSuccess", { order });
+  } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -291,11 +317,20 @@ const LoadSingleOrder = async (req, res) => {
     const order = await Orders.findOne({ userId: id, _id: orderId }).populate(
       "products.productId"
     );
-
     console.log(order);
+    let totalAmount = 0;
+    order.products.forEach((product) => {
+      totalAmount += product.price * product.quantity;
+    });
+    if (order.coupon.code) {
+      totalAmount -= order.coupon.discountAmount;
+    }
+
+    console.log(totalAmount);
 
     res.render("usersViews/singleOrder", {
       order,
+      totalAmount,
     });
   } catch (error) {
     console.log(error);
@@ -377,15 +412,22 @@ const cancelProducts = async (req, res) => {
 
     let finalTotal = orderDoc.finalTotal;
 
-    if (orderDoc.paymentStatus == "Paid") {
-      //refund
-      console.log("refund");
-      let refund = itemDetails.quantity * itemDetails.price;
-      if (refund > orderDoc.finalTotal) {
-        refund = orderDoc.finalTotal;
-      }
-      finalTotal -= refund;
+    //refund
+    console.log("refund");
+    let refund = itemDetails.quantity * itemDetails.price;
+    if (refund > orderDoc.finalTotal) {
+      refund = orderDoc.finalTotal;
+    }
 
+    if (orderDoc.coupon.code) {
+      const coupon = await Coupons.findById(orderDoc.coupon.couponId);
+      if (finalTotal < coupon.minimumAmount) {
+        refund -= orderDoc.coupon.discountAmount;
+      }
+    }
+    finalTotal -= refund;
+
+    if (orderDoc.paymentStatus == "Paid") {
       const walletDoc = await Wallet.findOne({ user: id });
 
       const refundTransaction = {
@@ -445,32 +487,40 @@ const cancelProducts = async (req, res) => {
 const returnProducts = async (req, res) => {
   try {
     console.log("return rprodcut");
-    const { orderId, productId, reason } = req.body;
+    const { orderId, productId, itemId, reason } = req.body;
     console.log(orderId, productId, reason);
 
     const { id } = req.session.user;
-
     console.log(id);
 
-    const orderDoc = await Orders.findOne({
-      _id: orderId,
-      userId: id,
-    });
+    const orderDoc = await Orders.findOneAndUpdate(
+      {
+        _id: orderId,
+        userId: id,
+        "products._id": itemId,
+      },
+      {
+        $set: {
+          "products.$.cancel.status": "Returned",
+          "products.$.cancel.reason": reason,
+          "products.$.cancel.date": Date.now(),
+        },
+      },
+      { new: true }
+    );
+
+    if (!orderDoc) {
+      return res.status(404).json({ error: "Order not found" });
+    }
 
     console.log("orderDoc");
     console.log(orderDoc);
 
     const itemDetails = orderDoc.products.find((item) => {
-      return item._id.equals(productId);
+      return item._id.equals(itemId);
     });
 
     console.log(itemDetails);
-
-    if (itemDetails) {
-      itemDetails.return.status = "Returned";
-      itemDetails.return.reason = reason;
-      itemDetails.return.date = Date.now();
-    }
 
     const product = await Product.findOneAndUpdate(
       {
@@ -486,11 +536,13 @@ const returnProducts = async (req, res) => {
       { new: true }
     );
 
+    let finalTotal = orderDoc.finalTotal;
     //refund
     let refund = itemDetails.quantity * itemDetails.price;
     if (refund > orderDoc.finalTotal) {
       refund = orderDoc.finalTotal;
     }
+    finalTotal -= refund;
 
     const walletDoc = await Wallet.findOne({ user: id });
 
@@ -502,40 +554,42 @@ const returnProducts = async (req, res) => {
 
     walletDoc.transactions.push(refundTransaction);
     walletDoc.currentBalance += refund;
-
-    const allProductsHaveStatus = orderDoc.products.reduce(
-      (accumulator, product) => {
-        // If the accumulator is already false, no need to check further products
-        if (!accumulator) return false;
-
-        const hasCancel = product?.cancel || null;
-        const hasReturn = product?.return || null;
-
-        // If the product does not have either 'cancel' or 'return', set the accumulator to false
-        if (!hasCancel && !hasReturn) {
-          return false;
-        }
-
-        // If the product has either field, keep the accumulator as true
-        return true;
-      },
-      true
-    );
-
-    console.log(allProductsHaveStatus);
-    console.log("allProductsHaveStatus");
-
-    if (allProductsHaveStatus) {
-      orderDoc.orderStatus = "Returned";
-      orderDoc.paymentStatus = "Refunded";
-    }
-
-    await orderDoc.save();
     await walletDoc.save();
 
-    if (!orderDoc) {
-      return res.status(404).json({ error: "Order not found" });
+    let allReturned = true;
+    for (const product of orderDoc.products) {
+      console.log(product);
+      let allReturned =
+        product.cancel?.status || product.return?.status || null;
+      console.log(allReturned);
+      if (!allReturned) {
+        console.log(allReturned);
+        allReturned = false;
+        break;
+      }
     }
+
+    let orderStatus = orderDoc.orderStatus;
+    let paymentStatus = orderDoc.paymentStatus;
+
+    if (allReturned && orderDoc.orderStatus == "Delivered") {
+      orderStatus = "Returned";
+      paymentStatus = "Refunded";
+    }
+
+    console.log("orderStatus, paymentStatus, finalTotal");
+    console.log(orderStatus, paymentStatus, finalTotal);
+
+    await Orders.findOneAndUpdate(
+      { _id: orderId },
+      {
+        $set: {
+          orderStatus: orderStatus,
+          paymentStatus: paymentStatus,
+          finalTotal: finalTotal,
+        },
+      }
+    );
 
     res.status(200).json({ message: "Product retuned successfully" });
   } catch (error) {
@@ -551,6 +605,7 @@ const invoice = async (req, res) => {
     console.log(id);
 
     const orderDoc = await Orders.findById(id);
+    console.log("x");
     console.log(orderDoc);
     let items = [];
     orderDoc.products.forEach((item) => {});
@@ -594,13 +649,31 @@ const invoice = async (req, res) => {
   }
 };
 
+const pay = async (req, res) => {
+  try {
+    const { id, paymentId } = req.body;
+    const order = await Orders.findById(id);
+    order.paymentStatus = "Paid";
+    order.paymentId = paymentId;
+
+    await order.save();
+
+    res.status(200).json({ message: "Payment Successfull" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   processCheckout,
   createOrder,
+  loadSuccessCheckout,
   LoadOrders,
   LoadSingleOrder,
   cancelOrder,
   cancelProducts,
   returnProducts,
   invoice,
+  pay,
 };

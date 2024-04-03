@@ -140,8 +140,6 @@
                     <div class="classynav">
                         <ul>
                             <li><a href="/shop">Shop</a></li>
-
-
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -152,11 +150,9 @@
             <div class="header-meta d-flex clearfix justify-content-end">
                 <!-- Search Area -->
                 <div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search" />
-                        <button type="submit">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
+                    <form action="/search" method="get">
+                        <input type="search" name="keyword" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>
                 <% if (!user) { %>
@@ -166,7 +162,7 @@
                     <% } else { %>
 
                         <div class="favourite-area">
-                            <a href="#"><img src="/img/core-img/heart.svg" alt="" /></a>
+                            <a href="/wishlist"><img src="/img/core-img/heart.svg" alt="" /></a>
                         </div>
 
                         <!-- User Login Info -->
@@ -210,11 +206,10 @@
             <!-- Single Product Description -->
             <div class="single_product_desc clearfix">
                 <!-- <span>mango</span> -->
-                <a href="cart.html">
-                    <h2 id="productName">
-                        <%= product.name %>
-                    </h2>
-                </a>
+                <h2 id="productName">
+                    <%= product.name %>
+                </h2>
+
                 <p class="product-price">
                     <% if (product.discount) { %>
                         <span class="old-price">
@@ -515,13 +510,26 @@
 
         // add to cart
         async function addToCart() {
-            const productId = document.getElementById("productId").value;
+            const productId = document.getElementById("productId")?.value || null;
             const color = document.querySelector(
                 'input[name="color"]:checked'
-            ).value;
-            const size = document.querySelector('input[name="size"]:checked').value;
+            )?.value || null;
+            const size = document.querySelector('input[name="size"]:checked')?.value || null;
+
+
 
             try {
+                if (!color || !size) {
+
+                    Swal.fire({
+                        title: "<strong>Please Select Color and Size</strong>",
+                        icon: "warning",
+                        html: `You have to Select Color and Size.`,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                    });
+                    return
+                }
                 const response = await fetch("/addToCart", {
                     method: "POST",
                     headers: {

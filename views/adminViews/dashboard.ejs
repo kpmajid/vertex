@@ -211,7 +211,7 @@
                                                 </div>
                                             </div>
 
-                                            <h1 class="mt-1 mb-3">₹<%= total.totalAmount %>
+                                            <h1 class="mt-1 mb-3">₹<%= total.totalAmount.toFixed(2) %>
                                             </h1>
                                             <!-- <div class="mb-0">
                                                 <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>
@@ -319,69 +319,22 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th class="d-none d-xl-table-cell">Start Date</th>
-                                        <th class="d-none d-xl-table-cell">End Date</th>
-                                        <th>Status</th>
-                                        <th class="d-none d-md-table-cell">Assignee</th>
+                                        <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Project Apollo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Fireball</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-danger">Cancelled</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Hades</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Nitro</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Phoenix</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project X</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Romeo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Christina Mason</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Wombat</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
+                                    <% top10ProductsList.forEach(product=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= product.Product[0].name %>
+                                            </td>
+                                            <td>
+                                                <%= product.totalQuantity %>
+                                            </td>
+
+                                        </tr>
+                                        <% }) %>
+
                                 </tbody>
                             </table>
                         </div>
@@ -396,69 +349,23 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th class="d-none d-xl-table-cell">Start Date</th>
-                                        <th class="d-none d-xl-table-cell">End Date</th>
-                                        <th>Status</th>
-                                        <th class="d-none d-md-table-cell">Assignee</th>
+                                        <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Project Apollo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Fireball</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-danger">Cancelled</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Hades</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Nitro</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Phoenix</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project X</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Romeo</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-success">Done</span></td>
-                                        <td class="d-none d-md-table-cell">Christina Mason</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Wombat</td>
-                                        <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                        <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                        <td><span class="badge bg-warning">In progress</span></td>
-                                        <td class="d-none d-md-table-cell">William Harris</td>
-                                    </tr>
+
+                                    <% top10CategoryList.forEach(product=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= product._id %>
+                                            </td>
+                                            <td>
+                                                <%= product.totalQuantity %>
+                                            </td>
+
+                                        </tr>
+                                        <% }) %>
+
                                 </tbody>
                             </table>
                         </div>
@@ -536,20 +443,10 @@
 
         async function renderSalesChart(period) {
             try {
-                // let interactiveText = document.querySelectorAll(".text-interactive")
-                // interactiveText.forEach((element) => {
-
-                //     element.classList.remove("active");
-                // })
-
-                // let element = document.getElementById(period)
-                // console.log(element)
-                // element.classList.add("active");
-
                 const response = await fetch(`/admin/sales-chart/${period}`)
                 const data = await response.json();
                 if (!response.ok) {
-                    // console.log(data);
+
                     return Swal.showValidationMessage(`${data.message}`);
                 }
 
@@ -562,7 +459,6 @@
                     ordersArray.push(item.orders);
                     timeArray.push(item.time);
                 });
-                // console.log(data)
 
                 const footer = (tooltipItems) => {
                     let orders = 0;
@@ -574,9 +470,14 @@
                     return 'Orders:' + orders;
                 }
 
-                // console.log(salesArray)
-                // console.log(ordersArray)
-                // console.log(timeArray)
+
+                let stepSize=2500
+
+                if(period=="Weekly"){
+                    stepSize=4000
+                }else if(period=="Monthly"){
+                    stepSize=7500
+                }
 
                 var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
                 var gradient = ctx.createLinearGradient(0, 0, 0, 225);
@@ -622,7 +523,7 @@
                             }],
                             yAxes: [{
                                 ticks: {
-                                    stepSize: 2500
+                                    stepSize:stepSize
                                 },
                                 display: true,
                                 borderDash: [3, 3],
