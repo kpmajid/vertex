@@ -92,7 +92,6 @@
                 <li><a href="/profile">Account</a></li>
                 <li><a href="/password">Change Password</a></li>
                 <li><a href="/orders" class="active">Order History</a></li>
-
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/wishlist">Wishlist</a></li>
                 <li><a href="/address">Address</a></li>
@@ -141,7 +140,7 @@
                             <%= order.paymentStatus %>
                           </td>
                           <td>
-                            <%= order.finalTotal %>
+                            <%= order.originalTotal-(order.coupon?.discountAmount||0) %>
                           </td>
                         </tr>
 

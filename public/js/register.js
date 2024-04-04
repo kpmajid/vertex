@@ -67,9 +67,20 @@ async function register(event) {
     isValid = false;
   }
 
-  if (password.value.trim().length < 8) {
-    passwordValidationMessage.textContent =
-      "Use 8 characters or more for your password";
+  const hasLower = /[a-z]/.test(password.value);
+  const hasUpper = /[A-Z]/.test(password.value);
+  const hasNumber = /\d/.test(password.value);
+
+  console.log("hasLower, hasUpper, hasNumber");
+  console.log(hasLower, hasUpper, hasNumber);
+
+  if (
+    password.value.trim().length < 8 ||
+    !hasLower ||
+    !hasUpper ||
+    !hasNumber
+  ) {
+    passwordValidationMessage.textContent = "Password requirements not met";
     isValid = false;
   }
 

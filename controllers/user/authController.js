@@ -105,6 +105,15 @@ const initiateUserRegister = async (req, res) => {
       });
     }
 
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        status: "error",
+        message:
+          "Please choose a stronger password. Try a mix of letters, numbers, and symbols.",
+      });
+    }
+
     let otp = generateOTP();
     let hashedOtp = await bcrypt.hash(otp, 10);
     const saveOtp = new Otp({

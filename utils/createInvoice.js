@@ -95,11 +95,11 @@ function generateInvoiceTable(doc, invoice) {
     generateTableRow(
       doc,
       position,
-      item.item,
-      item.description,
-      formatCurrency(item.amount / item.quantity),
+      item.productId.name,
+      item.color + "," + item.size,
+      formatCurrency(item.price * 100),
       item.quantity,
-      formatCurrency(item.amount)
+      formatCurrency(item.price * item.quantity * 100)
     );
 
     generateHr(doc, position + 20);
@@ -116,18 +116,7 @@ function generateInvoiceTable(doc, invoice) {
     formatCurrency(invoice.subtotal)
   );
 
-  const paidToDatePosition = subtotalPosition + 20;
-  generateTableRow(
-    doc,
-    paidToDatePosition,
-    "",
-    "",
-    "Paid To Date",
-    "",
-    formatCurrency(invoice.paid)
-  );
-
-  let couponPosition = paidToDatePosition + 20;
+  let couponPosition = subtotalPosition + 20;
   generateTableRow(
     doc,
     couponPosition,
@@ -138,7 +127,18 @@ function generateInvoiceTable(doc, invoice) {
     formatCurrency(invoice?.coupon?.value || 0)
   );
 
-  const duePosition = couponPosition + 25;
+  const paidToDatePosition = couponPosition + 20;
+  generateTableRow(
+    doc,
+    paidToDatePosition,
+    "",
+    "",
+    "Paid To Date",
+    "",
+    formatCurrency(invoice.paid)
+  );
+
+  const duePosition = paidToDatePosition + 25;
   doc.font("Helvetica-Bold");
   generateTableRow(
     doc,
@@ -170,7 +170,7 @@ function generateTableRow(
   doc
     .fontSize(10)
     .text(item, 50, y)
-    .text(description, 150, y)
+    .text(description, 225, y)
     .text(unitCost, 280, y, { width: 90, align: "right" })
     .text(quantity, 370, y, { width: 90, align: "right" })
     .text(lineTotal, 0, y, { align: "right" });

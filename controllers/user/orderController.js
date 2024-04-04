@@ -501,9 +501,9 @@ const returnProducts = async (req, res) => {
       },
       {
         $set: {
-          "products.$.cancel.status": "Returned",
-          "products.$.cancel.reason": reason,
-          "products.$.cancel.date": Date.now(),
+          "products.$.return.status": "Returned",
+          "products.$.return.reason": reason,
+          "products.$.return.date": Date.now(),
         },
       },
       { new: true }
@@ -563,10 +563,12 @@ const returnProducts = async (req, res) => {
     await walletDoc.save();
 
     let allReturned = true;
+    console.log("starting loop");
     for (const product of orderDoc.products) {
+      console.log("product in allretunred");
       console.log(product);
-      let allReturned =
-        product.cancel?.status || product.return?.status || null;
+      allReturned = product.cancel?.status || product.return?.status || null;
+      console.log("allReturned");
       console.log(allReturned);
       if (!allReturned) {
         console.log(allReturned);
@@ -579,6 +581,7 @@ const returnProducts = async (req, res) => {
     let paymentStatus = orderDoc.paymentStatus;
 
     if (allReturned && orderDoc.orderStatus == "Delivered") {
+      console.log(allReturned, orderDoc.orderStatus);
       orderStatus = "Returned";
       paymentStatus = "Refunded";
     }
@@ -610,16 +613,26 @@ const invoice = async (req, res) => {
     const { id } = req.params;
     console.log(id);
 
-    const orderDoc = await Orders.findById(id);
+    const orderDoc = await Orders.findById(id).populate("products.productId");
     console.log("x");
     console.log(orderDoc);
-    let items = [];
+    let items = orderDoc.products.filter(
+      (product) => !product.cancel.status && !product.return.status
+    );
     orderDoc.products.forEach((item) => {});
-    let subtotal;
+
+    let subTotal = 0;
+
+    items.forEach((product) => {
+      subTotal += product.quantity * product.price;
+    });
+
     let paid = 0;
     if (orderDoc.paymentStatus == "Paid") {
       paid = orderDoc.finalTotal * 100;
     }
+
+    console.log(items);
 
     const invoice = {
       shipping: {
@@ -631,7 +644,7 @@ const invoice = async (req, res) => {
         postal_code: orderDoc.shippingAddress.pincode,
       },
       items: items,
-      subtotal: orderDoc.originalTotal * 100,
+      subtotal: subTotal * 100,
       paid,
       coupon: {
         code: orderDoc?.coupon?.code || "none",
