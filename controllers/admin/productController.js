@@ -72,9 +72,7 @@ const loadProducts = async (req, res) => {
         },
       },
     ]);
-
     const offers = await Discounts.find({ end: { $gte: new Date() } });
-
     res.render("adminViews/products", { products, offers });
   } catch (error) {
     console.log(error);
@@ -131,7 +129,6 @@ const addProduct = async (req, res) => {
 const loadEditProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    // console.log(id);
     const product = await Product.findById(id);
 
     //all parentCategories

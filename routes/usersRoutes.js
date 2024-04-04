@@ -92,8 +92,6 @@ router.get("/register", isLogout, renderRegisterForm);
 router.post("/register", initiateUserRegister);
 router.get("/register/otp", loadValidateOTP);
 
-// router.get("/register", isLogout, loadRegister);
-// router.post("/register", isLogout, registerUser);
 
 //forgot-password
 router.get("/forgot-password", renderForgotPasswordForm);

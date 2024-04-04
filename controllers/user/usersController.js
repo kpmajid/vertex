@@ -10,7 +10,7 @@ const { ObjectId } = require("mongodb");
 
 const loadHome = (req, res) => {
   const user = req.session?.user ?? null;
-  res.render("usersViews/index", { user });
+  res.render("usersViews/index", { user }); 
 };
 
 const loadShop = async (req, res) => {

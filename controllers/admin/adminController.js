@@ -1,7 +1,6 @@
 const Admin = require("../../models/Admin");
 const Category = require("../../models/Category");
 const Product = require("../../models/Product");
-
 const Orders = require("../../models/Orders");
 const Address = require("../../models/Address");
 const Discounts = require("../../models/Discounts");

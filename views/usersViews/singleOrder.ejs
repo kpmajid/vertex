@@ -101,719 +101,576 @@
 
 <body>
     <!-- ##### Header Area Start ##### -->
-    <header class="header_area">
-        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
-            <!-- Classy Menu -->
-            <nav class="classy-navbar" id="essenceNav">
-                <!-- Logo -->
-                <a class="nav-brand" href="/"><img src="/img/core-img/logo.png" alt="" /></a>
-                <!-- Navbar Toggler -->
-                <div class="classy-navbar-toggler">
-                    <span class="navbarToggler"><span></span><span></span><span></span></span>
-                </div>
-                <!-- Menu -->
-                <div class="classy-menu">
-                    <!-- close btn -->
-                    <div class="classycloseIcon">
-                        <div class="cross-wrap">
-                            <span class="top"></span><span class="bottom"></span>
+    <%- include("./partials/privateNavbar") %>
+
+        <!-- ##### Header Area End ##### -->
+
+
+        <!-- ##### Checkout Area Start ##### -->
+        <div class="profile-page section-padding-80 pb-0">
+            <div class="container">
+                <div class="row">
+                    <!-- Sidebar Section -->
+                    <div class="col-12 col-md-5 col-lg-3">
+                        <div class="profile-sidebar">
+                            <ul class="list-unstyled profile-options">
+                                <li><a href="/profile">Account</a></li>
+                                <li><a href="/password">Change Password</a></li>
+                                <li><a href="/orders" class="active">Order History</a></li>
+
+                                <li><a href="/cart">Shopping Cart</a></li>
+                                <li><a href="/wishlist">Wishlist</a></li>
+                                <li><a href="/address">Address</a></li>
+                                <li><a href="/add-address">Add Address</a></li>
+                                <li><a href="/wallet">wallet</a></li>
+                                <li><a href="/logout">Logout</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <!-- Nav Start -->
-                    <div class="classynav">
-                        <ul>
-                            <li><a href="/shop">Shop</a></li>
 
+                    <!-- User Details Section -->
+                    <div class="col-12 col-md-7 col-lg-9">
+                        <div class="user-details clearfix mb-2">
+                            <div class="row">
+                                <div class="order-details">
+                                    <input type="hidden" name="" id="orderId" value="<%= order._id %>">
+                                    <input type="hidden" name="" id="finalTotal" value="<%= order.finalTotal %>">
+                                    <input type="hidden" name="" id="mobile"
+                                        value="<%= order.shippingAddress.mobile %>">
+                                    <h6>Order Number: <%= order.order_number %>
+                                    </h6>
+                                    <h6>Status: <%=order.orderStatus %>
+                                    </h6>
+                                    <h6>Payment Method: <%= order.paymentMethod %>
+                                    </h6>
+                                    <h6>Payment Status: <%= order.paymentStatus %>
+                                    </h6>
+                                    <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
+                                    </h6>
+                                    <h6>Total: <%= totalAmount %>
+                                    </h6>
+                                    <% if (order.coupon) { %>
 
-                        </ul>
-                    </div>
-                    <!-- Nav End -->
-                </div>
-            </nav>
+                                        <% } %>
 
-            <!-- Header Meta Data -->
-            <div class="header-meta d-flex clearfix justify-content-end">
-                <!-- Search Area -->
-                <div class="search-area">
-                    <form action="/search" method="get">
-                        <input type="search" name="keyword" id="headerSearch" placeholder="Type for search">
-                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </form>
-                </div>
-                <div class="favourite-area">
-                    <a href="/wishlist"><img src="/img/core-img/heart.svg" alt=""></a>
-                </div>
-
-                <!-- User Login Info -->
-                <div class="user-login-info">
-                    <a href="/profile"><img src="/img/core-img/user.svg" alt=""></a>
-                </div>
-                <!-- Cart Area -->
-                <div class="cart-area">
-                    <a href="/cart" id="essenceCartBtn"><img src="/img/core-img/bag.svg" alt="">
-                        <!-- <span>3</span> -->
-                    </a>
-                </div>
-                <div class="sign-in-area">
-                    <a href="/logout">Logout</a>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- ##### Header Area End ##### -->
-
-
-    <!-- ##### Checkout Area Start ##### -->
-    <div class="profile-page section-padding-80 pb-0">
-        <div class="container">
-            <div class="row">
-                <!-- Sidebar Section -->
-                <div class="col-12 col-md-5 col-lg-3">
-                    <div class="profile-sidebar">
-                        <ul class="list-unstyled profile-options">
-                            <li><a href="/profile">Account</a></li>
-                            <li><a href="/password">Change Password</a></li>
-                            <li><a href="/orders" class="active">Order History</a></li>
-                            <li><a href="#">Track Order</a></li>
-                            <li><a href="/cart">Shopping Cart</a></li>
-                            <li><a href="/wishlist">Wishlist</a></li>
-                            <li><a href="/address">Address</a></li>
-                            <li><a href="/add-address">Add Address</a></li>
-                            <li><a href="/wallet">wallet</a></li>
-                            <li><a href="/logout">Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- User Details Section -->
-                <div class="col-12 col-md-7 col-lg-9">
-                    <div class="user-details clearfix mb-2">
-                        <div class="row">
-                            <div class="order-details">
-                                <input type="hidden" name="" id="orderId" value="<%= order._id %>">
-                                <input type="hidden" name="" id="finalTotal" value="<%= order.finalTotal %>">
-                                <input type="hidden" name="" id="mobile" value="<%= order.shippingAddress.mobile %>">
-                                <h6>Order Number: <%= order.order_number %>
-                                </h6>
-                                <h6>Status: <%=order.orderStatus %>
-                                </h6>
-                                <h6>Payment Method: <%= order.paymentMethod %>
-                                </h6>
-                                <h6>Payment Status: <%= order.paymentStatus %>
-                                </h6>
-                                <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
-                                </h6>
-                                <h6>Total: <%= totalAmount %>
-                                </h6>
-                                <% if (order.coupon) { %>
-
-                                    <% } %>
-
-                            </div>
+                                </div>
 
 
 
-                            <div class="order-button">
-                                <% if (order.paymentStatus=="Failed" ) { %>
-                                    <button type="button" class="btn btn-success" onclick="pay()">Pay</button>
-                                    <% } %>
+                                <div class="order-button">
+                                    <% if (order.paymentStatus=="Failed" ) { %>
+                                        <button type="button" class="btn btn-success" onclick="pay()">Pay</button>
+                                        <% } %>
 
-                                        <% if (order.orderStatus!=="Cancelled" && order.orderStatus!=="Returned" ) { %>
-                                            <% if (order.orderStatus=="Delivered" ) { %>
+                                            <% if (order.orderStatus!=="Cancelled" && order.orderStatus!=="Returned" ) {
+                                                %>
+                                                <% if (order.orderStatus=="Delivered" ) { %>
 
-                                                <!-- <button type="button" class="btn btn-danger bg-danger"
+                                                    <!-- <button type="button" class="btn btn-danger bg-danger"
                                             data-orderId="<%= order._id %>" id="actionBtn" data-action="return"
                                             onclick="returnOrder(this)">Return
                                             Order</button> -->
-                                                <button onclick="downloadInvoice()"
-                                                    class="btn btn-primary">Invoice</button>
+                                                    <button onclick="downloadInvoice()"
+                                                        class="btn btn-primary">Invoice</button>
 
-                                                <% } else { %>
-                                                    <!-- <button type="button" class=" btn  btn-danger bg-danger"
+                                                    <% } else { %>
+                                                        <!-- <button type="button" class=" btn  btn-danger bg-danger"
                                                 data-orderId="<%= order._id %>" id="actionBtn" data-action="cancel"
                                                 onclick="cancelOrder(this)">Cancel
                                                 Order</button> -->
 
-                                                    <% } %>
-
                                                         <% } %>
 
+                                                            <% } %>
+
+                                </div>
                             </div>
+
+                            <hr>
+
+                            <h6 class="card-title  mb-0">Delivery Address:</h6>
+                            <p>
+                                <%= order.shippingAddress.fullname %><br />
+                                    <%= order.shippingAddress.mobile %><br />
+                                        <%= order.shippingAddress.address %><br />
+                                            <%= order.shippingAddress.pincode %><br />
+                                                <%= order.shippingAddress.street %>, <%= order.shippingAddress.city %>,
+                                                        <%= order.shippingAddress.state %>
+                                                            <br />
+                            </p>
                         </div>
-
-                        <hr>
-
-                        <h6 class="card-title  mb-0">Delivery Address:</h6>
-                        <p>
-                            <%= order.shippingAddress.fullname %><br />
-                                <%= order.shippingAddress.mobile %><br />
-                                    <%= order.shippingAddress.address %><br />
-                                        <%= order.shippingAddress.pincode %><br />
-                                            <%= order.shippingAddress.street %>, <%= order.shippingAddress.city %>, <%=
-                                                        order.shippingAddress.state %>
-                                                        <br />
-                        </p>
-                    </div>
-                    <div class="table-responsive-sm mb-3">
-                        <table id="myTable" class="table text-center table-hover my-0">
-                            <thead>
-                                <tr>
-                                    <th class=""></th>
-                                    <th class="">Name</th>
-                                    <th class="">Variant</th>
-                                    <th class="">Price</th>
-                                    <th class="">Quantity</th>
-                                    <th class="">Total</th>
-                                    <th class=""></th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% order.products.forEach(product=> { %>
+                        <div class="table-responsive-sm mb-3">
+                            <table id="myTable" class="table text-center table-hover my-0">
+                                <thead>
                                     <tr>
-                                        <td class="product-image">
-                                            <img src="/img/products/<%=product.productId.images[0]  %>"
-                                                class="cart-thumb" alt="" />
-                                        </td>
-                                        <td>
-                                            <%=product.productId.name %>
-                                                <br>
-                                        </td>
-                                        <td>
-                                            <%= product.size %>,
-                                                <%= product.color %>
-                                        </td>
-                                        <td>
-                                            ₹<%= product.price %>
-                                        </td>
-                                        <td>
-                                            <%= product.quantity %>
-                                        </td>
-                                        <td class="product-total">
-                                            ₹<%= product.price*product.quantity %>
-                                        </td>
-                                        <td>
-                                            <div class="product-row">
+                                        <th class=""></th>
+                                        <th class="">Name</th>
+                                        <th class="">Variant</th>
+                                        <th class="">Price</th>
+                                        <th class="">Quantity</th>
+                                        <th class="">Total</th>
+                                        <th class=""></th>
 
-                                                <% if (order.orderStatus==="Cancelled" || product.cancel?.status) { %>
-                                                    Cancelled
-                                                    <% } else if (order.orderStatus==="Returned" ||
-                                                        product.return?.status) { %>
-                                                        Returned
-                                                        <% } else if (order.orderStatus==="Delivered" ) { %>
-                                                            <button class="btn btn-danger return-product"
-                                                                data-itemid="<%= product._id %>"
-                                                                data-productid="<%= product.productId._id %>"
-                                                                onclick="returnProduct(this)">
-                                                                return product
-                                                            </button>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% order.products.forEach(product=> { %>
+                                        <tr>
+                                            <td class="product-image">
+                                                <img src="/img/products/<%=product.productId.images[0]  %>"
+                                                    class="cart-thumb" alt="" />
+                                            </td>
+                                            <td>
+                                                <%=product.productId.name %>
+                                                    <br>
+                                            </td>
+                                            <td>
+                                                <%= product.size %>,
+                                                    <%= product.color %>
+                                            </td>
+                                            <td>
+                                                ₹<%= product.price %>
+                                            </td>
+                                            <td>
+                                                <%= product.quantity %>
+                                            </td>
+                                            <td class="product-total">
+                                                ₹<%= product.price*product.quantity %>
+                                            </td>
+                                            <td>
+                                                <div class="product-row">
 
-                                                            <% } else { %>
-                                                                <button class="btn btn-danger cancel-product"
+                                                    <% if (order.orderStatus==="Cancelled" || product.cancel?.status) {
+                                                        %>
+                                                        Cancelled
+                                                        <% } else if (order.orderStatus==="Returned" ||
+                                                            product.return?.status) { %>
+                                                            Returned
+                                                            <% } else if (order.orderStatus==="Delivered" ) { %>
+                                                                <button class="btn btn-danger return-product"
                                                                     data-itemid="<%= product._id %>"
                                                                     data-productid="<%= product.productId._id %>"
-                                                                    onclick="cancelProduct(this)">
-                                                                    Cancel product
+                                                                    onclick="returnProduct(this)">
+                                                                    return product
                                                                 </button>
 
-                                                                <% } %>
-                                            </div>
+                                                                <% } else { %>
+                                                                    <button class="btn btn-danger cancel-product"
+                                                                        data-itemid="<%= product._id %>"
+                                                                        data-productid="<%= product.productId._id %>"
+                                                                        onclick="cancelProduct(this)">
+                                                                        Cancel product
+                                                                    </button>
+
+                                                                    <% } %>
+                                                </div>
 
 
 
-                                        </td>
-                                    </tr>
-                                    <% }) %>
-                                        <% if (order.coupon.couponId) { %>
-                                            <tr>
-                                                <td colspan="4"></td>
-                                                <td>Subtotal</td>
-                                                <td id="subtotal">
-                                                    ₹<%= order.originalTotal %>
-                                                </td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4"></td>
-                                                <td>Coupon</td>
-                                                <td id="coupon">
-                                                    -₹<%= order.coupon.discountAmount %>
-                                                </td>
-                                                <td></td>
-                                            </tr>
-                                            <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                            <% if (order.coupon.couponId) { %>
                                                 <tr>
                                                     <td colspan="4"></td>
-                                                    <td>Total</td>
-                                                    <td>
-                                                        ₹<%= totalAmount %>
+                                                    <td>Subtotal</td>
+                                                    <td id="subtotal">
+                                                        ₹<%= order.originalTotal %>
                                                     </td>
                                                     <td></td>
                                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-
-
-                </div>
-            </div>
-        </div>
-
-        <!-- ##### Checkout Area End ##### -->
-
-        <!-- ##### Footer Area Start ##### -->
-        <footer class="footer_area clearfix">
-            <div class="container">
-                <div class="row">
-                    <!-- Single Widget Area -->
-                    <div class="col-12 col-md-6">
-                        <div class="single_widget_area d-flex mb-30">
-                            <!-- Logo -->
-                            <div class="footer-logo mr-50">
-                                <a href="#"><img src="/img/core-img/logo2.png" alt="" /></a>
-                            </div>
-                            <!-- Footer Menu -->
-                            <div class="footer_menu">
-                                <ul>
-                                    <li><a href="/shop">Shop</a></li>
-                                    <!-- <li><a href="/blog.html">Blog</a></li>
-                                    <li><a href="/contact.html">Contact</a></li> -->
-                                </ul>
-                            </div>
+                                                <tr>
+                                                    <td colspan="4"></td>
+                                                    <td>Coupon</td>
+                                                    <td id="coupon">
+                                                        -₹<%= order.coupon.discountAmount %>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <% } %>
+                                                    <tr>
+                                                        <td colspan="4"></td>
+                                                        <td>Total</td>
+                                                        <td>
+                                                            ₹<%= totalAmount %>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    <!-- Single Widget Area -->
-                    <div class="col-12 col-md-6">
-                        <div class="single_widget_area mb-30">
-                            <ul class="footer_widget_menu">
-                                <li><a href="#">Order Status</a></li>
-                                <li><a href="#">Payment Options</a></li>
-                                <li><a href="#">Shipping and Delivery</a></li>
-                                <li><a href="#">Guides</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Terms of Use</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row align-items-end">
-                    <!-- Single Widget Area -->
-                    <div class="col-12 col-md-6">
-                        <div class="single_widget_area">
-                            <div class="footer_heading mb-30">
-                                <h6>Subscribe</h6>
-                            </div>
-                            <div class="subscribtion_form">
-                                <form action="#" method="post">
-                                    <input type="email" name="mail" class="mail" placeholder="Your email here" />
-                                    <button type="submit" class="submit">
-                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Single Widget Area -->
-                    <div class="col-12 col-md-6">
-                        <div class="single_widget_area">
-                            <div class="footer_social_area">
-                                <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i
-                                        class="fa fa-facebook" aria-hidden="true"></i></a>
-                                <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i
-                                        class="fa fa-instagram" aria-hidden="true"></i></a>
-                                <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i
-                                        class="fa fa-twitter" aria-hidden="true"></i></a>
-                                <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i
-                                        class="fa fa-pinterest" aria-hidden="true"></i></a>
-                                <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i
-                                        class="fa fa-youtube-play" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row mt-5">
-                    <div class="col-md-12 text-center">
-                        <p>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
-                            All rights reserved | Made with
-                            <i class="fa fa-heart-o" aria-hidden="true"></i> by
-                            <a href="https://colorlib.com" target="_blank">Colorlib</a>,
-                            distributed by
-                            <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
+
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- ##### Footer Area End ##### -->
 
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script>
-            async function downloadInvoice() {
-                try {
-                    const orderId = document.querySelector("#orderId").value
+            <!-- ##### Checkout Area End ##### -->
 
-                    const response = await fetch(`/invoice/${orderId}`);
+            <!-- ##### Footer Area Start ##### -->
+            <%- include("./partials/user-footer") %>
+                <!-- ##### Footer Area End ##### -->
 
-                    // Check if the response is successful
-                    if (response.ok) {
-                        // Create a blob from the response data
-                        const blob = await response.blob();
-
-                        // Create a temporary URL for the blob
-                        const url = window.URL.createObjectURL(blob);
-
-                        // Create an anchor element to trigger the download
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'invoice.pdf';
-                        document.body.appendChild(a);
-                        a.click();
-
-                        // Clean up by revoking the URL object
-                        window.URL.revokeObjectURL(url);
-                    } else {
-                        console.error('Failed to download invoice. Status:', response.status);
-                    }
-                } catch (error) {
-                    console.error('Error downloading invoice:', error);
-                }
-            }
-
-            async function cancelProduct(button) {
-                try {
-                    const orderId = document.querySelector("#orderId").value
-                    const { value: reason } = await Swal.fire({
-                        input: "textarea",
-                        inputLabel: "Are you sure you want to cancel this product?",
-                        inputPlaceholder: "Type your reason here...",
-                        inputAttributes: {
-                            "aria-label": "Type your message here"
-                        },
-                        showCancelButton: true,
-                        inputValidator: (value) => {
-                            return new Promise((resolve) => {
-                                if (value) {
-                                    resolve();
-                                } else {
-                                    resolve("Please enter your reason for product cancel");
-                                }
-                            });
-                        }
-                    });
-                    console.log(reason)
-
-                    const productId = button.getAttribute("data-productid")
-                    const itemId = button.getAttribute("data-itemid")
-
-                    const response = await fetch("/cancel-products", {
-                        method: "POST",
-                        headers: {
-                            "content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ orderId, productId, itemId, reason })
-                    })
-                    const jsonData = await response.json();
-                    if (response.ok) {
-                        await Swal.fire({
-                            icon: "success",
-                            title: "Product has been canceled",
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                        window.location.reload()
-                    }
-
-                } catch (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: `Something went wrong!${error}`,
-                    });
-                }
-            }
-
-            async function returnProduct(button) {
-                try {
-                    const orderId = document.querySelector("#orderId").value
-                    const { value: reason } = await Swal.fire({
-                        input: "textarea",
-                        inputLabel: "Are you sure you want to return this product?",
-                        inputPlaceholder: "Type your reason here...",
-                        inputAttributes: {
-                            "aria-label": "Type your message here"
-                        },
-                        showCancelButton: true,
-                        inputValidator: (value) => {
-                            return new Promise((resolve) => {
-                                if (value) {
-                                    resolve();
-                                } else {
-                                    resolve("Please enter your reason for product return");
-                                }
-                            });
-                        }
-                    });
-                    console.log(reason)
-
-                    const productId = button.getAttribute("data-productid")
-                    const itemId = button.getAttribute("data-itemid")
-
-                    console.log(productId, itemId)
-
-                    const response = await fetch("/return-products", {
-                        method: "POST",
-                        headers: {
-                            "content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ orderId, productId, itemId, reason })
-                    })
-                    const jsonData = await response.json();
-                    if (response.ok) {
-                        await Swal.fire({
-                            icon: "success",
-                            title: "Product has been Returned",
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                        window.location.reload()
-                    }
-
-                } catch (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: `Something went wrong!${error}`,
-                    });
-                }
-            }
-
-
-            async function returnOrder(e) {
-                console.log("returnng")
-            }
-
-            async function cancelOrder(e) {
-                try {
-                    console.log(e)
-                    const button = event.target;
-                    const orderId = button.dataset.orderid;
-
-                    const { value: reason } = await Swal.fire({
-                        input: "textarea",
-                        inputLabel: "Are you sure you want to cancel this product?",
-                        inputPlaceholder: "Type your reason here...",
-                        inputAttributes: {
-                            "aria-label": "Type your message here"
-                        },
-                        showCancelButton: true,
-                        inputValidator: (value) => {
-                            return new Promise((resolve) => {
-                                if (value) {
-                                    resolve();
-                                } else {
-                                    resolve("Please enter your reason for product cancel");
-                                }
-                            });
-                        }
-                    });
-
-
-                    const response = await fetch('/cancelOrder', {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            orderId
-                        }),
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        await Swal.fire({
-                            icon: "success",
-                            title: "Order Canceled",
-                            text: data.message,
-                        });
-                        window.location.assign("/orders")
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-
-
-
-            const initialize = () => {
-                createOrder()
-
-                // const actionButton = document.querySelector("#actionBtn")
-                // const action = actionButton.getAttribute('data-action')
-                // console.log(action)
-                // if (action == "cancel") {
-                //     console.log("cancel Order")
-                //     actionButton.addEventListener("click", cancelOrder)
-                // } else {
-                //     console.log("return Order")
-                //     actionButton.addEventListener("click", returnOrder)
-                // }
-
-                // const cancelProductBtns = document.querySelectorAll(".cancel-product")
-                // cancelProductBtns.forEach((button) => {
-                //     button.addEventListener("click", () => (cancelProduct(button)))
-                // })
-            }
-
-            let orderId;
-
-            function pay() {
-                const amount = document.querySelector("#finalTotal").value
-                setupRazorpay(orderId, amount);
-            }
-
-
-            async function createOrder() {
-                try {
-                    const amount = document.querySelector("#finalTotal").value
-                    console.log(amount)
-                    console.log(typeof amount)
-                    const response = await fetch("/create/orderId", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ amount }),
-                        redirect: "follow",
-                    });
-                    const result = await response.json();
-
-                    orderId = result.orderId;
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-
-            function setupRazorpay(orderId, amount) {
-                console.log("setupRazorpay");
-
-                let phoneNumber = document.querySelector("#mobile").value;
-                var options = {
-                    key: "rzp_test_XmE1i9cQzXOgPU",
-                    amount: amount * 100,
-                    currency: "INR",
-                    name: "Acme Corp",
-                    description: "Test Transaction",
-                    image: "https://example.com/your_logo",
-                    order_id: orderId,
-                    handler: async function (response) {
-                        let payment_id = response.razorpay_payment_id
-                        const paymentData = {
-                            payment_id: response.razorpay_payment_id,
-                            order_id: response.razorpay_order_id,
-                            signature: response.razorpay_signature,
-                        };
+                <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                <script>
+                    async function downloadInvoice() {
                         try {
-                            console.log("verifyPayment");
-                            const response = await fetch("/verify-payment", {
+                            const orderId = document.querySelector("#orderId").value
+
+                            const response = await fetch(`/invoice/${orderId}`);
+
+                            // Check if the response is successful
+                            if (response.ok) {
+                                // Create a blob from the response data
+                                const blob = await response.blob();
+
+                                // Create a temporary URL for the blob
+                                const url = window.URL.createObjectURL(blob);
+
+                                // Create an anchor element to trigger the download
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'invoice.pdf';
+                                document.body.appendChild(a);
+                                a.click();
+
+                                // Clean up by revoking the URL object
+                                window.URL.revokeObjectURL(url);
+                            } else {
+                                console.error('Failed to download invoice. Status:', response.status);
+                            }
+                        } catch (error) {
+                            console.error('Error downloading invoice:', error);
+                        }
+                    }
+
+                    async function cancelProduct(button) {
+                        try {
+                            const orderId = document.querySelector("#orderId").value
+                            const { value: reason } = await Swal.fire({
+                                input: "textarea",
+                                inputLabel: "Are you sure you want to cancel this product?",
+                                inputPlaceholder: "Type your reason here...",
+                                inputAttributes: {
+                                    "aria-label": "Type your message here"
+                                },
+                                showCancelButton: true,
+                                inputValidator: (value) => {
+                                    return new Promise((resolve) => {
+                                        if (value) {
+                                            resolve();
+                                        } else {
+                                            resolve("Please enter your reason for product cancel");
+                                        }
+                                    });
+                                }
+                            });
+                            console.log(reason)
+
+                            const productId = button.getAttribute("data-productid")
+                            const itemId = button.getAttribute("data-itemid")
+
+                            const response = await fetch("/cancel-products", {
+                                method: "POST",
+                                headers: {
+                                    "content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ orderId, productId, itemId, reason })
+                            })
+                            const jsonData = await response.json();
+                            if (response.ok) {
+                                await Swal.fire({
+                                    icon: "success",
+                                    title: "Product has been canceled",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                window.location.reload()
+                            }
+
+                        } catch (error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: `Something went wrong!${error}`,
+                            });
+                        }
+                    }
+
+                    async function returnProduct(button) {
+                        try {
+                            const orderId = document.querySelector("#orderId").value
+                            const { value: reason } = await Swal.fire({
+                                input: "textarea",
+                                inputLabel: "Are you sure you want to return this product?",
+                                inputPlaceholder: "Type your reason here...",
+                                inputAttributes: {
+                                    "aria-label": "Type your message here"
+                                },
+                                showCancelButton: true,
+                                inputValidator: (value) => {
+                                    return new Promise((resolve) => {
+                                        if (value) {
+                                            resolve();
+                                        } else {
+                                            resolve("Please enter your reason for product return");
+                                        }
+                                    });
+                                }
+                            });
+                            console.log(reason)
+
+                            const productId = button.getAttribute("data-productid")
+                            const itemId = button.getAttribute("data-itemid")
+
+                            console.log(productId, itemId)
+
+                            const response = await fetch("/return-products", {
+                                method: "POST",
+                                headers: {
+                                    "content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ orderId, productId, itemId, reason })
+                            })
+                            const jsonData = await response.json();
+                            if (response.ok) {
+                                await Swal.fire({
+                                    icon: "success",
+                                    title: "Product has been Returned",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                window.location.reload()
+                            }
+
+                        } catch (error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: `Something went wrong!${error}`,
+                            });
+                        }
+                    }
+
+
+                    async function returnOrder(e) {
+                        console.log("returnng")
+                    }
+
+                    async function cancelOrder(e) {
+                        try {
+                            console.log(e)
+                            const button = event.target;
+                            const orderId = button.dataset.orderid;
+
+                            const { value: reason } = await Swal.fire({
+                                input: "textarea",
+                                inputLabel: "Are you sure you want to cancel this product?",
+                                inputPlaceholder: "Type your reason here...",
+                                inputAttributes: {
+                                    "aria-label": "Type your message here"
+                                },
+                                showCancelButton: true,
+                                inputValidator: (value) => {
+                                    return new Promise((resolve) => {
+                                        if (value) {
+                                            resolve();
+                                        } else {
+                                            resolve("Please enter your reason for product cancel");
+                                        }
+                                    });
+                                }
+                            });
+
+
+                            const response = await fetch('/cancelOrder', {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    orderId
+                                }),
+                            });
+                            const data = await response.json();
+                            if (response.ok) {
+                                await Swal.fire({
+                                    icon: "success",
+                                    title: "Order Canceled",
+                                    text: data.message,
+                                });
+                                window.location.assign("/orders")
+                            }
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    }
+
+
+
+                    const initialize = () => {
+                        createOrder()
+
+                        // const actionButton = document.querySelector("#actionBtn")
+                        // const action = actionButton.getAttribute('data-action')
+                        // console.log(action)
+                        // if (action == "cancel") {
+                        //     console.log("cancel Order")
+                        //     actionButton.addEventListener("click", cancelOrder)
+                        // } else {
+                        //     console.log("return Order")
+                        //     actionButton.addEventListener("click", returnOrder)
+                        // }
+
+                        // const cancelProductBtns = document.querySelectorAll(".cancel-product")
+                        // cancelProductBtns.forEach((button) => {
+                        //     button.addEventListener("click", () => (cancelProduct(button)))
+                        // })
+                    }
+
+                    let orderId;
+
+                    function pay() {
+                        const amount = document.querySelector("#finalTotal").value
+                        setupRazorpay(orderId, amount);
+                    }
+
+
+                    async function createOrder() {
+                        try {
+                            const amount = document.querySelector("#finalTotal").value
+                            console.log(amount)
+                            console.log(typeof amount)
+                            const response = await fetch("/create/orderId", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
                                 },
-                                body: JSON.stringify(paymentData),
+                                body: JSON.stringify({ amount }),
+                                redirect: "follow",
                             });
-                            const data = await response.json;
-                            console.log(data)
-                            if (response.ok) {
-                                console.log("placerder for razor pay")
-                                successPayement(payment_id)
-                            }
+                            const result = await response.json();
+
+                            orderId = result.orderId;
                         } catch (error) {
                             console.log(error);
                         }
-                    },
-                    "prefill": {
-                        "contact": phoneNumber
-                    },
-                    theme: {
-                        color: "#3399cc",
-                    },
-                };
-                var rzp1 = new Razorpay(options);
-
-                rzp1.on("payment.failed", function (response) {
-                    alert(response.error.description);
-                });
-                rzp1.open(); // Open the Razorpay Checkout form immediately after creating the instance
-            }
-
-            async function successPayement(paymentId) {
-                try {
-                    let id = document.querySelector("#orderId").value
-                    const response = await fetch("/pay", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            id, paymentId
-                        }),
-                    });
-                    const data = await response.json()
-                    if (!response.ok) {
-                        // Handle error response
-                        console.error("Error placing order:", data);
-                        // Optionally, display an error message to the user
-                        await Swal.fire({
-                            icon: "error",
-                            title: "Error placing order",
-                            text: data.message || "An error occurred.",
-                            showConfirmButton: true,
-                        });
-                        return
                     }
-                    await Swal.fire({
-                        icon: "success",
-                        title: "Payment successful",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                    window.location.reload();
-                } catch (error) {
-                    await Swal.fire({
-                        icon: "error",
-                        title: "Error placing order",
-                        text: error.message || "An error occurred while placing your order.",
-                        showConfirmButton: true,
-                    });
-                }
-            }
 
-            document.addEventListener("DOMContentLoaded", () => initialize());
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    function setupRazorpay(orderId, amount) {
+                        console.log("setupRazorpay");
 
-        <!-- jQuery (Necessary for All JavaScript Plugins) -->
-        <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-        <!-- Popper js -->
-        <script src="/js/popper.min.js"></script>
-        <!-- Bootstrap js -->
-        <script src="/js/bootstrap.min.js"></script>
-        <!-- Plugins js -->
-        <script src="/js/plugins.js"></script>
-        <!-- Classy Nav js -->
-        <script src="/js/classy-nav.min.js"></script>
-        <!-- Active js -->
-        <script src="/js/active.js"></script>
+                        let phoneNumber = document.querySelector("#mobile").value;
+                        var options = {
+                            key: "rzp_test_XmE1i9cQzXOgPU",
+                            amount: amount * 100,
+                            currency: "INR",
+                            name: "Acme Corp",
+                            description: "Test Transaction",
+                            image: "https://example.com/your_logo",
+                            order_id: orderId,
+                            handler: async function (response) {
+                                let payment_id = response.razorpay_payment_id
+                                const paymentData = {
+                                    payment_id: response.razorpay_payment_id,
+                                    order_id: response.razorpay_order_id,
+                                    signature: response.razorpay_signature,
+                                };
+                                try {
+                                    console.log("verifyPayment");
+                                    const response = await fetch("/verify-payment", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(paymentData),
+                                    });
+                                    const data = await response.json;
+                                    console.log(data)
+                                    if (response.ok) {
+                                        console.log("placerder for razor pay")
+                                        successPayement(payment_id)
+                                    }
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            },
+                            "prefill": {
+                                "contact": phoneNumber
+                            },
+                            theme: {
+                                color: "#3399cc",
+                            },
+                        };
+                        var rzp1 = new Razorpay(options);
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        rzp1.on("payment.failed", function (response) {
+                            alert(response.error.description);
+                        });
+                        rzp1.open(); // Open the Razorpay Checkout form immediately after creating the instance
+                    }
+
+                    async function successPayement(paymentId) {
+                        try {
+                            let id = document.querySelector("#orderId").value
+                            const response = await fetch("/pay", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    id, paymentId
+                                }),
+                            });
+                            const data = await response.json()
+                            if (!response.ok) {
+                                // Handle error response
+                                console.error("Error placing order:", data);
+                                // Optionally, display an error message to the user
+                                await Swal.fire({
+                                    icon: "error",
+                                    title: "Error placing order",
+                                    text: data.message || "An error occurred.",
+                                    showConfirmButton: true,
+                                });
+                                return
+                            }
+                            await Swal.fire({
+                                icon: "success",
+                                title: "Payment successful",
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                            window.location.reload();
+                        } catch (error) {
+                            await Swal.fire({
+                                icon: "error",
+                                title: "Error placing order",
+                                text: error.message || "An error occurred while placing your order.",
+                                showConfirmButton: true,
+                            });
+                        }
+                    }
+
+                    document.addEventListener("DOMContentLoaded", () => initialize());
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                <!-- jQuery (Necessary for All JavaScript Plugins) -->
+                <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+                <!-- Popper js -->
+                <script src="/js/popper.min.js"></script>
+                <!-- Bootstrap js -->
+                <script src="/js/bootstrap.min.js"></script>
+                <!-- Plugins js -->
+                <script src="/js/plugins.js"></script>
+                <!-- Classy Nav js -->
+                <script src="/js/classy-nav.min.js"></script>
+                <!-- Active js -->
+                <script src="/js/active.js"></script>
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
