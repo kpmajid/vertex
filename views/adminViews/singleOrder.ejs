@@ -93,11 +93,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/transaction">
-                            <span class="align-middle">Transaction</span>
-                        </a>
-                    </li>
+
 
                     <li class="sidebar-header">User Mangement</li>
 
@@ -150,7 +146,7 @@
                         </h6>
                         <h6>Ordered: <%= order.createdAt.toLocaleDateString() %>
                         </h6>
-                        <h6>Total: <%= order.finalTotal %>
+                        <h6>Total: <%= order.originalTotal-(order.coupon?.discountAmount||0) %>
                         </h6>
                         <% if (order.orderStatus!=="Delivered" && order.orderStatus!=="Cancelled" &&
                             order.orderStatus!=="Returned" ) { %>
@@ -159,9 +155,6 @@
                                 data-orderId="<%= order._id %>">Update</button>
 
                             <% } %>
-
-
-
 
                                 <hr>
                                 <h6 class="card-title  mb-0">Delivery Address:</h6>
@@ -250,7 +243,7 @@
                                                     <td colspan="4"></td>
                                                     <td>Total</td>
                                                     <td>
-                                                        ₹<%= order.finalTotal %>
+                                                        ₹<%= order.originalTotal-(order.coupon?.discountAmount||0) %>
                                                     </td>
                                                     <td></td>
                                                 </tr>

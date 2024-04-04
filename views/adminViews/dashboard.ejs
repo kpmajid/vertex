@@ -101,11 +101,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/transaction">
-                            <span class="align-middle">Transaction</span>
-                        </a>
-                    </li>
+
 
                     <li class="sidebar-header">User Mangement</li>
 
@@ -471,12 +467,12 @@
                 }
 
 
-                let stepSize=2500
+                let stepSize = 2500
 
-                if(period=="Weekly"){
-                    stepSize=4000
-                }else if(period=="Monthly"){
-                    stepSize=7500
+                if (period == "Weekly") {
+                    stepSize = 4000
+                } else if (period == "Monthly") {
+                    stepSize = 7500
                 }
 
                 var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
@@ -523,7 +519,7 @@
                             }],
                             yAxes: [{
                                 ticks: {
-                                    stepSize:stepSize
+                                    stepSize: stepSize
                                 },
                                 display: true,
                                 borderDash: [3, 3],

@@ -542,6 +542,12 @@ const returnProducts = async (req, res) => {
     if (refund > orderDoc.finalTotal) {
       refund = orderDoc.finalTotal;
     }
+    if (orderDoc.coupon.code) {
+      const coupon = await Coupons.findById(orderDoc.coupon.couponId);
+      if (finalTotal < coupon.minimumAmount) {
+        refund -= orderDoc.coupon.discountAmount;
+      }
+    }
     finalTotal -= refund;
 
     const walletDoc = await Wallet.findOne({ user: id });

@@ -61,6 +61,12 @@
             </a>
           </li>
 
+          <li class="sidebar-item ">
+            <a class="sidebar-link" href="/admin/sales">
+              <span class="align-middle">Sales</span>
+            </a>
+          </li>
+
           <li class="sidebar-item">
             <a class="sidebar-link" href="/admin/products">
               <span class="align-middle">Products</span>
@@ -98,11 +104,7 @@
             </a>
           </li>
 
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/admin/transaction">
-              <span class="align-middle">Transaction</span>
-            </a>
-          </li>
+
 
           <li class="sidebar-header">User Mangement</li>
 
@@ -188,7 +190,7 @@
                               <%= order.paymentMethod %>
                             </td>
                             <td>
-                              <%= order.finalTotal %>
+                              <%= order.originalTotal-(order.coupon?.discountAmount||0) %>
                             </td>
                           </tr>
                           <% }) %>
