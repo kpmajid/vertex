@@ -189,6 +189,7 @@ const loadEditOffer = async (req, res) => {
     console.log(offer);
     res.render("adminViews/edit-offer", { offer });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -251,6 +252,7 @@ const editOffer = async (req, res) => {
 
     res.json({ success: true, message: "Offer Updated" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

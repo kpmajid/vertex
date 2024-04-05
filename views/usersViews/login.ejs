@@ -20,48 +20,51 @@
 
 <body>
     <!-- ##### Header Area Start ##### -->
-  <%- include("./partials/navbar") %> 
-    
-    <!-- ##### Header Area End ##### -->
+    <%- include("./partials/navbar") %>
 
-    <!-- ##### Welcome Area Start ##### -->
-    <section class="p-5 bg-img background-overlay">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12 p-0">
-                    <div class="p-0 col-sm-12 col-md-8 col-lg-5 mx-auto d-table h-100">
-                        <div class="d-table-cell align-middle">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="m-sm-4">
-                                        <div class="text-center my-4">
-                                            <h1 class="h2">Welcome back</h1>
-                                            <p class="">Sign in to your account to continue</p>
+        <!-- ##### Header Area End ##### -->
+
+        <!-- ##### Welcome Area Start ##### -->
+        <section class="p-5 bg-img background-overlay">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-12 p-0">
+                        <div class="p-0 col-sm-12 col-md-8 col-lg-5 mx-auto d-table h-100">
+                            <div class="d-table-cell align-middle">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="m-sm-4">
+                                            <div class="text-center my-4">
+                                                <h1 class="h2">Welcome back</h1>
+                                                <p class="">Sign in to your account to continue</p>
+                                            </div>
+                                            <form autocomplete="off">
+                                                <div class="mb-3">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input autocomplete="false" id="email" class="form-control"
+                                                        type="email" name="email" placeholder="Enter your email" />
+
+                                                    <div id="emailValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="password" class="form-label">Password</label>
+                                                    <input autocomplete="false" id="password"
+                                                        class="mb-1    form-control" type="password" name="password"
+                                                        placeholder="Enter your password" />
+                                                    <div id="passwordValidationMessage" class="text-danger mb-2"></div>
+                                                    <a href="/forgot-password" class=" sign-up-anchor">Forgot
+                                                        Password?</a>
+                                                </div>
+                                                <div class="text-center mb-2">
+                                                    <button type="button" id="loginBtn" class="btn btn-primary">
+                                                        Sign in
+                                                    </button>
+                                                </div>
+                                                <p>Don't have an account? <a class="sign-up-anchor"
+                                                        href="/register">Sign
+                                                        Up</a></p>
+                                            </form>
                                         </div>
-                                        <form autocomplete="off">
-                                            <div class="mb-3">
-                                                <label for="email" class="form-label">Email</label>
-                                                <input autocomplete="false" id="email" class="form-control" type="email"
-                                                    name="email" placeholder="Enter your email" />
-
-                                                <div id="emailValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="password" class="form-label">Password</label>
-                                                <input autocomplete="false" id="password" class="mb-1    form-control"
-                                                    type="password" name="password" placeholder="Enter your password" />
-                                                <div id="passwordValidationMessage" class="text-danger mb-2"></div>
-                                                <a href="/forgot-password" class=" sign-up-anchor">Forgot
-                                                    Password?</a>
-                                            </div>
-                                            <div class="text-center mb-2">
-                                                <button type="button" id="loginBtn" class="btn btn-primary">
-                                                    Sign in
-                                                </button>
-                                            </div>
-                                            <p>Don't have an account? <a class="sign-up-anchor" href="/register">Sign
-                                                    Up</a></p>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -69,91 +72,91 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- ##### Welcome Area End ##### -->
+        </section>
+        <!-- ##### Welcome Area End ##### -->
 
-    <!-- ##### Footer Area Start ##### -->
-    <%- include("./partials/user-footer") %>
-        <!-- ##### Footer Area End ##### -->
+        <!-- ##### Footer Area Start ##### -->
+        <%- include("./partials/user-footer") %>
+            <!-- ##### Footer Area End ##### -->
 
-        <!-- jQuery (Necessary for All JavaScript Plugins) -->
-        <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-        <!-- Popper js -->
-        <script src="/js/popper.min.js"></script>
-        <!-- Bootstrap js -->
-        <script src="/js/bootstrap.min.js"></script>
-        <!-- Plugins js -->
-        <script src="/js/plugins.js"></script>
-        <!-- Classy Nav js -->
-        <script src="/js/classy-nav.min.js"></script>
-        <!-- Active js -->
-        <script src="/js/active.js"></script>
+            <!-- jQuery (Necessary for All JavaScript Plugins) -->
+            <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+            <!-- Popper js -->
+            <script src="/js/popper.min.js"></script>
+            <!-- Bootstrap js -->
+            <script src="/js/bootstrap.min.js"></script>
+            <!-- Plugins js -->
+            <script src="/js/plugins.js"></script>
+            <!-- Classy Nav js -->
+            <script src="/js/classy-nav.min.js"></script>
+            <!-- Active js -->
+            <script src="/js/active.js"></script>
 
-        <script>
-            const url = "/login";
-            const btn = document.getElementById("loginBtn");
-            const email = document.getElementById("email");
-            const password = document.getElementById("password");
-
-
-            const emailValidationMessage = document.getElementById("emailValidationMessage");
-            const passwordValidationMessage = document.getElementById("passwordValidationMessage");
-
-            function validateEmail(email) {
-                let validRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const matches = email.match(validRegex)
-                return matches !== null && matches[0] === email
-            }
-
-            btn.addEventListener("click", async () => {
-                event.preventDefault();
+            <script>
+                const url = "/login";
+                const btn = document.getElementById("loginBtn");
+                const email = document.getElementById("email");
+                const password = document.getElementById("password");
 
 
-                emailValidationMessage.textContent = "";
-                passwordValidationMessage.textContent = "";
+                const emailValidationMessage = document.getElementById("emailValidationMessage");
+                const passwordValidationMessage = document.getElementById("passwordValidationMessage");
 
-                if (email.value.trim() === "") {
-                    emailValidationMessage.textContent = "Email is required";
-                    return;
-                } else if (!validateEmail(email.value)) {
-                    console.log("not epty")
-                    emailValidationMessage.textContent = "invalid Email";
-                    return
+                function validateEmail(email) {
+                    let validRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const matches = email.match(validRegex)
+                    return matches !== null && matches[0] === email
                 }
 
-                if (password.value.trim() === "") {
-                    passwordValidationMessage.textContent = "Password is required";
-                    return;
-                }
+                btn.addEventListener("click", async () => {
+                    event.preventDefault();
 
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            email: email.value,
-                            password: password.value,
-                        }),
-                    });
 
-                    console.log(response)
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    } else {
-                        const jsonData = await response.json();
-                        if (jsonData.message == "Invalid password") {
-                            return passwordValidationMessage.textContent = jsonData.message;
-                        }
-                        return emailValidationMessage.textContent = jsonData.message;
+                    emailValidationMessage.textContent = "";
+                    passwordValidationMessage.textContent = "";
+
+                    if (email.value.trim() === "") {
+                        emailValidationMessage.textContent = "Email is required";
+                        return;
+                    } else if (!validateEmail(email.value)) {
+                        console.log("not epty")
+                        emailValidationMessage.textContent = "invalid Email";
+                        return
                     }
-                } catch (error) {
-                    console.log(error)
-                }
-            });
-        </script>
+
+                    if (password.value.trim() === "") {
+                        passwordValidationMessage.textContent = "Password is required";
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                email: email.value,
+                                password: password.value,
+                            }),
+                        });
+
+
+
+                        console.log(response)
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        } else {
+                            if (jsonData.message == "Invalid password") {
+                                return passwordValidationMessage.textContent = jsonData.message;
+                            }
+                            return emailValidationMessage.textContent = jsonData.message;
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                });
+            </script>
 </body>
 
 </html>

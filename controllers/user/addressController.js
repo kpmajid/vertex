@@ -10,6 +10,7 @@ const loadAddress = async (req, res) => {
     res.render("usersViews/address", { addresses });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -39,6 +40,7 @@ const removeAddress = async (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -70,6 +72,7 @@ const addAddress = async (req, res) => {
     res.status(200).json({ message: "address added" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -89,6 +92,7 @@ const loadEditAddress = async (req, res) => {
     res.render("usersViews/edit-address", { address });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -125,6 +129,7 @@ const editAddress = async (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

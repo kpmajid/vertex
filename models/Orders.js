@@ -100,6 +100,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  deliveryCharge: {
+    type: Number,
+    required: true,
+  },
   coupon: {
     code: { type: String },
     couponId: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon" },

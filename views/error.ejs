@@ -18,19 +18,58 @@
 </head>
 
 <body>
+    <%- include("./partials/navbar") %>
 
-    <div id="notfound">
-        <div class="notfound-bg"></div>
-        <div class="notfound">
-            <div class="notfound-404">
-                <h1>404</h1>
-            </div>
-            <h2>we are sorry, we are facing some issues in server</h2>
-            <p>Error: <%= error %>
-            </p>
-            <a href="/" class="home-btn">Go Home</a>
-        </div>
-    </div>
+        <%- include("./partials/user-footer") %>
+
+            <body>
+                <%- include("./usersViews/partials/navbar") %>
+
+                    <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg)">
+                        <div class="container h-100">
+                            <div class="row h-100 align-items-center">
+                                <div class="col-12">
+                                    <div class="page-title text-center">
+                                        <h2>Server issues</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ##### Breadcumb Area End ##### -->
+
+
+                    <!-- ##### Shop Grid Area Start ##### -->
+                    <section class="shop_grid_area section-padding-80" style="text-align: center;">
+                        <div class="container">
+                            <div id="notfound">
+                                <div class="notfound-bg"></div>
+                                <div class="notfound">
+                                    <div class="notfound-404">
+                                        <h1>404</h1>
+                                    </div>
+                                    <h2>we are sorry, we are facing some issues in server</h2>
+                                    <p>Error: <%= error %>
+                                    </p>
+                                    <a href="/" class="home-btn">Go Home</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <%- include("./usersViews/partials/user-footer") %>
+                        <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+                        <!-- Popper js -->
+                        <script src="/js/popper.min.js"></script>
+                        <!-- Bootstrap js -->
+                        <script src="/js/bootstrap.min.js"></script>
+                        <!-- Plugins js -->
+                        <script src="/js/plugins.js"></script>
+                        <!-- Classy Nav js -->
+                        <script src="/js/classy-nav.min.js"></script>
+                        <!-- Active js -->
+                        <script src="/js/active.js"></script>
+            </body>
 
 </body>
 

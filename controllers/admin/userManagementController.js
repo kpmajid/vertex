@@ -19,6 +19,7 @@ const loadUsers = async (req, res) => {
     res.render("adminViews/users", { users, status });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -34,6 +35,7 @@ const loadSingleUser = async (req, res) => {
     res.render("adminViews/singleUser", { user, orders });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

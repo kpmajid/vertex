@@ -173,6 +173,13 @@ const createOrder = async (req, res) => {
 
     let finalTotal = originalTotal;
 
+    let deliveryCharge = 0;
+    if (originalTotal != 0 && originalTotal <= 1000) {
+      deliveryCharge = 50;
+    } else if (subtotal > 1000) {
+      deliveryCharge = 70;
+    }
+
     const latestOrder = await Orders.findOne().sort({ order_number: -1 });
     let order_number = latestOrder?.order_number ?? 10000;
 
@@ -244,6 +251,7 @@ const createOrder = async (req, res) => {
       paymentStatus,
       originalTotal,
       finalTotal,
+      deliveryCharge,
       order_number: order_number + 1,
       coupon: couponDetails,
     };

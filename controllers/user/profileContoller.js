@@ -15,6 +15,7 @@ const loadProfile = async (req, res) => {
     res.render("usersViews/profile", { user,coupons });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -34,6 +35,7 @@ const editProfile = async (req, res) => {
     res.status(200).json({ message: "profile updated successfully" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -47,6 +49,7 @@ const loadWallet = async (req, res) => {
     res.render("usersViews/wallet", { wallet });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

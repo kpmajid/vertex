@@ -14,11 +14,11 @@ const bcrypt = require("bcrypt");
 const getCategories = async (req, res) => {
   try {
     const categories = await Category.find({ isParentCategory: true });
-    console.log(categories);
-    console.log("categories");
+
     res.status(200).json({ categories });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -30,6 +30,7 @@ const loadOrders = async (req, res) => {
     res.render("adminViews/orders", { orders });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -46,9 +47,9 @@ const loadSingleOrder = async (req, res) => {
     console.log(order);
 
     res.render("adminViews/singleOrder", { order });
-
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -72,6 +73,7 @@ const updateOrderStatus = async (req, res) => {
     res.status(200).json({ message });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -86,6 +88,7 @@ const getSubCategory = async (req, res) => {
     res.json({ subCategories });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -95,6 +98,7 @@ const loadDiscount = async (req, res) => {
     res.render("adminViews/discount", { discounts });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -104,6 +108,7 @@ const loadAddDiscount = (req, res) => {
     res.render("adminViews/add-discount");
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -114,6 +119,7 @@ const getProducts = async (req, res) => {
     res.json(products);
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -157,6 +163,7 @@ const getOffers = async (req, res) => {
     res.status(200).json({ offers });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

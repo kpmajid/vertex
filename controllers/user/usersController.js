@@ -10,7 +10,7 @@ const { ObjectId } = require("mongodb");
 
 const loadHome = (req, res) => {
   const user = req.session?.user ?? null;
-  res.render("usersViews/index", { user }); 
+  res.render("usersViews/index", { user });
 };
 
 const loadShop = async (req, res) => {
@@ -26,9 +26,9 @@ const loadShop = async (req, res) => {
 
     const minPrice = req.query?.min || "";
     const maxPrice = req.query?.max || "";
-
     const sort = req.query?.sort || "";
 
+    let currentPage = req.query.page || 1;
     let query = [
       {
         $lookup: {
@@ -125,11 +125,11 @@ const loadShop = async (req, res) => {
     console.log(categories);
     console.log(products);
     console.log(products.length);
-    let currentPage = 2;
 
     res.render("usersViews/shop", { products, categories, user, currentPage });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -273,6 +273,7 @@ const loadProduct = async (req, res) => {
     res.render("usersViews/product", { product, uniqueColors, user });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -298,69 +299,9 @@ const fetchVariants = async (req, res) => {
     res.json({ variants });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
-
-// const loadCart = async (req, res) => {
-//   try {
-//     const { id } = req.session.user;
-//     const cartItems = await Cart.aggregate([
-//       {
-//         $match: {
-//           userId: new ObjectId("65d25b7ffea88e9a743cc4f2"),
-//         },
-//       },
-//       {
-//         $unwind: {
-//           path: "$products",
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "products",
-//           localField: "products.productId",
-//           foreignField: "_id",
-//           as: "products.details",
-//         },
-//       },
-//       {
-//         $unwind: {
-//           path: "$products.details",
-//         },
-//       },
-//       {
-//         $project: {
-//           name: "$products.details.name",
-//           color: "$products.color",
-//           size: "$products.size",
-//           quantity: "$products.quantity",
-//           image: "$products.details.images",
-//           discountedPrice: "$products.details.discountedPrice",
-//           originalPrice: "$products.details.originalPrice",
-//         },
-//       },
-//     ]);
-//     console.log(cartItems);
-//     res.send(cartItems);
-//   } catch (error) {
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// };
-
-// const loadCart = async (req, res) => {
-//   try {
-//     const { id } = req.session.user;
-//     const cart = await Cart.findOne({ userId: id }).populate(
-//       "products.productId",
-//       "-category -description -variants -status"
-//     );
-//     // console.log(cart);
-//     const products = cart?.products || null;
-//     res.render("usersViews/cart", { products });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 const loadCheckOut = async (req, res) => {
   try {
@@ -386,14 +327,13 @@ const loadCheckOut = async (req, res) => {
       couponCode = couponCode.toUpperCase();
       couponDoc = await Coupons.findOne({ couponCode: couponCode });
     }
-    // console.log("products loadCheclout");
-    // console.log(products);
 
     console.log("addresses in load");
     console.log(addresses);
     res.render("usersViews/checkout", { addresses, products, couponDoc });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

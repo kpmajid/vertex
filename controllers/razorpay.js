@@ -42,18 +42,14 @@ const verifyPayment = (req, res) => {
 
   if (generated_signature !== signature) {
     console.log("true?");
-    res
-      .status(400)
-      .json({
-        success: false,
-        message: "Payment signature verification failed",
-      });
+    res.status(400).json({
+      success: false,
+      message: "Payment signature verification failed",
+    });
     return;
   }
 
-
-
-  res.status(200).json({ message: "payment successful", });
+  res.status(200).json({ message: "payment successful" });
 };
 
 module.exports = { razorPayOrder, verifyPayment };

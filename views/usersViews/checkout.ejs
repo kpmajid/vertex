@@ -93,607 +93,636 @@
 
 <body>
     <!-- ##### Header Area Start ##### -->
-    <%- include("./partials/privateNavbar") %> 
+    <%- include("./partials/privateNavbar") %>
 
-    <!-- ##### Header Area End ##### -->
+        <!-- ##### Header Area End ##### -->
 
-    <!-- ##### Breadcumb Area Start ##### -->
-    <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg)">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12">
-                    <div class="page-title text-center">
-                        <h2>Checkout</h2>
+        <!-- ##### Breadcumb Area Start ##### -->
+        <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg)">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-12">
+                        <div class="page-title text-center">
+                            <h2>Checkout</h2>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- ##### Breadcumb Area End ##### -->
+        <!-- ##### Breadcumb Area End ##### -->
 
-    <!-- ##### Checkout Area Start ##### -->
-    <div class="checkout_area section-padding-80">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-6 col-lg-7">
-                    <div class="cart-page-heading">
-                        <h5>Billing Address</h5>
-                    </div>
-                    <div id="addressOptions" class="row flex radio-box">
-                        <% addresses.forEach(address=> { %>
-                            <input type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>"
-                                data-phone="<%= address.mobile %>" />
-                            <label for="<%= address._id %>" class="col-lg-6 radio-label">
-                                <p>
-                                    <%= address.fullname %><br />
-                                        <%= address.mobile %><br />
-                                            <%= address.address %><br />
-                                                <%= address.pincode %><br />
-                                                    <%= address.state %>, <%= address.city %>, <%= address.street %>,
-                                                                <br />
-                                </p>
-                            </label>
-                            <% }) %>
-                    </div>
-                    <hr />
-                    <div id="accordion" role="tablist" class="mb-4">
-                        <div class="card">
-                            <div class="card-header" role="tab" id="headingOne">
-                                <h6 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="false"
-                                        aria-controls="collapseOne">
-                                        <div class="cart-page-heading">
-                                            <h5>Add Address</h5>
-                                        </div>
-                                    </a>
-                                </h6>
-                            </div>
+        <!-- ##### Checkout Area Start ##### -->
+        <div class="checkout_area section-padding-80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-7">
+                        <div class="cart-page-heading">
+                            <h5>Billing Address</h5>
+                        </div>
+                        <div id="addressOptions" class="row flex radio-box">
+                            <% addresses.forEach(address=> { %>
+                                <input type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>"
+                                    data-phone="<%= address.mobile %>" />
+                                <label for="<%= address._id %>" class="col-lg-6 radio-label">
+                                    <p>
+                                        <%= address.fullname %><br />
+                                            <%= address.mobile %><br />
+                                                <%= address.address %><br />
+                                                    <%= address.pincode %><br />
+                                                        <%= address.state %>, <%= address.city %>, <%= address.street %>
+                                                                    ,
+                                                                    <br />
+                                    </p>
+                                </label>
+                                <% }) %>
+                        </div>
+                        <hr />
+                        <div id="accordion" role="tablist" class="mb-4">
+                            <div class="card">
+                                <div class="card-header" role="tab" id="headingOne">
+                                    <h6 class="mb-0">
+                                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="false"
+                                            aria-controls="collapseOne">
+                                            <div class="cart-page-heading">
+                                                <h5>Add Address</h5>
+                                            </div>
+                                        </a>
+                                    </h6>
+                                </div>
 
-                            <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne"
-                                data-parent="#accordion">
-                                <div class="card-body">
-                                    <form action="#" method="post">
-                                        <div class="row">
-                                            <div class="col-md-12 mb-3">
-                                                <label for="full_name">First Name<span>*</span></label>
-                                                <input type="text" class="form-control" id="full_name" value=""
-                                                    required />
-                                                <div id="fullNameValidationMessage" class="text-danger mb-2"></div>
+                                <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne"
+                                    data-parent="#accordion">
+                                    <div class="card-body">
+                                        <form action="#" method="post">
+                                            <div class="row">
+                                                <div class="col-md-12 mb-3">
+                                                    <label for="full_name">First Name<span>*</span></label>
+                                                    <input type="text" class="form-control" id="full_name" value=""
+                                                        required />
+                                                    <div id="fullNameValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="mobile">Mobile No <span>*</span></label>
+                                                    <input type="number" class="form-control" id="mobile" Mobile="0"
+                                                        value="" />
+                                                    <div id="mobileValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="street_address">Address <span>*</span></label>
+                                                    <input type="text" class="form-control" id="street_address"
+                                                        value="" />
+                                                    <div id="streetAddressValidationMessage" class="text-danger mb-2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="pincode">Pincode <span>*</span></label>
+                                                    <input type="text" class="form-control" id="pincode" value="" />
+                                                    <div id="pincodeValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="state">State <span>*</span></label>
+                                                    <input type="text" class="form-control" id="state" name="state" />
+                                                    <div id="stateValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="town_city">Town/City <span>*</span></label>
+                                                    <input type="text" class="form-control" id="town_city" value="" />
+                                                    <div id="townCityValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="street">Street <span>*</span></label>
+                                                    <input type="text" class="form-control" id="street" name="street" />
+                                                    <div id="streetValidationMessage" class="text-danger mb-2"></div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="button" class="btn essence-btn" id="saveBtn">
+                                                        Add
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="mobile">Mobile No <span>*</span></label>
-                                                <input type="number" class="form-control" id="mobile" Mobile="0"
-                                                    value="" />
-                                                <div id="mobileValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="street_address">Address <span>*</span></label>
-                                                <input type="text" class="form-control" id="street_address" value="" />
-                                                <div id="streetAddressValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="pincode">Pincode <span>*</span></label>
-                                                <input type="text" class="form-control" id="pincode" value="" />
-                                                <div id="pincodeValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="state">State <span>*</span></label>
-                                                <input type="text" class="form-control" id="state" name="state" />
-                                                <div id="stateValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="town_city">Town/City <span>*</span></label>
-                                                <input type="text" class="form-control" id="town_city" value="" />
-                                                <div id="townCityValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="street">Street <span>*</span></label>
-                                                <input type="text" class="form-control" id="street" name="street" />
-                                                <div id="streetValidationMessage" class="text-danger mb-2"></div>
-                                            </div>
-                                            <div class="col-12">
-                                                <button type="button" class="btn essence-btn" id="saveBtn">
-                                                    Add
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
-                    <div class="order-details-confirmation">
-                        <div class="cart-page-heading">
-                            <h5>Your Order</h5>
-                        </div>
+                    <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                        <div class="order-details-confirmation">
+                            <div class="cart-page-heading">
+                                <h5>Your Order</h5>
+                            </div>
 
-                        <ul class="order-details-form mb-4" id="cart-summary">
-                            <li class="summary-header">
-                                <span class="product-name-head">Product</span>
-                                <span>Qty</span>
-                                <span>Price</span>
-                            </li>
-                            <% if (products.length>0) { %>
-                                <% products.forEach(product=> { %>
-                                    <li class="summary-item" id="<%=product._id%>">
-                                        <span class="product-name">
-                                            <%= product.productId.name %>
-                                        </span>
-                                        <span class="product-quantity">
-                                            <%= product.quantity %>
-                                        </span>
-                                        <span class="product-originalPrice"> ₹ <%=product.quantity *
-                                                product.productId.originalPrice%>
-                                        </span>
-                                    </li>
-                                    <% }) %>
-                                        <% } %>
+                            <ul class="order-details-form mb-4" id="cart-summary">
+                                <li class="summary-header">
+                                    <span class="product-name-head">Product</span>
+                                    <span>Qty</span>
+                                    <span>Price</span>
+                                </li>
+                                <% if (products.length>0) { %>
+                                    <% products.forEach(product=> { %>
+                                        <li class="summary-item" id="<%=product._id%>">
+                                            <span class="product-name">
+                                                <%= product.productId.name %>
+                                            </span>
+                                            <span class="product-quantity">
+                                                <%= product.quantity %>
+                                            </span>
+                                            <span class="product-originalPrice"> ₹ <%=product.quantity *
+                                                    product.productId.originalPrice%>
+                                            </span>
+                                        </li>
+                                        <% }) %>
+                                            <% } %>
 
-                                            <hr class="summary-divider" />
+                                                <hr class="summary-divider" />
 
-                                            <li><span>SUBTOTAL</span> <span id="subtotal">₹0.00</span></li>
-                                            <li><span>Discounts &amp; Offers:</span></li>
-                                            <% products.forEach(product=> { %>
-                                                <% if (product.productId.discount) { %>
-                                                    <li id="<%=product._id%>">
-                                                        <span class="product-name">
-                                                            -<%= product.productId.name %> (x<span class="quantity">
-                                                                    <%= product.quantity %>):
-                                                                </span>
-                                                        </span>
-                                                        <span class="product-discount">-₹
-                                                            <%= product.quantity*product.productId.discount %>
-                                                        </span>
-                                                    </li>
-                                                    <% } %>
-                                                        <% }) %>
+                                                <li><span>SUBTOTAL</span> <span id="subtotal">₹0.00</span></li>
+                                                <li><span>Delivery Charge</span> <span id="delivery">₹0.00</span></li>
+                                                <li><span>Discounts &amp; Offers:</span></li>
+                                                <% products.forEach(product=> { %>
+                                                    <% if (product.productId.discount) { %>
+                                                        <li id="<%=product._id%>">
+                                                            <span class="product-name">
+                                                                -<%= product.productId.name %> (x<span class="quantity">
+                                                                        <%= product.quantity %>):
+                                                                    </span>
+                                                            </span>
+                                                            <span class="product-discount">-₹
+                                                                <%= product.quantity*product.productId.discount %>
+                                                            </span>
+                                                        </li>
+                                                        <% } %>
+                                                            <% }) %>
 
-                                                            <% if (couponDoc) { %>
-
-
-                                                                <li id="coupon">
-                                                                    <span id="coupon-name">- <%= couponDoc.couponCode %>
-                                                                            :</span>
-                                                                    <span id="coupon-value">-₹ <%=
-                                                                            couponDoc.discountAmount %>.00</span>
-                                                                </li>
-
-                                                                <% } %>
+                                                                <% if (couponDoc) { %>
 
 
-                                                                    <hr />
-                                                                    <li><span>Total</span> <span id="total">₹0.00</span>
+                                                                    <li id="coupon">
+                                                                        <span id="coupon-name">- <%=
+                                                                                couponDoc.couponCode %>
+                                                                                :</span>
+                                                                        <span id="coupon-value">-₹ <%=
+                                                                                couponDoc.discountAmount %>.00</span>
                                                                     </li>
-                                                                    <hr />
-                        </ul>
+
+                                                                    <% } %>
 
 
-                        <div class="form-group">
-                            <label for="paymentMethod">Select Payment Method:</label><br />
-                            <input type="radio" id="cashOnDelivery" name="paymentMethod" value="COD" />
-                            <label for="cashOnDelivery">Cash On Delivery</label><br />
-                            <input type="radio" id="wallet" name="paymentMethod" value="wallet" />
-                            <label for="wallet">Wallet</label><br />
+                                                                        <hr />
+                                                                        <li><span>Total</span> <span
+                                                                                id="total">₹0.00</span>
+                                                                        </li>
+                                                                        <hr />
+                            </ul>
 
-                            <input type="radio" id="paypal" name="paymentMethod" value="paypal" />
-                            <label for="razorpay">RazorPay</label><br />
+
+                            <div class="form-group">
+                                <label for="paymentMethod">Select Payment Method:</label><br />
+                                <input type="radio" id="cashOnDelivery" name="paymentMethod" value="COD" />
+                                <label for="cashOnDelivery">Cash On Delivery</label><br />
+                                <input type="radio" id="wallet" name="paymentMethod" value="wallet" />
+                                <label for="wallet">Wallet</label><br />
+
+                                <input type="radio" id="paypal" name="paymentMethod" value="paypal" />
+                                <label for="razorpay">RazorPay</label><br />
+                            </div>
+
+                            <button id="placeOrderBtn" class="btn essence-btn">
+                                Place Order
+                            </button>
                         </div>
-
-                        <button id="placeOrderBtn" class="btn essence-btn">
-                            Place Order
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- ##### Checkout Area End ##### -->
+        <!-- ##### Checkout Area End ##### -->
 
-    <!-- ##### Footer Area Start ##### -->
-    <%- include("./partials/user-footer") %>
-        <!-- ##### Footer Area End ##### -->
+        <!-- ##### Footer Area Start ##### -->
+        <%- include("./partials/user-footer") %>
+            <!-- ##### Footer Area End ##### -->
 
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script>
-            let orderId;
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <script>
+                let orderId;
 
-            const initialize = () => {
-                // calculateSubtotal();
-                calculateTotal()
-                createOrder();
+                const initialize = () => {
+                    // calculateSubtotal();
+                    calculateTotal()
+                    createOrder();
 
-                const btn = document.getElementById("saveBtn");
-                btn.addEventListener("click", addAddress);
+                    const btn = document.getElementById("saveBtn");
+                    btn.addEventListener("click", addAddress);
 
-                const placeOrderBtn = document.getElementById("placeOrderBtn");
-                placeOrderBtn.addEventListener("click", checkPlaceOrder);
-            };
+                    const placeOrderBtn = document.getElementById("placeOrderBtn");
+                    placeOrderBtn.addEventListener("click", checkPlaceOrder);
+                };
 
-            function calculateTotal() {
-                var subtotal = 0;
-                var items = document.querySelectorAll('.summary-item');
+                function calculateTotal() {
+                    var subtotal = 0;
+                    var items = document.querySelectorAll('.summary-item');
 
-                items.forEach(function (item) {
-                    var price = parseFloat(item.querySelector('.product-originalPrice').innerText.trim().replace(/[^\d.-]/g, ''));
-                    subtotal += price;
-                });
-
-                var subtotalElement = document.getElementById('subtotal');
-
-                subtotalElement.textContent = '₹' + subtotal.toFixed(2);
-
-                let totalDisocunt = 0;
-                var discounts = document.querySelectorAll('.product-discount');
-                discounts.forEach(function (discount) {
-
-                    var discountAmount = parseFloat(discount.innerText.trim().replace(/[^0-9.]/g, ''));
-                    console.log(typeof discountAmount)
-                    totalDisocunt += discountAmount;
-                });
-
-
-                let couponValue = 0;
-                if (document.getElementById("coupon")) {
-                    const couponValueElement = document.querySelector("#coupon-value")
-                    couponValue = parseFloat(couponValueElement.innerText.replace("-₹", ""))
-                }
-
-                var totalElement = document.getElementById('total');
-                const total = subtotal - totalDisocunt - couponValue;
-                totalElement.textContent = '₹' + total.toFixed(2);
-            }
-
-
-            const fullNameValidationMessage = document.getElementById(
-                "fullNameValidationMessage"
-            );
-            const mobileValidationMessage = document.getElementById(
-                "mobileValidationMessage"
-            );
-            const streetAddressValidationMessage = document.getElementById(
-                "streetAddressValidationMessage"
-            );
-            const pincodeValidationMessage = document.getElementById(
-                "pincodeValidationMessage"
-            );
-            const stateValidationMessage = document.getElementById(
-                "stateValidationMessage"
-            );
-            const townCityValidationMessage = document.getElementById(
-                "townCityValidationMessage"
-            );
-            const streetValidationMessage = document.getElementById(
-                "streetValidationMessage"
-            );
-
-            async function createOrder() {
-                try {
-                    const amount = document
-                        .querySelector("#total")
-                        .innerText.replace("₹", "");
-                    console.log(amount)
-                    const response = await fetch("/create/orderId", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ amount }),
-                        redirect: "follow",
+                    items.forEach(function (item) {
+                        var price = parseFloat(item.querySelector('.product-originalPrice').innerText.trim().replace(/[^\d.-]/g, ''));
+                        subtotal += price;
                     });
-                    const result = await response.json();
 
-                    orderId = result.orderId;
-                } catch (error) {
-                    console.log(error);
+                    var subtotalElement = document.getElementById('subtotal');
+
+                    subtotalElement.textContent = '₹' + subtotal.toFixed(2);
+
+                    let totalDisocunt = 0;
+                    var discounts = document.querySelectorAll('.product-discount');
+                    discounts.forEach(function (discount) {
+
+                        var discountAmount = parseFloat(discount.innerText.trim().replace(/[^0-9.]/g, ''));
+                        console.log(typeof discountAmount)
+                        totalDisocunt += discountAmount;
+                    });
+
+                    let deliveryCharge = 0;
+                    const deliveryElement = document.getElementById("delivery")
+                    if (subtotal != 0 && subtotal <= 1000) {
+                        deliveryElement.innerText = `₹50`;
+                        deliveryCharge = 50
+                    } else if (subtotal > 1000) {
+                        deliveryElement.innerText = `₹70`;
+                        deliveryCharge = 70
+                    }
+
+
+                    let couponValue = 0;
+                    if (document.getElementById("coupon")) {
+                        const couponValueElement = document.querySelector("#coupon-value")
+                        couponValue = parseFloat(couponValueElement.innerText.replace("-₹", ""))
+                    }
+
+                    var totalElement = document.getElementById('total');
+                    const total = subtotal - totalDisocunt - couponValue + deliveryCharge;
+                    totalElement.textContent = '₹' + total.toFixed(2);
                 }
-            }
 
-            async function addAddress() {
-                try {
-                    console.log("clicked");
 
-                    let isValidated = true;
-                    fullNameValidationMessage.textContent = "";
-                    mobileValidationMessage.textContent = "";
-                    streetAddressValidationMessage.textContent = "";
-                    pincodeValidationMessage.textContent = "";
-                    stateValidationMessage.textContent = "";
-                    townCityValidationMessage.textContent = "";
-                    streetValidationMessage.textContent = "";
+                const fullNameValidationMessage = document.getElementById(
+                    "fullNameValidationMessage"
+                );
+                const mobileValidationMessage = document.getElementById(
+                    "mobileValidationMessage"
+                );
+                const streetAddressValidationMessage = document.getElementById(
+                    "streetAddressValidationMessage"
+                );
+                const pincodeValidationMessage = document.getElementById(
+                    "pincodeValidationMessage"
+                );
+                const stateValidationMessage = document.getElementById(
+                    "stateValidationMessage"
+                );
+                const townCityValidationMessage = document.getElementById(
+                    "townCityValidationMessage"
+                );
+                const streetValidationMessage = document.getElementById(
+                    "streetValidationMessage"
+                );
 
-                    const full_name = document.getElementById("full_name").value;
-                    const mobile = document.getElementById("mobile").value;
-                    const address = document.getElementById("street_address").value;
-                    const pincode = document.getElementById("pincode").value;
-                    const state = document.getElementById("state").value;
-                    const town_city = document.getElementById("town_city").value;
-                    const street = document.getElementById("street").value;
+                async function createOrder() {
+                    try {
+                        const amount = document
+                            .querySelector("#total")
+                            .innerText.replace("₹", "");
+                        console.log(amount)
+                        const response = await fetch("/create/orderId", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ amount }),
+                            redirect: "follow",
+                        });
+                        const result = await response.json();
 
-                    if (full_name.trim() == "") {
-                        fullNameValidationMessage.textContent = "full name is required";
-                        isValidated = false;
+                        orderId = result.orderId;
+                    } catch (error) {
+                        console.log(error);
                     }
-                    if (mobile.trim() == "") {
-                        mobileValidationMessage.textContent = "mobile number is required";
-                        isValidated = false;
-                    }
-                    if (address.trim() == "") {
-                        streetAddressValidationMessage.textContent = "address is required";
-                        isValidated = false;
-                    }
-                    if (pincode.trim() == "") {
-                        pincodeValidationMessage.textContent = "pincode is required";
-                        isValidated = false;
-                    }
-                    if (state.trim() == "") {
-                        stateValidationMessage.textContent = "state name is required";
-                        isValidated = false;
-                    }
-                    if (town_city.trim() == "") {
-                        townCityValidationMessage.textContent = "town/city is required";
-                        isValidated = false;
-                    }
-                    if (street.trim() == "") {
-                        streetValidationMessage.textContent = "street is required";
-                        isValidated = false;
-                    }
+                }
 
-                    if (!isValidated) {
-                        return;
-                    }
+                async function addAddress() {
+                    try {
+                        console.log("clicked");
 
-                    console.log(
-                        full_name,
-                        mobile,
-                        address,
-                        pincode,
-                        state,
-                        town_city,
-                        street
-                    );
+                        let isValidated = true;
+                        fullNameValidationMessage.textContent = "";
+                        mobileValidationMessage.textContent = "";
+                        streetAddressValidationMessage.textContent = "";
+                        pincodeValidationMessage.textContent = "";
+                        stateValidationMessage.textContent = "";
+                        townCityValidationMessage.textContent = "";
+                        streetValidationMessage.textContent = "";
 
-                    const response = await fetch("/add-address", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
+                        const full_name = document.getElementById("full_name").value;
+                        const mobile = document.getElementById("mobile").value;
+                        const address = document.getElementById("street_address").value;
+                        const pincode = document.getElementById("pincode").value;
+                        const state = document.getElementById("state").value;
+                        const town_city = document.getElementById("town_city").value;
+                        const street = document.getElementById("street").value;
+
+                        if (full_name.trim() == "") {
+                            fullNameValidationMessage.textContent = "full name is required";
+                            isValidated = false;
+                        }
+                        if (mobile.trim() == "") {
+                            mobileValidationMessage.textContent = "mobile number is required";
+                            isValidated = false;
+                        }
+                        if (address.trim() == "") {
+                            streetAddressValidationMessage.textContent = "address is required";
+                            isValidated = false;
+                        }
+                        if (pincode.trim() == "") {
+                            pincodeValidationMessage.textContent = "pincode is required";
+                            isValidated = false;
+                        }
+                        if (state.trim() == "") {
+                            stateValidationMessage.textContent = "state name is required";
+                            isValidated = false;
+                        }
+                        if (town_city.trim() == "") {
+                            townCityValidationMessage.textContent = "town/city is required";
+                            isValidated = false;
+                        }
+                        if (street.trim() == "") {
+                            streetValidationMessage.textContent = "street is required";
+                            isValidated = false;
+                        }
+
+                        if (!isValidated) {
+                            return;
+                        }
+
+                        console.log(
                             full_name,
                             mobile,
                             address,
                             pincode,
                             state,
                             town_city,
-                            street,
-                        }),
+                            street
+                        );
+
+                        const response = await fetch("/add-address", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                full_name,
+                                mobile,
+                                address,
+                                pincode,
+                                state,
+                                town_city,
+                                street,
+                            }),
+                        });
+                        if (response.status === 401) {
+                            // Handle case where user is not logged in
+                            Swal.fire({
+                                title: "<strong>You haven't logged</strong>",
+                                icon: "warning",
+                                html: `You have to login before trying to adding Address.`,
+                                showCloseButton: true,
+                                focusConfirm: false,
+                                confirmButtonText: `<a href="/login">Login</a>`,
+                            });
+                        } else if (response.status === 409) {
+                            // Handle case where the product is already in the cart
+                            const data = await response.json();
+                            Swal.fire(data.message);
+                        } else if (response.ok) {
+                            await Swal.fire("Address added to successfully!");
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+
+                function calculateSubtotal() {
+                    let subtotal = 0;
+                    const totalPrices = document.querySelectorAll(".totalPrice");
+                    console.log(totalPrices);
+
+                    totalPrices.forEach((totalPrice) => {
+                        totalPrice = parseFloat(totalPrice.innerText.replace("₹", ""));
+                        subtotal += totalPrice;
                     });
-                    if (response.status === 401) {
-                        // Handle case where user is not logged in
+
+                    const subtotalElement = document.getElementById("subtotal");
+                    if (subtotalElement) {
+                        subtotalElement.innerText = `₹${subtotal.toFixed(2)}`;
+                    }
+
+                    let deliveryCharge = 0;
+                    const deliveryElement = document.getElementById("delivery")
+                    if (subtotal != 0 && subtotal <= 1000) {
+                        deliveryElement.innerText = `₹50`;
+                        deliveryCharge = 50
+                    } else if (subtotal > 1000) {
+                        deliveryElement.innerText = `₹70`;
+                        deliveryCharge = 70
+                    }
+
+                    console.log(deliveryCharge)
+
+                    let total = subtotal + deliveryCharge
+                    const totalElement = document.getElementById("total");
+                    if (totalElement) {
+                        totalElement.innerText = `₹${total.toFixed(2)}`;
+                    }
+                    console.log(subtotal)
+                }
+
+                function checkPlaceOrder() {
+                    event.preventDefault();
+
+                    // Check if an address is selected
+                    const selectedAddress = document.querySelector(
+                        'input[name="address"]:checked'
+                    );
+                    const selectedPaymentMethod = document.querySelector(
+                        'input[name="paymentMethod"]:checked'
+                    );
+
+                    let isSelected = true;
+                    let message = "";
+                    if (!selectedAddress && !selectedPaymentMethod) {
+                        message = `Please select an address and a payment method.`;
+                        isSelected = false;
+                    } else if (!selectedAddress) {
+                        message = `Please select an address.`;
+                        isSelected = false;
+                    } else if (!selectedPaymentMethod) {
+                        message = `Please select a payment method.`;
+                        isSelected = false;
+                    }
+
+                    if (!isSelected) {
                         Swal.fire({
-                            title: "<strong>You haven't logged</strong>",
                             icon: "warning",
-                            html: `You have to login before trying to adding Address.`,
+                            html: message,
                             showCloseButton: true,
                             focusConfirm: false,
-                            confirmButtonText: `<a href="/login">Login</a>`,
+                            confirmButtonText: `Ok`,
                         });
-                    } else if (response.status === 409) {
-                        // Handle case where the product is already in the cart
-                        const data = await response.json();
-                        Swal.fire(data.message);
-                    } else if (response.ok) {
-                        await Swal.fire("Address added to successfully!");
-                        window.location.reload();
                     }
-                } catch (error) {
-                    console.log(error);
-                }
-            }
 
-            function calculateSubtotal() {
-                let subtotal = 0;
-                const totalPrices = document.querySelectorAll(".totalPrice");
-                console.log(totalPrices);
-
-                totalPrices.forEach((totalPrice) => {
-                    totalPrice = parseFloat(totalPrice.innerText.replace("₹", ""));
-                    subtotal += totalPrice;
-                });
-
-                const subtotalElement = document.getElementById("subtotal");
-                if (subtotalElement) {
-                    subtotalElement.innerText = `₹${subtotal.toFixed(2)}`;
-                }
-
-                const totalElement = document.getElementById("total");
-                if (totalElement) {
-                    totalElement.innerText = `₹${subtotal.toFixed(2)}`;
-                }
-                console.log(subtotal)
-            }
-
-            function checkPlaceOrder() {
-                event.preventDefault();
-
-                // Check if an address is selected
-                const selectedAddress = document.querySelector(
-                    'input[name="address"]:checked'
-                );
-                const selectedPaymentMethod = document.querySelector(
-                    'input[name="paymentMethod"]:checked'
-                );
-
-                let isSelected = true;
-                let message = "";
-                if (!selectedAddress && !selectedPaymentMethod) {
-                    message = `Please select an address and a payment method.`;
-                    isSelected = false;
-                } else if (!selectedAddress) {
-                    message = `Please select an address.`;
-                    isSelected = false;
-                } else if (!selectedPaymentMethod) {
-                    message = `Please select a payment method.`;
-                    isSelected = false;
-                }
-
-                if (!isSelected) {
-                    Swal.fire({
-                        icon: "warning",
-                        html: message,
-                        showCloseButton: true,
-                        focusConfirm: false,
-                        confirmButtonText: `Ok`,
-                    });
-                }
-
-                const paymentMethod = selectedPaymentMethod.value;
-
-                if (paymentMethod == "paypal") {
-                    console.log("payapl aan");
-                    const amount = document
-                        .querySelector("#total")
-                        .innerText.replace("₹", "");
-                    console.log(orderId);
-                    setupRazorpay(orderId, amount);
-                } else if (paymentMethod == "COD") {
-                    placeOrder()
-                } else if (paymentMethod == "wallet") {
-                    placeOrder()
-                }
-            }
-
-            async function placeOrder(paymentStatus = null, payment_id = null) {
-                console.log("placing Order")
-
-                const selectedAddress = document.querySelector(
-                    'input[name="address"]:checked'
-                );
-                const selectedPaymentMethod = document.querySelector(
-                    'input[name="paymentMethod"]:checked'
-                );
-
-                try {
-                    const addressId = selectedAddress.value;
                     const paymentMethod = selectedPaymentMethod.value;
-                    console.log(addressId, paymentMethod);
 
-                    const response = await fetch("/placeOrder", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            addressId,
-                            paymentMethod,
-                            paymentStatus,
-                            payment_id,
-                        }),
-                    });
-                    const data = await response.json()
-                    if (!response.ok) {
-
-                        // Handle error response
-                        console.error("Error placing order:", data);
-                        // Optionally, display an error message to the user
-                        await Swal.fire({
-                            icon: "error",
-                            title: "Error placing order",
-                            text: data.message || "An error occurred while placing your order.",
-                            showConfirmButton: true,
-                        });
-                        return
+                    if (paymentMethod == "paypal") {
+                        console.log("payapl aan");
+                        const amount = document
+                            .querySelector("#total")
+                            .innerText.replace("₹", "");
+                        console.log(orderId);
+                        setupRazorpay(orderId, amount);
+                    } else if (paymentMethod == "COD") {
+                        placeOrder()
+                    } else if (paymentMethod == "wallet") {
+                        placeOrder()
                     }
-                    await Swal.fire({
-                        icon: "success",
-                        title: "Your Order has been placed",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                    window.location.assign(`/checkout-success/${data.orderId}`);
-                } catch (error) {
-                    console.log(error);
                 }
-            }
 
-            function setupRazorpay(orderId, amount) {
-                console.log("setupRazorpay");
-                const selectedAddress = document.querySelector(
-                    'input[name="address"]:checked'
-                );
-                let phoneNumber = selectedAddress.getAttribute('data-phone');
-                var options = {
-                    key: "rzp_test_XmE1i9cQzXOgPU",
-                    amount: amount * 100,
-                    currency: "INR",
-                    name: "Vertex",
-                    description: "Test Transaction",
-                    image: "https://example.com/your_logo",
-                    order_id: orderId,
-                    handler: async function (response) {
-                        let payment_id = response.razorpay_payment_id
-                        const paymentData = {
-                            payment_id: response.razorpay_payment_id,
-                            order_id: response.razorpay_order_id,
-                            signature: response.razorpay_signature,
-                        };
-                        try {
-                            console.log("verifyPayment");
-                            const response = await fetch("/verify-payment", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(paymentData),
+                async function placeOrder(paymentStatus = null, payment_id = null) {
+                    console.log("placing Order")
+
+                    const selectedAddress = document.querySelector(
+                        'input[name="address"]:checked'
+                    );
+                    const selectedPaymentMethod = document.querySelector(
+                        'input[name="paymentMethod"]:checked'
+                    );
+
+                    try {
+                        const addressId = selectedAddress.value;
+                        const paymentMethod = selectedPaymentMethod.value;
+                        console.log(addressId, paymentMethod);
+
+                        const response = await fetch("/placeOrder", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                addressId,
+                                paymentMethod,
+                                paymentStatus,
+                                payment_id,
+                            }),
+                        });
+                        const data = await response.json()
+                        if (!response.ok) {
+
+                            // Handle error response
+                            console.error("Error placing order:", data);
+                            // Optionally, display an error message to the user
+                            await Swal.fire({
+                                icon: "error",
+                                title: "Error placing order",
+                                text: data.message || "An error occurred while placing your order.",
+                                showConfirmButton: true,
                             });
-                            const data = await response.json;
-                            console.log(data)
-                            if (response.ok) {
-                                console.log("placerder for razor pay")
-                                console.log(payment_id)
-                                placeOrder(undefined, payment_id)
-                            }
-                        } catch (error) {
-                            console.log(error);
+                            return
                         }
-                    },
-                    "prefill": {
-                        "contact": phoneNumber
-                    },
-                    theme: {
-                        color: "#3399cc",
-                    },
-                };
-                var rzp1 = new Razorpay(options);
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Your Order has been placed",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        window.location.assign(`/checkout-success/${data.orderId}`);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
 
-                rzp1.on("payment.failed", function (response) {
-                    document.querySelector(".razorpay-container").style.display = "none";
-                    let paymentStatus = "Failed"
-                    placeOrder(paymentStatus)
-                    return
-                });
-                rzp1.open(); // Open the Razorpay Checkout form immediately after creating the instance
-            }
+                function setupRazorpay(orderId, amount) {
+                    console.log("setupRazorpay");
+                    const selectedAddress = document.querySelector(
+                        'input[name="address"]:checked'
+                    );
+                    let phoneNumber = selectedAddress.getAttribute('data-phone');
+                    var options = {
+                        key: "rzp_test_XmE1i9cQzXOgPU",
+                        amount: amount * 100,
+                        currency: "INR",
+                        name: "Vertex",
+                        description: "Test Transaction",
+                        image: "https://example.com/your_logo",
+                        order_id: orderId,
+                        handler: async function (response) {
+                            let payment_id = response.razorpay_payment_id
+                            const paymentData = {
+                                payment_id: response.razorpay_payment_id,
+                                order_id: response.razorpay_order_id,
+                                signature: response.razorpay_signature,
+                            };
+                            try {
+                                console.log("verifyPayment");
+                                const response = await fetch("/verify-payment", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(paymentData),
+                                });
+                                const data = await response.json;
+                                console.log(data)
+                                if (response.ok) {
+                                    console.log("placerder for razor pay")
+                                    console.log(payment_id)
+                                    placeOrder(undefined, payment_id)
+                                }
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        },
+                        "prefill": {
+                            "contact": phoneNumber
+                        },
+                        theme: {
+                            color: "#3399cc",
+                        },
+                    };
+                    var rzp1 = new Razorpay(options);
 
-            document.addEventListener("DOMContentLoaded", () => initialize());
-        </script>
+                    rzp1.on("payment.failed", function (response) {
+                        document.querySelector(".razorpay-container").style.display = "none";
+                        let paymentStatus = "Failed"
+                        placeOrder(paymentStatus)
+                        return
+                    });
+                    rzp1.open(); // Open the Razorpay Checkout form immediately after creating the instance
+                }
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                document.addEventListener("DOMContentLoaded", () => initialize());
+            </script>
 
-        <!-- jQuery (Necessary for All JavaScript Plugins) -->
-        <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-        <!-- Popper js -->
-        <script src="/js/popper.min.js"></script>
-        <!-- Bootstrap js -->
-        <script src="/js/bootstrap.min.js"></script>
-        <!-- Plugins js -->
-        <script src="/js/plugins.js"></script>
-        <!-- Classy Nav js -->
-        <script src="/js/classy-nav.min.js"></script>
-        <!-- Active js -->
-        <script src="/js/active.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <!-- jQuery (Necessary for All JavaScript Plugins) -->
+            <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+            <!-- Popper js -->
+            <script src="/js/popper.min.js"></script>
+            <!-- Bootstrap js -->
+            <script src="/js/bootstrap.min.js"></script>
+            <!-- Plugins js -->
+            <script src="/js/plugins.js"></script>
+            <!-- Classy Nav js -->
+            <script src="/js/classy-nav.min.js"></script>
+            <!-- Active js -->
+            <script src="/js/active.js"></script>
 </body>
 
 </html>

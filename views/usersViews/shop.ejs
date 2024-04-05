@@ -115,385 +115,412 @@
 
 <body>
     <!-- ##### Header Area Start ##### -->
-    <%- include("./partials/publicNavbar") %>    
-    <!-- ##### Header Area End ##### -->
+    <%- include("./partials/publicNavbar") %>
+        <!-- ##### Header Area End ##### -->
 
-    <!-- ##### Breadcumb Area Start ##### -->
-    <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg)">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12">
-                    <div class="page-title text-center">
-                        <h2>dresses</h2>
+        <!-- ##### Breadcumb Area Start ##### -->
+        <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg)">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-12">
+                        <div class="page-title text-center">
+                            <h2>dresses</h2>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- ##### Breadcumb Area End ##### -->
+        <!-- ##### Breadcumb Area End ##### -->
 
-    <!-- ##### Shop Grid Area Start ##### -->
-    <section class="shop_grid_area section-padding-80">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="shop_sidebar_area">
-                        <!-- ##### Single Widget ##### -->
-                        <h6 class="widget-title mb-30">Filter by</h6>
-                        <form action="">
-                            <div class="widget catagory mb-15">
-                                <!-- Widget Title -->
-                                <!-- Widget Title -->
-                                <h6 class="widget-title2 category-title collapsed mb-15" data-toggle="collapse"
-                                    data-target="#menu-content2" style="display: flex">
-                                    Catagories
-                                </h6>
-
-                                <!--  Catagories  -->
-                                <div class="catagories-menu">
-                                    <ul id="menu-content2" class="menu-content catetgory collapse">
-                                        <!-- Single Item -->
-                                        <% if (categories) { %>
-                                            <% categories.forEach(category=> {%>
-                                                <li>
-                                                    <input type="checkbox" id="<%= category.name %>"
-                                                        name="<%= category.name %>" class="category" />
-                                                    <label for="<%= category.name %>">
-                                                        <%= category.name %>
-                                                    </label>
-                                                </li>
-                                                <% }) %>
-                                                    <% } %>
-                                    </ul>
-                                </div>
-                            </div>
-
+        <!-- ##### Shop Grid Area Start ##### -->
+        <section class="shop_grid_area section-padding-80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <div class="shop_sidebar_area">
                             <!-- ##### Single Widget ##### -->
-                            <div class="widget price mb-30">
-                                <!-- Widget Title 2 -->
-                                <p class="widget-title2 mb-15">Price</p>
+                            <h6 class="widget-title mb-30">Filter by</h6>
+                            <form action="">
+                                <div class="widget catagory mb-15">
+                                    <!-- Widget Title -->
+                                    <!-- Widget Title -->
+                                    <h6 class="widget-title2 category-title collapsed mb-15" data-toggle="collapse"
+                                        data-target="#menu-content2" style="display: flex">
+                                        Catagories
+                                    </h6>
 
-                                <div class="widget-desc">
-                                    <div class="slider-range">
-                                        <div data-min="500" data-max="5000" data-unit="₹" data-step="500"
-                                            class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                                            data-value-min="500" data-value-max="5000" data-label-result="Range:">
-                                            <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all"
-                                                tabindex="0"></span>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all"
-                                                tabindex="0"></span>
-                                        </div>
-                                        <div class="range-price" id="range-price">
-                                            Range: ₹500.00 - ₹5000.00
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="widget widget-color mb-30" style="display: none">
-                                <p class="widget-title2 color-title collapsed mb-15" data-toggle="collapse"
-                                    data-target="#colors" style="display: flex">
-                                    Color
-                                </p>
-                                <div class="">
-                                    <ul id="colors" class="menu-content2 widget-color-content color collapse">
-                                        <li>
-                                            <input type="checkbox" id="colorWhite" class="color" name="White" />
-                                            <label for="colorWhite">White</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorBlack" class="color" name="Black" />
-                                            <label for="colorBlack">Black</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorRed" class="color" name="Red" />
-                                            <label for="colorRed">Red</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorGreen" class="color" name="Green" />
-                                            <label for="colorGreen">Green</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorYellow" class="color" name="Yellow" />
-                                            <label for="colorYellow">Yellow</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="colorBlue" class="color" name="Blue" />
-                                            <label for="colorBlue">Blue</label>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="widget widget-size mb-30" style="display: none">
-                                <p class="widget-title2 mb-15 size-title collapsed" data-toggle="collapse"
-                                    data-target="#size" style="display: flex">
-                                    Size
-                                </p>
-                                <div class="">
-                                    <ul class="menu-content2 size collapse" id="size">
-                                        <li>
-                                            <input type="checkbox" id="sizeSmall" class="size" name="Small" />
-                                            <label for="sizeSmall">Small</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="sizeMedium" class="size" name="Medium" />
-                                            <label for="sizeMedium">Medium</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="sizeLarge" class="size" name="Large" />
-                                            <label for="sizeLarge">Large</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="sizeExtraLarge" class="size" name="ExtraLarge" />
-                                            <label for="sizeExtraLarge">ExtraLarge</label>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary" id="applyFilter">
-                                Filter
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-8 col-lg-9">
-                    <div class="shop_grid_product_area">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="product-topbar d-flex align-items-center justify-content-between">
-                                    <!-- Total Products -->
-                                    <div class="total-products">
-                                        <!-- <p><span>186</span> products found</p> -->
-                                    </div>
-                                    <!-- Sorting -->
-                                    <div class="product-sorting d-flex">
-                                        <p>Sort by:</p>
-                                        <select name="sortBy" onchange="updateURL()" id="sortBySelect">
-                                            <option value="default">None</option>
-                                            <option value="lowToHigh">Price: Low to High</option>
-                                            <option value="highToLow">Price: High to Low</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Single Product -->
-                        <% if (products.length>0) { %>
-                            <div class="row">
-                                <% products.forEach(product=> { %>
-                                    <div class="col-12 col-sm-6 col-lg-4">
-                                        <div class="single-product-wrapper">
-                                            <!-- Product Image -->
-                                            <div class="product-img">
-                                                <a href="/product/<%= product._id %>">
-                                                    <img src="/img/products/<%= product.images[0] %>" alt="" />
-                                                    <!-- Hover Thumb -->
-                                                    <img class="hover-img" src="/img/products/<%= product.images[1] %>"
-                                                        alt="" />
-                                                </a>
-
-                                                <!-- Product Badge -->
-                                                <% if (product.discount) { %>
-                                                    <div class="product-badge offer-badge">
-                                                        <span>
-                                                            <%= product.discountPercent %> %
-                                                        </span>
-                                                    </div>
-                                                    <% } else { %> ₹ <%= product.originalPrice %>
-                                                            <% } %>
-                                            </div>
-
-                                            <!-- Product Description -->
-                                            <div class="product-description">
-                                                <!-- <span>topshop</span> -->
-                                                <a href="/product/<%= product._id %>">
-                                                    <h6>
-                                                        <%= product.name %>
-                                                    </h6>
-                                                </a>
-
-                                                <p class="product-price">
-                                                    <% if (product.discount) { %>
-                                                        <span class="old-price">
-                                                            ₹ <%= product.originalPrice %>
-                                                        </span>
-                                                        ₹ <%= product.discountedPrice %>
-                                                            <% } else { %> ₹ <%= product.originalPrice %>
-                                                                    <% } %>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <% }) %>
-                            </div>
-                            <% } else { %>
-                                <div class="row justify-content-center">
-                                    There is no product to display
-                                </div>
-
-                                <% } %>
-
-                                    <!-- Pagination -->
-                                    <nav aria-label="navigation" class="row justify-content-center">
-                                        <ul class="pagination mt-25 mb-40">
-
-                                            <% var totalPages=Math.ceil(products.length / 6); %>
-                                                <% if(currentPage==1&&totalPages==1){ %>
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#">
-                                                            1
-                                                        </a>
+                                    <!--  Catagories  -->
+                                    <div class="catagories-menu">
+                                        <ul id="menu-content2" class="menu-content catetgory collapse">
+                                            <!-- Single Item -->
+                                            <% if (categories) { %>
+                                                <% categories.forEach(category=> {%>
+                                                    <li>
+                                                        <input type="checkbox" id="<%= category.name %>"
+                                                            name="<%= category.name %>" class="category" />
+                                                        <label for="<%= category.name %>">
+                                                            <%= category.name %>
+                                                        </label>
                                                     </li>
-                                                    <% } else if (currentPage==1&&totalPages>1) { %>
+                                                    <% }) %>
+                                                        <% } %>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- ##### Single Widget ##### -->
+                                <div class="widget price mb-30">
+                                    <!-- Widget Title 2 -->
+                                    <p class="widget-title2 mb-15">Price</p>
+
+                                    <div class="widget-desc">
+                                        <div class="slider-range">
+                                            <div data-min="500" data-max="5000" data-unit="₹" data-step="500"
+                                                class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                                                data-value-min="500" data-value-max="5000" data-label-result="Range:">
+                                                <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                                                <span class="ui-slider-handle ui-state-default ui-corner-all"
+                                                    tabindex="0"></span>
+                                                <span class="ui-slider-handle ui-state-default ui-corner-all"
+                                                    tabindex="0"></span>
+                                            </div>
+                                            <div class="range-price" id="range-price">
+                                                Range: ₹500.00 - ₹5000.00
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="widget widget-color mb-30" style="display: none">
+                                    <p class="widget-title2 color-title collapsed mb-15" data-toggle="collapse"
+                                        data-target="#colors" style="display: flex">
+                                        Color
+                                    </p>
+                                    <div class="">
+                                        <ul id="colors" class="menu-content2 widget-color-content color collapse">
+                                            <li>
+                                                <input type="checkbox" id="colorWhite" class="color" name="White" />
+                                                <label for="colorWhite">White</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="colorBlack" class="color" name="Black" />
+                                                <label for="colorBlack">Black</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="colorRed" class="color" name="Red" />
+                                                <label for="colorRed">Red</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="colorGreen" class="color" name="Green" />
+                                                <label for="colorGreen">Green</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="colorYellow" class="color" name="Yellow" />
+                                                <label for="colorYellow">Yellow</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="colorBlue" class="color" name="Blue" />
+                                                <label for="colorBlue">Blue</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="widget widget-size mb-30" style="display: none">
+                                    <p class="widget-title2 mb-15 size-title collapsed" data-toggle="collapse"
+                                        data-target="#size" style="display: flex">
+                                        Size
+                                    </p>
+                                    <div class="">
+                                        <ul class="menu-content2 size collapse" id="size">
+                                            <li>
+                                                <input type="checkbox" id="sizeSmall" class="size" name="Small" />
+                                                <label for="sizeSmall">Small</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="sizeMedium" class="size" name="Medium" />
+                                                <label for="sizeMedium">Medium</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="sizeLarge" class="size" name="Large" />
+                                                <label for="sizeLarge">Large</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="sizeExtraLarge" class="size"
+                                                    name="ExtraLarge" />
+                                                <label for="sizeExtraLarge">ExtraLarge</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="applyFilter">
+                                    Filter
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-8 col-lg-9">
+                        <div class="shop_grid_product_area">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="product-topbar d-flex align-items-center justify-content-between">
+                                        <!-- Total Products -->
+                                        <div class="total-products">
+                                            <!-- <p><span>186</span> products found</p> -->
+                                        </div>
+                                        <!-- Sorting -->
+                                        <div class="product-sorting d-flex">
+                                            <p>Sort by:</p>
+                                            <select name="sortBy" onchange="updateURL()" id="sortBySelect">
+                                                <option value="default">None</option>
+                                                <option value="lowToHigh">Price: Low to High</option>
+                                                <option value="highToLow">Price: High to Low</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Single Product -->
+                            <% if (products.length>0) { %>
+                                <div class="row">
+
+                                    <% const startIndex=(currentPage - 1) * 6; %>
+                                        <% const endIndex=Math.min(startIndex + 6, products.length); %>
+
+                                            <% for (let i=startIndex; i < endIndex; i++) { %>
+                                                <% const product=products[i]; %>
+                                                    <div class="col-12 col-sm-6 col-lg-4">
+                                                        <div class="single-product-wrapper">
+                                                            <!-- Product Image -->
+                                                            <div class="product-img">
+                                                                <a href="/product/<%= product._id %>">
+                                                                    <img src="/img/products/<%= product.images[0] %>"
+                                                                        alt="" />
+                                                                    <!-- Hover Thumb -->
+                                                                    <img class="hover-img"
+                                                                        src="/img/products/<%= product.images[1] %>"
+                                                                        alt="" />
+                                                                </a>
+
+                                                                <!-- Product Badge -->
+                                                                <% if (product.discount) { %>
+                                                                    <div class="product-badge offer-badge">
+                                                                        <span>
+                                                                            <%= product.discountPercent %> %
+                                                                        </span>
+                                                                    </div>
+                                                                    <% } else { %>
+                                                                        ₹ <%= product.originalPrice %>
+                                                                            <% } %>
+                                                            </div>
+
+                                                            <!-- Product Description -->
+                                                            <div class="product-description">
+                                                                <a href="/product/<%= product._id %>">
+                                                                    <h6>
+                                                                        <%= product.name %>
+                                                                    </h6>
+                                                                </a>
+                                                                <p class="product-price">
+                                                                    <% if (product.discount) { %>
+                                                                        <span class="old-price">₹ <%=
+                                                                                product.originalPrice %></span>
+                                                                        ₹ <%= product.discountedPrice %>
+                                                                            <% } else { %>
+                                                                                ₹ <%= product.originalPrice %>
+                                                                                    <% } %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                                <% } else { %>
+                                    <div class="row justify-content-center">
+                                        There is no product to display
+                                    </div>
+
+                                    <% } %>
+
+                                        <!-- Pagination -->
+                                        <nav aria-label="navigation" class="row justify-content-center">
+                                            <ul class="pagination mt-25 mb-40">
+
+                                                <% var totalPages=Math.ceil(products.length / 6); %>
+                                                    <% if(currentPage==1&&totalPages==1){ %>
                                                         <li class="page-item">
                                                             <a class="page-link" href="#">
                                                                 1
                                                             </a>
                                                         </li>
-                                                        <li class="page-item">
-                                                            <a class="page-link" href="#"><i
-                                                                    class="fa fa-angle-right"></i></a>
-                                                        </li>
-                                                        <% } else if (currentPage==totalPages) { %>
-                                                            <li class="page-item">
-                                                                <a class="page-link" href="#"><i
-                                                                        class="fa fa-angle-left"></i></a>
-                                                            </li>
+                                                        <% } else if (currentPage==1&&totalPages>1) { %>
                                                             <li class="page-item">
                                                                 <a class="page-link" href="#">
-                                                                    <%= currentPage %>
+                                                                    1
                                                                 </a>
                                                             </li>
-                                                            <% } else if (currentPage!=1&&totalPages>1) { %>
+                                                            <li class="page-item">
+                                                                <button class="page-link" onclick="page(2)"><i
+                                                                        class="fa fa-angle-right"></i></button>
+                                                            </li>
+                                                            <% } else if (currentPage==totalPages) { %>
                                                                 <li class="page-item">
-                                                                    <a class="page-link" href="#"><i
-                                                                            class="fa fa-angle-left"></i></a>
+
+                                                                    <button class="page-link"
+                                                                        onclick="page( `<%= currentPage-1 %>`)"><i
+                                                                            class="fa fa-angle-left"></i></button>
+
                                                                 </li>
                                                                 <li class="page-item">
                                                                     <a class="page-link" href="#">
                                                                         <%= currentPage %>
                                                                     </a>
                                                                 </li>
-                                                                <li class="page-item">
-                                                                    <a class="page-link" href="#"><i
-                                                                            class="fa fa-angle-right"></i></a>
-                                                                </li>
+                                                                <% } else if (currentPage!=1&&totalPages>1) { %>
+                                                                    <li class="page-item">
 
-                                                                <% } %>
+                                                                        <button class="page-link"
+                                                                            onclick="page( `<%= currentPage-1 %>`)"><i
+                                                                                class="fa fa-angle-left"></i></button>
+                                                                    </li>
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="#">
+                                                                            <%= currentPage %>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="page-item">
 
-                                                                    
-                                        </ul>
-                                    </nav>
+                                                                        <button class="page-link"
+                                                                            onclick="page( `<%= currentPage+1 %>`)"><i
+                                                                                class="fa fa-angle-right"></i></button>
+                                                                    </li>
+
+                                                                    <% } %>
+
+
+                                            </ul>
+                                        </nav>
 
 
 
 
 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- ##### Shop Grid Area End ##### -->
+        </section>
+        <!-- ##### Shop Grid Area End ##### -->
 
-    <!-- ##### Footer Area Start ##### -->
-    <%- include("./partials/user-footer") %>
-    <!-- ##### Footer Area End ##### -->
+        <!-- ##### Footer Area Start ##### -->
+        <%- include("./partials/user-footer") %>
+            <!-- ##### Footer Area End ##### -->
 
-    <!-- jQuery (Necessary for All JavaScript Plugins) -->
-    <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="/js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="/js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="/js/plugins.js"></script>
-    <!-- Classy Nav js -->
-    <script src="/js/classy-nav.min.js"></script>
-    <!-- Active js -->
-    <script src="/js/active.js"></script>
+            <!-- jQuery (Necessary for All JavaScript Plugins) -->
+            <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+            <!-- Popper js -->
+            <script src="/js/popper.min.js"></script>
+            <!-- Bootstrap js -->
+            <script src="/js/bootstrap.min.js"></script>
+            <!-- Plugins js -->
+            <script src="/js/plugins.js"></script>
+            <!-- Classy Nav js -->
+            <script src="/js/classy-nav.min.js"></script>
+            <!-- Active js -->
+            <script src="/js/active.js"></script>
 
-    <script>
-        function updateURL() {
-            const sortBy = document.getElementById("sortBySelect").value;
-            const url = new URL(window.location.href);
-            const queryParams = url.searchParams;
+            <script>
+                function updateURL() {
+                    const sortBy = document.getElementById("sortBySelect").value;
+                    const url = new URL(window.location.href);
+                    const queryParams = url.searchParams;
 
-            // Update or add the "sort" parameter
-            queryParams.set("sort", sortBy);
+                    // Update or add the "sort" parameter
+                    queryParams.set("sort", sortBy);
 
-            // Remove the trailing ampersand if present
-            if (queryParams.toString().endsWith("&")) {
-                queryParams.delete(queryParams.keys().next().value);
-            }
+                    // Remove the trailing ampersand if present
+                    if (queryParams.toString().endsWith("&")) {
+                        queryParams.delete(queryParams.keys().next().value);
+                    }
 
-            console.log(url);
-            window.location.href = url;
-        }
+                    console.log(url);
+                    window.location.href = url;
+                }
 
-        function filter() {
-            let selectedCategories = getSelectedValues("catetgory");
-            let selectedColors = getSelectedValues("color");
-            let selectedSizes = getSelectedValues("size");
+                function page(number) {
+                    const url = new URL(window.location.href);
+                    const queryParams = url.searchParams;
 
-            let queryParams = new URLSearchParams();
+                    queryParams.set("page", number);
 
-            // Append selected categories to the query URL
-            if (selectedCategories.length > 0) {
-                selectedCategories.forEach((category) =>
-                    queryParams.append("categories", category)
-                );
-            }
+                    if (queryParams.toString().endsWith("&")) {
+                        queryParams.delete(queryParams.keys().next().value);
+                    }
 
-            // Append selected colors to the query URL
-            if (selectedColors.length > 0) {
-                selectedColors.forEach((color) =>
-                    queryParams.append("colors", color)
-                );
-            }
+                    console.log(url);
+                    window.location.href = url;
+                }
 
-            // Append selected sizes to the query URL
-            if (selectedSizes.length > 0) {
-                selectedSizes.forEach((size) => queryParams.append("sizes", size));
-            }
+                function filter() {
+                    let selectedCategories = getSelectedValues("catetgory");
+                    let selectedColors = getSelectedValues("color");
+                    let selectedSizes = getSelectedValues("size");
 
-            const range = document.querySelector("#range-price");
-            if (range.getAttribute("data-min") && range.getAttribute("data-max")) {
-                queryParams.append("min", range.getAttribute("data-min"));
-                queryParams.append("max", range.getAttribute("data-max"));
-            }
+                    let queryParams = new URLSearchParams();
 
-            let queryURL = "/shop?" + queryParams.toString();
+                    // Append selected categories to the query URL
+                    if (selectedCategories.length > 0) {
+                        selectedCategories.forEach((category) =>
+                            queryParams.append("categories", category)
+                        );
+                    }
 
-            // Output or use the constructed query URL as needed
-            console.log("Query URL:", queryURL);
-            window.location.href = queryURL;
-        }
+                    // Append selected colors to the query URL
+                    if (selectedColors.length > 0) {
+                        selectedColors.forEach((color) =>
+                            queryParams.append("colors", color)
+                        );
+                    }
 
-        function getSelectedValues(className) {
-            let selectedValues = [];
-            let checkboxes = document.querySelectorAll(
-                "." + className + " input[type=checkbox]:checked"
-            );
+                    // Append selected sizes to the query URL
+                    if (selectedSizes.length > 0) {
+                        selectedSizes.forEach((size) => queryParams.append("sizes", size));
+                    }
 
-            console.log(checkboxes);
-            checkboxes.forEach(function (checkbox) {
-                selectedValues.push(checkbox.name);
-            });
-            return selectedValues;
-        }
+                    const range = document.querySelector("#range-price");
+                    if (range.getAttribute("data-min") && range.getAttribute("data-max")) {
+                        queryParams.append("min", range.getAttribute("data-min"));
+                        queryParams.append("max", range.getAttribute("data-max"));
+                    }
 
-        window.addEventListener("DOMContentLoaded", (event) => {
-            document
-                .getElementById("applyFilter")
-                .addEventListener("click", filter);
-        });
-    </script>
+                    let queryURL = "/shop?" + queryParams.toString();
+
+                    // Output or use the constructed query URL as needed
+                    console.log("Query URL:", queryURL);
+                    window.location.href = queryURL;
+                }
+
+                function getSelectedValues(className) {
+                    let selectedValues = [];
+                    let checkboxes = document.querySelectorAll(
+                        "." + className + " input[type=checkbox]:checked"
+                    );
+
+                    console.log(checkboxes);
+                    checkboxes.forEach(function (checkbox) {
+                        selectedValues.push(checkbox.name);
+                    });
+                    return selectedValues;
+                }
+
+                window.addEventListener("DOMContentLoaded", (event) => {
+                    document
+                        .getElementById("applyFilter")
+                        .addEventListener("click", filter);
+                });
+            </script>
 </body>
 
 </html>

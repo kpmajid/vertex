@@ -57,12 +57,18 @@ const authUser = async (req, res) => {
       return res.json({ message: "Invalid password" });
     }
 
+    if (user.isBlocked) {
+      res.redirect("/blocked");
+      return;
+    }
+
     req.session.user = { id: user._id };
 
     console.log("logged");
     res.redirect("/");
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -189,6 +195,7 @@ const loadValidateOTP = async (req, res) => {
     res.render("usersViews/validateOTP");
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -233,6 +240,7 @@ const verifyOTP = async (req, res) => {
     res.redirect("/login");
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -252,6 +260,7 @@ const resendOTP = async (req, res) => {
     res.status(200).json({ message: "otp resented" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -303,6 +312,7 @@ async function handleRefferal(referralCode, userId) {
     await refereeWallet.save();
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
@@ -347,6 +357,7 @@ const initiateForgotPassword = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -383,6 +394,7 @@ const verifyForgotPasswordOTP = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -403,6 +415,7 @@ const updatePassword = async (req, res) => {
     res.redirect("/login");
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

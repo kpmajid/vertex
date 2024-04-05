@@ -14,6 +14,8 @@ const renderAddCoupon = (req, res) => {
     res.render("adminViews/add-coupon");
   } catch (error) {
     console.log(error);
+
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

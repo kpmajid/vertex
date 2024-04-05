@@ -76,6 +76,7 @@ const loadProducts = async (req, res) => {
     res.render("adminViews/products", { products, offers });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -88,6 +89,7 @@ const loadAddProduct = async (req, res) => {
     res.render("adminViews/add-product", { categories });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -123,6 +125,7 @@ const addProduct = async (req, res) => {
     res.json({ message: "product created successfully" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -146,6 +149,7 @@ const loadEditProduct = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -197,6 +201,7 @@ const editProduct = async (req, res) => {
     res.status(200).json({ message: "product updated successfully" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

@@ -92,7 +92,6 @@ router.get("/register", isLogout, renderRegisterForm);
 router.post("/register", initiateUserRegister);
 router.get("/register/otp", loadValidateOTP);
 
-
 //forgot-password
 router.get("/forgot-password", renderForgotPasswordForm);
 router.post("/forgot-password", initiateForgotPassword);
@@ -101,8 +100,6 @@ router.post("/update-password", updatePassword);
 
 //resend OTP
 router.get("/resend", resendOTP);
-
-// router.use("/", isBlocked);
 
 router.get("/shop", loadShop);
 router.get("/shop/:category", loadCategoryShop);
@@ -113,58 +110,67 @@ router.get("/product/:id", loadProduct);
 router.get("/variants/:id/:color", fetchVariants);
 
 //profile
-router.get("/profile", isLogin, loadProfile);
-router.patch("/profile", isLogin, editProfile);
+router.get("/profile", isLogin, isBlocked, loadProfile);
+router.patch("/profile", isLogin, isBlocked, editProfile);
 
 //profile-password
-router.get("/password", isLogin, loadPassword);
-router.patch("/password", isLogin, changePassword);
+router.get("/password", isLogin, isBlocked, loadPassword);
+router.patch("/password", isLogin, isBlocked, changePassword);
 
 //address
-router.get("/address", isLogin, loadAddress);
-router.delete("/removeAddress", removeAddress);
-router.get("/add-address", isLogin, loadAddAddress);
-router.get("/address/:id", isLogin, loadEditAddress);
-router.patch("/address/:id", isLogin, editAddress);
-router.post("/add-address", isLogin, addAddress);
+router.get("/address", isLogin, isBlocked, loadAddress);
+router.delete("/removeAddress", isLogin, isBlocked, removeAddress);
+router.get("/add-address", isLogin, isBlocked, loadAddAddress);
+router.get("/address/:id", isLogin, isBlocked, loadEditAddress);
+router.patch("/address/:id", isLogin, isBlocked, editAddress);
+router.post("/add-address", isLogin, isBlocked, addAddress);
 
 //cart
-router.get("/cart", isLogin, loadCart);
-router.post("/addToCart", addToCart);
-router.delete("/removeProduct", isLogin, removeProduct);
-router.patch("/updateQuantity", isLogin, updateQuantity);
-router.post("/proceed-to-checkout", isLogin, processCheckout);
+router.get("/cart", isLogin, isBlocked, loadCart);
+router.post("/addToCart", isLogin, isBlocked, addToCart);
+router.delete("/removeProduct", isLogin, isBlocked, removeProduct);
+router.patch("/updateQuantity", isLogin, isBlocked, updateQuantity);
+router.post("/proceed-to-checkout", isLogin, isBlocked, processCheckout);
 
 //checkout
-router.get("/checkout", isLogin, loadCheckOut);
+router.get("/checkout", isLogin, isBlocked, loadCheckOut);
 
 //razor pay
-router.post("/create/orderId", isLogin, razorPayOrder);
-router.post("/verify-payment", isLogin, verifyPayment);
+router.post("/create/orderId", isLogin, isBlocked, razorPayOrder);
+router.post("/verify-payment", isLogin, isBlocked, verifyPayment);
 
 //razorpay end
 
 //order
-router.post("/placeOrder", isLogin, createOrder);
-router.get("/checkout-success/:id", isLogin, loadSuccessCheckout);
+router.post("/placeOrder", isLogin, isBlocked, createOrder);
+router.get("/checkout-success/:id", isLogin, isBlocked, loadSuccessCheckout);
 
-router.get("/orders", isLogin, LoadOrders);
-router.get("/orders/:orderId", isLogin, LoadSingleOrder);
-router.patch("/cancelOrder", isLogin, cancelOrder);
-router.post("/cancel-products", isLogin, cancelProducts);
-router.post("/return-products", isLogin, returnProducts);
-router.get("/invoice/:id", isLogin, invoice);
-router.post("/pay", isLogin, pay);
+router.get("/orders", isLogin, isBlocked, LoadOrders);
+router.get("/orders/:orderId", isLogin, isBlocked, LoadSingleOrder);
+router.patch("/cancelOrder", isLogin, isBlocked, cancelOrder);
+router.post("/cancel-products", isLogin, isBlocked, cancelProducts);
+router.post("/return-products", isLogin, isBlocked, returnProducts);
+router.get("/invoice/:id", isLogin, isBlocked, invoice);
+router.post("/pay", isLogin, isBlocked, pay);
 
 //wishlist
-router.get("/wishlist", isLogin, loadWishlist);
-router.get("/addToWishlist/:id", addToWishlist);
-router.delete("/wishlist/:productId", removeProductFromWishlist);
+router.get("/wishlist", isLogin, isBlocked, loadWishlist);
+router.get("/addToWishlist/:id", isLogin, isBlocked, addToWishlist);
+router.delete(
+  "/wishlist/:productId",
+  isLogin,
+  isBlocked,
+  removeProductFromWishlist
+);
 
 //coupon
-router.post("/checkCoupon/:couponCode", checkCoupon);
+router.post("/checkCoupon/:couponCode", isLogin, isBlocked, checkCoupon);
 
-router.get("/wallet", isLogin, loadWallet);
+router.get("/wallet", isLogin, isBlocked, loadWallet);
+
+router.get("/blocked", (req, res) => {
+  res.status(404).render("blocked");
+});
 
 router.get("/logout", logout);
 

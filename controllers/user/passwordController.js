@@ -1,3 +1,6 @@
+const User = require("../../models/User");
+const bcrypt = require("bcrypt");
+
 const loadPassword = (req, res) => {
   res.render("usersViews/password");
 };
@@ -19,6 +22,7 @@ const changePassword = async (req, res) => {
     res.status(200).json({ message: "password changed" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 

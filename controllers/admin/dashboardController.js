@@ -107,6 +107,7 @@ async function top10Category() {
     return products;
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 

@@ -38,6 +38,7 @@ const addToCart = async (req, res) => {
       .json({ message: "Product added to the cart successfully", cart });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -106,6 +107,7 @@ const loadCart = async (req, res) => {
     res.render("usersViews/cart", { products });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -144,6 +146,7 @@ const removeProduct = async (req, res) => {
     return res.status(200).json({ success: true });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -200,6 +203,7 @@ const updateQuantity = async (req, res) => {
     // Successful response
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
