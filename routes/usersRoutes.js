@@ -102,7 +102,6 @@ router.post("/update-password", updatePassword);
 router.get("/resend", resendOTP);
 
 router.get("/shop", loadShop);
-router.get("/shop/:category", loadCategoryShop);
 
 router.get("/search", loadSearch);
 
